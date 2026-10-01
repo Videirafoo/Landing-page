@@ -159,9 +159,15 @@ a {
     font-size: 17px;
 }
 
+.projetos {
+    margin-top: 42px;
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: 28px;
+    align-items: start;
+}
+
 .projeto {
-    max-width: 900px;
-    margin: 42px auto 0;
     background: #ffffff;
     border: 1px solid #e4e9f0;
     border-radius: 16px;
@@ -170,6 +176,12 @@ a {
 
 .projeto h3 {
     margin-bottom: 16px;
+}
+
+.projeto-mobile img {
+    max-height: 620px;
+    margin: 0 auto;
+    object-fit: contain;
 }
 
 footer {
@@ -197,7 +209,8 @@ footer {
     }
 
     .inicio-conteudo,
-    .cards {
+    .cards,
+    .projetos {
         grid-template-columns: 1fr;
     }
 
