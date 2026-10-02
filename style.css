@@ -32,6 +32,8 @@ a{color:inherit;text-decoration:none}
 .projeto h3{margin-bottom:16px;font-size:24px}
 .projeto-mobile img{max-height:920px;margin:0 auto;object-fit:contain}
 footer{padding:28px 20px;text-align:center;background:#0c2340;color:#fff;font-size:14px}
+
+
 @media(max-width:920px){
   .topo-conteudo{flex-direction:column;padding:14px 0}
   .menu{gap:14px;flex-wrap:wrap;justify-content:center}
@@ -41,6 +43,8 @@ footer{padding:28px 20px;text-align:center;background:#0c2340;color:#fff;font-si
   .inicio-texto p{margin-left:auto;margin-right:auto}
   .inicio-imagem img{width:100%}
 }
+
+
 @media(max-width:520px){
   .menu{font-size:13px}
   .marca img{width:180px}
