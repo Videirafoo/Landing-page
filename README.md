@@ -24,21 +24,22 @@ A landing page está publicada no GitHub Pages:
 Landing-page/
 ├── index.html
 ├── style.css
+├── README.md
 └── img/
-    ├── logo-base.jpg
-    ├── dashboard.jpg
-    └── aplicativo.jpg
+    ├── logo-base-hq.webp
+    ├── dashboard-hq.webp
+    └── app-hq.webp
 ```
 
 ## Imagens
 
-As imagens ficam dentro do próprio repositório, na pasta `img/`, para que o GitHub Pages carregue tudo diretamente sem depender de serviços externos.
+As imagens ficam dentro do próprio repositório, na pasta `img/`, e são carregadas diretamente pelo GitHub Pages.
 
-- `logo-base.jpg` — identidade visual do B.A.S.E.
-- `dashboard.jpg` — visual do sistema web.
-- `aplicativo.jpg` — visual do aplicativo mobile.
+- `logo-base-hq.webp` — logo B.A.S.E. em alta qualidade;
+- `dashboard-hq.webp` — imagem do sistema web em alta qualidade;
+- `app-hq.webp` — imagem do aplicativo mobile em alta qualidade.
 
-O HTML utiliza caminhos relativos e um parâmetro de versão para evitar cache antigo no navegador.
+O HTML usa caminhos relativos e parâmetro de versão para evitar cache de imagens antigas no navegador.
 
 ## Tecnologias
 
@@ -63,6 +64,6 @@ Configuração do GitHub Pages:
 - Branch: `main`
 - Pasta: `/ (root)`
 
-Assim o projeto abre diretamente pelo endereço:
+Endereço direto:
 
 **https://videirafoo.github.io/Landing-page/**
