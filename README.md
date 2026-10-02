@@ -1,12 +1,12 @@
 # Landing Page - B.A.S.E.
 
-Projeto acadêmico em **HTML e CSS** para apresentar o sistema **B.A.S.E. — Base de Acompanhamento do Sistema Escolar**.
+Projeto acadêmico simples em **HTML e CSS** para apresentar o sistema **B.A.S.E. — Base de Acompanhamento do Sistema Escolar**.
 
 ## Site
 
-A landing page é publicada pelo GitHub Pages:
+A landing page está publicada no GitHub Pages:
 
-`https://videirafoo.github.io/Landing-page/`
+**https://videirafoo.github.io/Landing-page/**
 
 ## Conteúdo
 
@@ -14,8 +14,8 @@ A landing page é publicada pelo GitHub Pages:
 - focos do projeto;
 - seção Quem Somos;
 - seção Como Trabalhamos;
-- visual do sistema web;
-- visual do aplicativo mobile;
+- imagem do sistema web;
+- imagem do aplicativo mobile;
 - layout responsivo para desktop e celular.
 
 ## Estrutura
@@ -25,20 +25,20 @@ Landing-page/
 ├── index.html
 ├── style.css
 └── img/
-    ├── logo-base-hq.webp
-    ├── dashboard-hq.webp
-    └── app-hq.webp
+    ├── logo-base.jpg
+    ├── dashboard.jpg
+    └── aplicativo.jpg
 ```
 
 ## Imagens
 
-As três imagens principais foram recriadas em resolução maior, preservando o visual de referência, e publicadas em **WebP com alta qualidade** para manter boa definição com tamanho de arquivo menor.
+As imagens ficam dentro do próprio repositório, na pasta `img/`, para que o GitHub Pages carregue tudo diretamente sem depender de serviços externos.
 
-- Logo B.A.S.E.: **1774 × 887 px**
-- Dashboard: **1536 × 1024 px**
-- Aplicativo mobile: **1024 × 1536 px**
+- `logo-base.jpg` — identidade visual do B.A.S.E.
+- `dashboard.jpg` — visual do sistema web.
+- `aplicativo.jpg` — visual do aplicativo mobile.
 
-O CSS exibe as imagens de forma responsiva e evita ampliar o arquivo além do necessário.
+O HTML utiliza caminhos relativos e um parâmetro de versão para evitar cache antigo no navegador.
 
 ## Tecnologias
 
@@ -46,7 +46,7 @@ O CSS exibe as imagens de forma responsiva e evita ampliar o arquivo além do ne
 - CSS3
 - GitHub Pages
 
-Não há JavaScript, framework, banco de dados ou dependências externas neste projeto.
+Não há JavaScript, framework, banco de dados ou dependências externas.
 
 ## Como abrir localmente
 
@@ -54,13 +54,15 @@ Não há JavaScript, framework, banco de dados ou dependências externas neste p
 2. Abra a pasta no VS Code.
 3. Abra o arquivo `index.html` no navegador.
 
-Também é possível usar a extensão **Live Server** do VS Code.
+Também pode usar a extensão **Live Server**.
 
 ## Publicação
 
-O GitHub Pages deve usar:
+Configuração do GitHub Pages:
 
 - Branch: `main`
 - Pasta: `/ (root)`
 
-Assim o site fica disponível diretamente pelo endereço informado acima.
+Assim o projeto abre diretamente pelo endereço:
+
+**https://videirafoo.github.io/Landing-page/**
