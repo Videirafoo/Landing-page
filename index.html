@@ -3,19 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>B.A.S.E. - Base de Acompanhamento do Sistema Escolar</title>
+  <meta name="description" content="B.A.S.E. Base de Acompanhamento do Sistema Escolar. Projeto acadêmico com sistema web, aplicativo mobile e integração da comunidade escolar.">
+  <meta name="theme-color" content="#0b3478">
+  <title>B.A.S.E. | Base de Acompanhamento do Sistema Escolar</title>
+  <link rel="icon" type="image/webp" href="img/logo-oficial-base.webp">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="Ir para o início">
+        <img src="img/logo-oficial-base.webp" alt="Logo oficial B.A.S.E." class="brand-logo">
+      </a>
 
-  <header>
-    <div class="container topo">
-      <img src="img/logo-base-hq.svg" alt="Logo oficial B.A.S.E." class="logo">
-      <nav>
-        <a href="#inicio">Início</a>
-        <a href="#sobre">Sobre</a>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="#projeto">Projeto</a>
         <a href="#web">Sistema Web</a>
         <a href="#mobile">Aplicativo</a>
+        <a href="#ecossistema">Ecossistema</a>
       </nav>
     </div>
   </header>
@@ -23,59 +28,104 @@
   <main>
     <section class="hero" id="inicio">
       <div class="container hero-grid">
-        <div>
-          <h1>Uma escola mais <span>conectada.</span><br>Uma gestão mais eficiente.</h1>
-          <p>O B.A.S.E. — Base de Acompanhamento do Sistema Escolar — reúne informações acadêmicas, comunicação e gestão em um único ambiente.</p>
-          <a href="#sobre" class="botao">Conheça o projeto</a>
+        <div class="hero-copy">
+          <p class="eyebrow">Base de Acompanhamento do Sistema Escolar</p>
+          <h1>Gestão escolar conectada em um só lugar.</h1>
+          <p class="hero-text">
+            O B.A.S.E. reúne informações acadêmicas, comunicação e gestão em uma proposta integrada para escola, estudantes e responsáveis.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#projeto">Conhecer o projeto</a>
+            <a class="button button-secondary" href="#web">Ver sistema web</a>
+          </div>
         </div>
-        <img src="img/dashboard-hq.svg" alt="Dashboard do sistema B.A.S.E." class="hero-img">
+
+        <a class="media-card hero-media" href="img/dashboard-hq.webp" target="_blank" rel="noopener" aria-label="Abrir imagem Tecnologia para uma gestão escolar eficiente">
+          <img src="img/dashboard-hq.webp" alt="Tecnologia para uma gestão escolar eficiente no B.A.S.E." fetchpriority="high">
+        </a>
       </div>
     </section>
 
-    <section class="secao" id="sobre">
-      <div class="container">
-        <h2>Sobre o projeto</h2>
-        <p class="centro">O B.A.S.E. foi pensado para facilitar a rotina escolar, melhorar a comunicação e tornar o acompanhamento dos alunos mais simples.</p>
+    <section class="section" id="projeto">
+      <div class="container narrow">
+        <p class="section-kicker">O projeto</p>
+        <h2>B.A.S.E.</h2>
+        <p class="section-lead">
+          O projeto apresenta uma solução digital integrada para organizar informações escolares, apoiar o acompanhamento acadêmico e facilitar a comunicação entre a escola e a comunidade escolar.
+        </p>
 
-        <div class="cards">
-          <article class="card laranja">
-            <h3>Organização</h3>
-            <p>Informações escolares reunidas em um só lugar.</p>
-          </article>
-
-          <article class="card azul">
-            <h3>Comunicação</h3>
-            <p>Avisos e informações entre escola e responsáveis.</p>
-          </article>
-
-          <article class="card verde">
-            <h3>Acompanhamento</h3>
-            <p>Notas, frequência e desempenho de forma visual.</p>
-          </article>
+        <div class="project-points" aria-label="Áreas principais do projeto">
+          <span>Gestão escolar</span>
+          <span>Acompanhamento acadêmico</span>
+          <span>Comunicação</span>
+          <span>Acesso web e mobile</span>
         </div>
       </div>
     </section>
 
-    <section class="secao fundo" id="web">
-      <div class="container">
-        <h2>Sistema Web</h2>
-        <p class="centro">Painel para acompanhar alunos, turmas, professores, frequência, comunicados, relatórios e indicadores.</p>
-        <img src="img/dashboard-hq.svg" alt="Sistema web B.A.S.E." class="imagem">
+    <section class="section section-soft" id="web">
+      <div class="container showcase">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Sistema Web</p>
+            <h2>Painel para a rotina escolar</h2>
+          </div>
+          <p>
+            Visão centralizada para alunos, frequência, relatórios, comunicação e acompanhamento da gestão.
+          </p>
+        </div>
+
+        <a class="media-card" href="img/sistema-web-profissional.webp" target="_blank" rel="noopener" aria-label="Abrir imagem Sistema web profissional">
+          <img src="img/sistema-web-profissional.webp" alt="Sistema web profissional B.A.S.E." loading="lazy" decoding="async">
+        </a>
+        <a class="open-image" href="img/sistema-web-profissional.webp" target="_blank" rel="noopener">Abrir imagem em tamanho original</a>
       </div>
     </section>
 
-    <section class="secao" id="mobile">
-      <div class="container">
-        <h2>Aplicativo Mobile</h2>
-        <p class="centro">Aplicativo para acompanhar desempenho, notas, avisos e informações acadêmicas.</p>
-        <img src="img/app-hq.svg" alt="Aplicativo mobile B.A.S.E." class="app">
+    <section class="section" id="mobile">
+      <div class="container showcase">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Aplicativo Mobile</p>
+            <h2>Acompanhamento no celular</h2>
+          </div>
+          <p>
+            A proposta mobile concentra notas, desempenho, avisos, frequência e informações da vida acadêmica.
+          </p>
+        </div>
+
+        <a class="media-card" href="img/aplicativo-mobile-completo.webp" target="_blank" rel="noopener" aria-label="Abrir imagem Aplicativo mobile completo">
+          <img src="img/aplicativo-mobile-completo.webp" alt="Aplicativo mobile completo B.A.S.E." loading="lazy" decoding="async">
+        </a>
+        <a class="open-image" href="img/aplicativo-mobile-completo.webp" target="_blank" rel="noopener">Abrir imagem em tamanho original</a>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="ecossistema">
+      <div class="container showcase">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Ecossistema</p>
+            <h2>Tudo conectado</h2>
+          </div>
+          <p>
+            Escola, equipe, estudantes e responsáveis reunidos na mesma proposta de acompanhamento escolar.
+          </p>
+        </div>
+
+        <a class="media-card" href="img/hero-ecosistema.webp" target="_blank" rel="noopener" aria-label="Abrir imagem Tudo conectado em um só ecossistema">
+          <img src="img/hero-ecosistema.webp" alt="Tudo conectado em um só ecossistema B.A.S.E." loading="lazy" decoding="async">
+        </a>
+        <a class="open-image" href="img/hero-ecosistema.webp" target="_blank" rel="noopener">Abrir imagem em tamanho original</a>
       </div>
     </section>
   </main>
 
-  <footer>
-    B.A.S.E. — Base de Acompanhamento do Sistema Escolar
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <img src="img/logo-oficial-base.webp" alt="B.A.S.E." class="footer-logo" loading="lazy">
+      <p>Projeto acadêmico B.A.S.E. | Engenharia de Software | 2026</p>
+    </div>
   </footer>
-
 </body>
 </html>
