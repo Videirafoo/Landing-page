@@ -26,18 +26,18 @@ Landing-page/
 ├── style.css
 ├── README.md
 └── img/
-    ├── logo-base-hq.webp
-    ├── dashboard-hq.webp
-    └── app-hq.webp
+    ├── logo-base-hq.svg
+    ├── dashboard-hq.svg
+    └── app-hq.svg
 ```
 
 ## Imagens
 
 As imagens ficam dentro do próprio repositório, na pasta `img/`, e são carregadas diretamente pelo GitHub Pages.
 
-- `logo-base-hq.webp` — logo B.A.S.E. em alta qualidade;
-- `dashboard-hq.webp` — imagem do sistema web em alta qualidade;
-- `app-hq.webp` — imagem do aplicativo mobile em alta qualidade.
+- `logo-base-hq.svg` — logo B.A.S.E. em alta qualidade;
+- `dashboard-hq.svg` — imagem vetorial do sistema web em alta qualidade;
+- `app-hq.svg` — imagem vetorial do aplicativo mobile em alta qualidade.
 
 O HTML usa caminhos relativos e parâmetro de versão para evitar cache de imagens antigas no navegador.
 
