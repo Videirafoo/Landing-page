@@ -1,64 +1,13 @@
-*{margin:0;padding:0;box-sizing:border-box}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,sans-serif;color:#172033;background:#fff}img{display:block;max-width:100%;height:auto}a{text-decoration:none;color:inherit}.container{width:min(1100px,92%);margin:auto}
 
+header{padding:14px 0;border-bottom:1px solid #eee}.topo-conteudo{display:flex;align-items:center;justify-content:space-between;gap:20px}.marca img{width:180px}.menu{display:flex;gap:18px;font-size:14px;font-weight:700}
 
-html{scroll-behavior:smooth}
+.inicio{padding:60px 0;background:#f7f9fc}.inicio-conteudo{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}.inicio h1{font-size:48px;line-height:1.05;margin:0 0 18px}.inicio h1 span{color:#0b63ce}.inicio p{color:#667085}.botao{display:inline-block;margin-top:12px;background:#0b63ce;color:#fff;padding:11px 18px;border-radius:6px}.inicio-imagem img{width:100%;border-radius:10px}
 
+.secao{padding:60px 0}.secao-clara{background:#f7f9fc}.secao h2{text-align:center;margin:0 0 30px;font-size:30px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{padding:24px;border-radius:10px;color:#fff;min-height:180px}.card-laranja{background:#ff7417}.card-azul{background:#2bc3d0}.card-verde{background:#38b66b}.texto{max-width:800px;margin:auto;text-align:center}.texto p{color:#667085}
 
-body{font-family:Arial,Helvetica,sans-serif;color:#172033;background:#fff;line-height:1.6}
+.projetos{display:grid;grid-template-columns:1.3fr .7fr;gap:22px;margin-top:35px}.projeto{border:1px solid #e5e7eb;border-radius:10px;padding:16px}.projeto h3{margin:0 0 12px}.projeto img{width:100%}.projeto-mobile img{max-height:760px;object-fit:contain}
 
+footer{padding:24px;text-align:center;background:#0c2340;color:#fff;font-size:13px}
 
-img{max-width:100%;display:block}
-
-
-a{color:inherit;text-decoration:none}
-.container{width:min(1200px,92%);margin:0 auto}
-.topo{background:#fff;border-bottom:1px solid #e8edf3;position:sticky;top:0;z-index:10}
-.topo-conteudo{min-height:86px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.marca img{width:220px;height:auto}
-.menu{display:flex;gap:26px;font-size:15px;font-weight:bold}
-.menu a:hover{color:#0b63ce}
-.inicio{padding:72px 0;background:#f7f9fc}
-.inicio-conteudo{display:grid;grid-template-columns:1fr 1.1fr;align-items:center;gap:54px}
-.inicio-texto h1{font-size:clamp(36px,5vw,62px);line-height:1.08;color:#101828;margin-bottom:22px}
-.inicio-texto h1 span{color:#0b63ce}
-.inicio-texto p{max-width:620px;color:#657084;margin-bottom:28px;font-size:18px}
-.botao{display:inline-block;background:#0b63ce;color:#fff;padding:12px 22px;border-radius:8px;font-weight:bold}
-.inicio-imagem{width:100%}
-.inicio-imagem img,.projeto img{width:100%;height:auto;border-radius:18px;box-shadow:0 18px 40px rgba(27,45,78,.12);image-rendering:auto}
-.secao{padding:72px 0}
-.secao-clara{background:#f7f9fc}
-.secao h2{text-align:center;font-size:34px;margin-bottom:34px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.card{min-height:220px;padding:28px;border-radius:16px;color:#fff;font-size:18px;display:flex;align-items:center}
-.card-laranja{background:#f97316}
-.card-azul{background:#22c7d6}
-.card-verde{background:#38b66b}
-.texto{max-width:860px;text-align:center;margin:0 auto}
-.texto p{color:#5c6678;font-size:18px}
-.projetos{margin-top:42px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:start}
-.projeto{background:#fff;border:1px solid #e4e9f0;border-radius:16px;padding:20px}
-.projeto h3{margin-bottom:16px;font-size:24px}
-.projeto-mobile img{max-height:920px;margin:0 auto;object-fit:contain}
-
-
-footer{padding:28px 20px;text-align:center;background:#0c2340;color:#fff;font-size:14px}
-
-
-@media(max-width:920px){
-  .topo-conteudo{flex-direction:column;padding:14px 0}
-  .menu{gap:14px;flex-wrap:wrap;justify-content:center}
-  .inicio{padding:48px 0}
-  .inicio-conteudo,.cards,.projetos{grid-template-columns:1fr}
-  .inicio-texto{text-align:center}
-  .inicio-texto p{margin-left:auto;margin-right:auto}
-  .inicio-imagem img{width:100%}
-}
-
-
-@media(max-width:520px){
-  .menu{font-size:13px}
-  .marca img{width:180px}
-  .inicio-texto h1{font-size:38px}
-  .secao{padding:52px 0}
-  .card{min-height:auto;font-size:16px}
-}
+@media(max-width:760px){.topo-conteudo{flex-direction:column}.menu{flex-wrap:wrap;justify-content:center}.inicio-conteudo,.cards,.projetos{grid-template-columns:1fr}.inicio{text-align:center}.inicio h1{font-size:38px}.marca img{width:160px}.secao{padding:45px 0}}
