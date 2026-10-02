@@ -20,6 +20,7 @@
         <a href="#funcionalidades">Recursos</a>
         <a href="#plataformas">Web e Mobile</a>
         <a href="#publicos">Para quem</a>
+        <a href="#contato">Contato</a>
       </nav>
     </div>
   </header>
@@ -187,6 +188,47 @@
         </figure>
       </div>
     </section>
+    <!-- Formulário optativo da atividade extensionista -->
+    <section class="section contact-section" id="contato">
+      <div class="container contact-grid">
+        <div class="contact-copy">
+          <span class="section-kicker">Contato</span>
+          <h2>Quer saber mais sobre o B.A.S.E.?</h2>
+          <p>
+            Deixe seus dados e uma mensagem. Nesta versão acadêmica, o formulário registra
+            os contatos no armazenamento local do navegador para demonstrar o funcionamento.
+          </p>
+
+          <div class="contact-notes">
+            <div><strong>Nome</strong><span>Identifica o interessado.</span></div>
+            <div><strong>E-mail</strong><span>Permite um contato posterior.</span></div>
+            <div><strong>Mensagem</strong><span>Registra o interesse ou dúvida sobre o projeto.</span></div>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contact-form">
+          <div class="form-field">
+            <label for="name">Nome</label>
+            <input type="text" id="name" name="name" placeholder="Seu nome" required maxlength="80">
+          </div>
+
+          <div class="form-field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required maxlength="120">
+          </div>
+
+          <div class="form-field">
+            <label for="message">Mensagem</label>
+            <textarea id="message" name="message" rows="5" placeholder="Escreva sua mensagem" required maxlength="600"></textarea>
+          </div>
+
+          <button class="btn btn-primary form-submit" type="submit">Registrar contato</button>
+          <p class="form-status" id="form-status" aria-live="polite"></p>
+          <p class="contact-count" id="contact-count"></p>
+        </form>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -195,5 +237,6 @@
       <p>Base de Acompanhamento do Sistema Escolar • Projeto acadêmico de Engenharia de Software</p>
     </div>
   </footer>
+  <script src="script.js"></script>
 </body>
 </html>
