@@ -49,3 +49,11 @@ O CSS usa Flexbox, CSS Grid e media queries. As imagens usam largura responsiva 
 ## Publicação
 
 O projeto é publicado como site estático pelo GitHub Pages.
+
+## Abrir no GitHub Pages
+
+- Landing page: `https://videirafoo.github.io/Landing-page/`
+- Demonstração interativa: `https://videirafoo.github.io/Landing-page/demo/`
+- Os dados da demonstração e as contas criadas ficam **somente no navegador e no dispositivo utilizado**. Não são compartilhados e não representam login seguro de produção. Não insira dados pessoais reais.
+- Para autenticação com backend e banco TXT, execute `node servidor.js` na pasta `sistema-faculdade` (VS Code). GitHub Pages não executa esse servidor.
+- Configure **Settings > Pages > Deploy from a branch > main > /(root)** caso a publicação ainda não esteja habilitada.

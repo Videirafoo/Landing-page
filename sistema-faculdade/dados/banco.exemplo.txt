@@ -1,0 +1,9 @@
+{
+  "escola": "",
+  "usuarios": [],
+  "alunos": [],
+  "professores": [],
+  "turmas": [],
+  "frequencias": [],
+  "avisos": []
+}
