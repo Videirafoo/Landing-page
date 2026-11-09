@@ -8,13 +8,17 @@ const crypto = require('node:crypto');
 const PORTA = Number(process.env.PORT || 3000);
 const RAIZ = __dirname;
 const ARQUIVO = path.join(RAIZ, 'dados', 'banco.txt');
-const SESSOES = new Map(); // Login permanece ativo até sair ou reiniciar o servidor.
-const TABELAS = ['alunos', 'professores', 'turmas', 'frequencias', 'avisos'];
+const SESSOES = new Map(); // Token em memória: sai ao reiniciar o servidor.
+const TENTATIVAS = new Map(); // Bloqueio temporário contra muitas senhas erradas.
+const TABELAS = ['alunos', 'matriculas', 'turmas', 'professores', 'frequencias', 'avaliacoes', 'conteudos', 'avisos'];
 const CAMPOS = {
   alunos: ['nome', 'matricula', 'turma'],
   professores: ['nome', 'disciplina', 'email'],
   turmas: ['nome', 'ano', 'turno'],
+  matriculas: ['alunoId', 'turmaId', 'data'],
   frequencias: ['alunoId', 'data', 'presente'],
+  avaliacoes: ['alunoId', 'disciplina', 'nota', 'data'],
+  conteudos: ['titulo', 'disciplina', 'descricao', 'data'],
   avisos: ['titulo', 'mensagem']
 };
 let fila = Promise.resolve();
@@ -62,7 +66,7 @@ function criarHash(senha) {
 function conferirSenha(senha, salvo) {
   if (typeof senha !== 'string' || !salvo) return false;
   const [sal, hash] = salvo.split(':');
-  if (!sal || !hash || hash.length !== 128) return false;
+  if (!sal || !/^[0-9a-f]{128}$/i.test(hash)) return false;
   const esperado = Buffer.from(hash, 'hex');
   const informado = crypto.scryptSync(senha, sal, 64);
   return crypto.timingSafeEqual(esperado, informado);
@@ -87,19 +91,28 @@ function publico(usuario) { return { id: usuario.id, nome: usuario.nome, matricu
 function validarCadastro(tabela, dados, banco) {
   const registro = {};
   for (const campo of CAMPOS[tabela]) {
-    if (campo === 'presente') {
+    if (campo === 'nota') {
+      const n = Number(dados.nota);
+      if (!Number.isFinite(n) || n < 0 || n > 10 || dados.nota === '') erro(400, 'Nota entre 0 e 10.');
+      registro.nota = n;
+    } else if (campo === 'presente') {
       if (typeof dados.presente !== 'boolean') erro(400, 'Presença inválida.');
       registro.presente = dados.presente;
     } else {
-      registro[campo] = texto(dados[campo], campo, 1, campo === 'mensagem' ? 400 : 150);
+      registro[campo] = texto(dados[campo], campo, 1, ['mensagem', 'descricao'].includes(campo) ? 400 : 150);
     }
   }
   if (tabela === 'alunos' && banco.alunos.some(a => a.matricula === registro.matricula)) erro(409, 'Matrícula já cadastrada.');
-  if (tabela === 'frequencias') {
-    if (!banco.alunos.some(a => a.id === registro.alunoId)) erro(400, 'Aluno não encontrado.');
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(registro.data)) erro(400, 'Data inválida.');
-    if (banco.frequencias.some(f => f.alunoId === registro.alunoId && f.data === registro.data)) erro(409, 'Frequência já registrada para essa data.');
+  if (['frequencias', 'avaliacoes', 'matriculas'].includes(tabela) && !banco.alunos.some(a => a.id === registro.alunoId)) erro(400, 'Aluno não encontrado.');
+  if (tabela === 'matriculas') {
+    if (!banco.turmas.some(t => t.id === registro.turmaId)) erro(400, 'Turma não encontrada.');
+    if (banco.matriculas.some(m => m.alunoId === registro.alunoId && m.turmaId === registro.turmaId)) erro(409, 'Aluno já matriculado nesta turma.');
   }
+  if (['frequencias', 'avaliacoes', 'matriculas', 'conteudos'].includes(tabela)) {
+    const d = registro.data;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || Number.isNaN(Date.parse(d)) || new Date(d).toISOString().slice(0, 10) !== d) erro(400, 'Data inválida.');
+  }
+  if (tabela === 'frequencias' && banco.frequencias.some(f => f.alunoId === registro.alunoId && f.data === registro.data)) erro(409, 'Frequência já registrada para essa data.');
   return registro;
 }
 async function api(req, res, rota) {
@@ -125,14 +138,30 @@ async function api(req, res, rota) {
   }
   if (rota === '/api/login' && metodo === 'POST') {
     const dados = await corpo(req);
-    const usuario = banco.usuarios.find(u => u.matricula === String(dados.matricula || '').trim().toUpperCase());
-    if (!usuario || !conferirSenha(dados.senha, usuario.hash)) erro(401, 'Matrícula ou senha incorretas.');
+    const matricula = String(dados.matricula || '').trim().toUpperCase();
+    const chave = (req.socket.remoteAddress || 'local') + ':' + matricula;
+    const tent = TENTATIVAS.get(chave);
+    if (tent && tent.ate > Date.now()) erro(429, 'Muitas tentativas. Tente novamente em um minuto.');
+    const usuario = banco.usuarios.find(u => u.matricula === matricula);
+    if (!usuario || !conferirSenha(dados.senha, usuario.hash)) {
+      const tentativas = (tent && tent.ate <= Date.now() ? 0 : tent?.n || 0) + 1;
+      TENTATIVAS.set(chave, {n: tentativas, ate: tentativas >= 5 ? Date.now() + 60_000 : 0});
+      erro(401, 'Matrícula ou senha incorretas.');
+    }
+    TENTATIVAS.delete(chave);
     iniciarSessao(res, usuario);
     return responder(res, 200, { usuario: publico(usuario), escola: banco.escola });
   }
 
   const usuario = usuarioAutenticado(req, banco);
   if (rota === '/api/me' && metodo === 'GET') return responder(res, 200, { usuario: publico(usuario), escola: banco.escola });
+  if (rota === '/api/escola' && metodo === 'PUT') {
+    if (usuario.perfil !== 'Administrador') erro(403, 'Somente o administrador pode alterar a escola.');
+    const dados = await corpo(req);
+    const nome = texto(dados.nome, 'nome da escola', 2, 120);
+    await gravar(b => { b.escola = nome; });
+    return responder(res, 200, {escola: nome});
+  }
   if (rota === '/api/sair' && metodo === 'POST') {
     SESSOES.delete(cookies(req).sessao);
     res.setHeader('Set-Cookie', 'sessao=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0');
@@ -185,7 +214,8 @@ async function api(req, res, rota) {
       await gravar(b => {
         const index = b[tabela].findIndex(item => item.id === id);
         if (index < 0) erro(404, 'Registro não encontrado.');
-        if (tabela === 'alunos' && b.frequencias.some(f => f.alunoId === id)) erro(409, 'Apague primeiro as frequências desse aluno.');
+        if (tabela === 'alunos' && ['frequencias', 'avaliacoes', 'matriculas'].some(t => b[t].some(f => f.alunoId === id))) erro(409, 'Exclua primeiro registros vinculados a esse aluno.');
+      if (tabela === 'turmas' && b.matriculas.some(m => m.turmaId === id)) erro(409, 'Exclua primeiro as matrículas desta turma.');
         b[tabela].splice(index, 1);
       });
       return responder(res, 200, {ok:true});
@@ -202,7 +232,7 @@ async function estatico(res, rota) {
   const nome = arquivos[rota];
   const conteudo = await fs.readFile(path.join(RAIZ, 'public', nome));
   const tipo = nome.endsWith('.css') ? 'text/css' : nome.endsWith('.js') ? 'text/javascript' : 'text/html';
-  res.writeHead(200, {'Content-Type':tipo+'; charset=utf-8', 'Cache-Control':'no-store'});
+  res.writeHead(200, {'Content-Type':tipo+'; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff', 'X-Frame-Options':'DENY'});
   res.end(conteudo);
 }
 const servidor = http.createServer(async (req, res) => {
@@ -217,6 +247,6 @@ async function iniciar() {
   await fs.mkdir(path.dirname(ARQUIVO), { recursive: true });
   try { await fs.access(ARQUIVO); }
   catch { await fs.copyFile(path.join(RAIZ, 'dados', 'banco.exemplo.txt'), ARQUIVO, require('node:fs').constants.COPYFILE_EXCL).catch(e => { if (e.code !== 'EEXIST') throw e; }); }
-  servidor.listen(PORTA, '127.0.0.1', () => console.log(`B.A.S.E. aberto em http://localhost:${PORTA}`));
+  servidor.listen(PORTA, process.env.HOST || '127.0.0.1', () => console.log(`B.A.S.E. aberto em http://localhost:${PORTA}`));
 }
 iniciar().catch(e => { console.error(e); process.exitCode = 1; });

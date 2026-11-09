@@ -2,8 +2,11 @@
   "escola": "",
   "usuarios": [],
   "alunos": [],
-  "professores": [],
+  "matriculas": [],
   "turmas": [],
+  "professores": [],
   "frequencias": [],
+  "avaliacoes": [],
+  "conteudos": [],
   "avisos": []
 }
