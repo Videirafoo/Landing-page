@@ -8,10 +8,6 @@ const N = {
   frequencias:'Frequência', avaliacoes:'Avaliações', conteudos:'Conteúdos', avisos:'Comunicados',
   relatorios:'Relatórios', indicadores:'Indicadores', configuracoes:'Configurações', usuarios:'Usuários'
 };
-const I = {
-  dashboard:'▦',alunos:'♙',matriculas:'▤',turmas:'▥',professores:'♧',frequencias:'✓',avaliacoes:'◎',
-  conteudos:'▧',avisos:'♬',relatorios:'▤',indicadores:'▥',configuracoes:'⚙',usuarios:'♙'
-};
 const D = {
   alunos: {titulo:'Alunos',desc:'Gerencie os alunos da escola.', cols:[['nome','Aluno'],['matricula','Matrícula'],['turma','Turma']],campos:[['nome','Nome do aluno'],['matricula','Matrícula do aluno'],['turma','Turma / série']]},
   matriculas:{titulo:'Matrículas',desc:'Vincule alunos a turmas.',cols:[['alunoId','Aluno'],['turmaId','Turma'],['data','Data da matrícula']],campos:[['alunoId','Aluno'],['turmaId','Turma'],['data','Data']]},
@@ -64,7 +60,7 @@ function entrarApp(d){
 }
 function montarMenu(){
   $('#menu').innerHTML=Object.keys(N).filter(k=>k!=='usuarios'||estado.usuario.perfil==='Administrador').map(k=>
-    `<button class="item-menu" type="button" data-pagina="${k}"><span aria-hidden="true" class="item-icone">${I[k]}</span><span>${N[k]}</span></button>`).join('');
+    `<button class="item-menu" type="button" data-pagina="${k}"><span aria-hidden="true" class="item-icone"></span><span>${N[k]}</span></button>`).join('');
   $$('#menu [data-pagina]').forEach(b=>b.onclick=()=>navegar(b.dataset.pagina));
 }
 function fecharMenu(){$('#menu-lateral').classList.remove('aberto');$('#sombra-menu').classList.remove('aberto');}
