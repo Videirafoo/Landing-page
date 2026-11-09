@@ -83,7 +83,7 @@ async function dashboard() {
   const atividades = dados.atividades.length ? dados.atividades.map(item=> `<div class="atividade-item"><span class="item-icone">✓</span><div><strong>${escapar(item.titulo)}</strong><p>${escapar(nomes[item.tipo] || item.tipo)}</p><time>${dataBR(item.criadoEm)}</time></div></div>`).join('') : '<div class="nenhum">Seus cadastros recentes aparecerão aqui.</div>';
   $('#conteudo').innerHTML = cabecalho('Visão geral da escola', 'Acompanhe os principais indicadores da instituição.', '<button class="botao primario" data-atalho="alunos">+ Novo aluno</button>') + `
     <div class="metricas">${metrica(dados.alunos,'Alunos matriculados','♙','azul','alunos')}${metrica(dados.turmas,'Turmas','▤','verde','turmas')}${metrica(dados.professores,'Professores','♧','laranja','professores')}${metrica(dados.frequencia === null ? '—' : dados.frequencia+'%','Frequência média','✓','roxo','frequencias')}</div>
-    <div class="grade-principal"><section class="cartao painel"><div class="painel-topo"><h2>Frequência dos alunos</h2><button class="link" data-atalho="frequencias">Ver registros</button></div>${grafico}</section><section class="cartao painel"><div class="painel-topo"><h2>Avisos e comunicados</h2><button class="link" data-atalho="avisos">Ver todos</button></div><div class="lista-avisos">${avisos}</div></section><section class="cartao painel"><div class="painel-topo"><h2>Atividades recentes</h2></div><div class="atividades">${atividades}</div></section><section class="cartao painel"><div class="painel-topo"><h2>Comece por aqui</h2></div><p style="color:#7d90a7;font-size:13px;line-height:1.8">1. Cadastre uma turma.<br>2. Cadastre os alunos e professores.<br>3. Registre a frequência.<br>4. Publique comunicados.<br><br>Todos os registros são gravados no arquivo <b>dados/banco.txt</b>.</p></section></div>`;
+    <div class="grade-principal"><section class="cartao painel"><div class="painel-topo"><h2>Frequência dos alunos</h2><button class="link" data-atalho="frequencias">Ver registros</button></div>${grafico}</section><section class="cartao painel"><div class="painel-topo"><h2>Avisos e comunicados</h2><button class="link" data-atalho="avisos">Ver todos</button></div><div class="lista-avisos">${avisos}</div></section><section class="cartao painel"><div class="painel-topo"><h2>Atividades recentes</h2></div><div class="atividades">${atividades}</div></section><section class="cartao painel"><div class="painel-topo"><h2>Comece por aqui</h2></div><p style="color:#7d90a7;font-size:13px;line-height:1.8">1. Cadastre uma turma.<br>2. Cadastre os alunos e professores.<br>3. Registre a frequência.<br>4. Publique comunicados.<br><br>Registros salvos ${window.BASE_DEMO ? 'somente neste navegador (demonstração).' : 'no arquivo <b>dados/banco.txt</b>.'}</p></section></div>`;
   document.querySelectorAll('[data-atalho]').forEach(el => el.addEventListener('click', () => navegar(el.dataset.atalho)));
 }
 function mostrarValor(chave, valor) {
@@ -135,7 +135,7 @@ async function inicializar() {
     if (!inicio.configurado) return mostrarEntrada(true);
     try { abrirSistema(await requisitar('/api/me')); }
     catch { mostrarEntrada(false); }
-  } catch { mostrarEntrada(false); $('#erro-entrada').textContent = 'Servidor não disponível. Execute node servidor.js no terminal.'; }
+  } catch { mostrarEntrada(false); $('#erro-entrada').textContent = window.BASE_DEMO ? 'Erro ao iniciar a demonstração no navegador.' : 'Servidor não disponível. Execute node servidor.js no terminal.'; }
 }
 $('#form-acesso').addEventListener('submit', async event => {
   event.preventDefault(); $('#erro-entrada').textContent = '';
@@ -151,7 +151,7 @@ $('#form-registro').addEventListener('submit', async e => {
   const secao = e.currentTarget.dataset.secao;
   const dados = Object.fromEntries(new FormData(e.currentTarget));
   if (secao === 'frequencias') dados.presente = dados.presente === 'true';
-  try {await requisitar('/api/'+secao,{method:'POST',body:JSON.stringify(dados)}); $('#janela').close(); aviso('Cadastro salvo no arquivo TXT.'); navegar(secao);}
+  try {await requisitar('/api/'+secao,{method:'POST',body:JSON.stringify(dados)}); $('#janela').close(); aviso(window.BASE_DEMO ? 'Cadastro salvo neste navegador.' : 'Cadastro salvo no arquivo TXT.'); navegar(secao);}
   catch(err){ $('#janela-erro').textContent = err.message; }
 });
 $('#fechar-janela').addEventListener('click',()=>$('#janela').close());
