@@ -1,68 +1,46 @@
-# B.A.S.E. — Projeto simples para faculdade
+# B.A.S.E. — Sistema Escolar Interativo (Faculdade)
 
-Projeto didático para abrir no Visual Studio Code. **Não precisa instalar bibliotecas, MySQL, XAMPP ou contratar VPS.**
+Projeto acadêmico com **login real por matrícula e senha**, dashboard escolar e banco `TXT`. O objetivo é reproduzir de forma simples o painel mostrado na apresentação da faculdade.
 
-## Requisitos
+## O que precisa instalar
+- Visual Studio Code
+- Node.js 18 ou superior: https://nodejs.org
 
-- VS Code
-- Node.js 18 ou superior: https://nodejs.org/
+## Como abrir
+1. Extraia este ZIP.
+2. Abra a pasta `BASE_Escolar_Interativo_Corrigido` no VS Code.
+3. Abra **Terminal > Novo Terminal**.
+4. Digite `node servidor.js` (ou `npm start`).
+5. Abra **http://localhost:3000** no navegador.
 
-## Como executar
+No primeiro acesso, cadastre **nome da escola, administrador, matrícula e senha** (mínimo 8 caracteres). Depois disso a página inicial exige matrícula e senha. Apenas o administrador consegue criar novas contas na opção **Usuários**.
 
-1. Extraia o ZIP e abra a pasta `BASE_Faculdade_Gradiente` no VS Code (Arquivo > Abrir Pasta).
-2. Abra **Terminal > Novo Terminal** no VS Code.
-3. Digite:
+**Teste:** tente entrar com matrícula inexistente ou senha errada. O acesso é negado. Após entrar, cadastre uma turma, um aluno, uma matrícula, frequência e avaliação. Os indicadores e gráficos são recalculados a partir desses registros. Ao clicar em **Sair**, a sessão é encerrada.
 
-   ```bash
-   node servidor.js
-   ```
-
-   Alternativa: `npm start`.
-
-4. **Alternativa no VS Code:** pressione `F5` e escolha **Iniciar B.A.S.E. (servidor)**.
-5. Abra **http://localhost:3000** no navegador. **Não abra `index.html` diretamente**, pois ele precisa do servidor.
-6. No primeiro acesso, informe nome da escola, nome do administrador, matrícula e uma senha de **8 caracteres ou mais**.
-7. Depois use a matrícula e a senha para entrar. Em **Usuários**, o administrador pode cadastrar outros funcionários.
-
-## Estrutura
-
+## Arquivos
 ```
-BASE_Faculdade_Gradiente/
-├── servidor.js           # Backend + API + login e senha
+BASE_Escolar_Interativo_Corrigido/
+├── servidor.js              ← backend + API + autenticação
 ├── public/
-│   ├── index.html        # Estrutura do frontend
-│   ├── style.css         # Estilo e responsividade
-│   └── app.js            # Interações e chamadas à API
+│   ├── index.html            ← login e dashboard
+│   ├── style.css             ← visual e versão celular
+│   └── app.js                ← interações do painel
 ├── dados/
-│   └── banco.txt         # Banco de dados simples em texto
-├── .vscode/launch.json    # Iniciar com F5 no VS Code
+│   └── banco.exemplo.txt     ← banco vazio inicial
 ├── package.json
+├── .vscode/launch.json       ← executar com F5
 └── LEIA-ME.md
 ```
 
-## Funcionalidades
+O servidor cria `dados/banco.txt` automaticamente na primeira execução. O banco é JSON em arquivo texto, **sem MySQL e sem dependências**. O TXT é privado e é ignorado pelo Git. As senhas são hashes `scrypt`, não ficam visíveis no banco.
 
-- Tela de primeiro acesso, sem login padrão.
-- Login exclusivamente de usuários cadastrados; senha incorreta não permite acesso.
-- Senhas armazenadas com hash e sal (não ficam visíveis no arquivo TXT).
-- Dashboard com números calculados pelos registros reais.
-- Cadastro, listagem, pesquisa e exclusão de alunos, professores, turmas e avisos.
-- Frequência por aluno e data, com cálculo da porcentagem de presenças.
-- Cadastro de novos acessos feito pelo administrador.
-- Layout responsivo para computadores e celulares.
+## Diferença entre GitHub Pages e servidor
+**GitHub Pages NÃO executa backend Node.js, PHP nem grava TXT.** Por isso, o GitHub Pages só pode apresentar páginas estáticas ou uma demonstração simulada. **A autenticação real deste ZIP funciona executando o servidor Node.js** ou hospedando esse servidor em um ambiente com suporte a Node.js. Não publique o TXT com senhas/dados reais no GitHub.
 
-## Como funciona o TXT
+Esta versão é para atividade de faculdade: **não use dados reais de menores**, nem considere esse TXT e esse sistema prontos para produção em redes municipais.
 
-O arquivo `dados/banco.txt` contém JSON em formato texto. O servidor cria esse arquivo automaticamente a partir de `dados/banco.exemplo.txt` se ele não existir. O arquivo real não deve ser publicado no GitHub. O servidor Node.js faz a leitura e gravação automaticamente.
-
-**Atenção:** mantenha `banco.txt` privado, não envie dados pessoais de alunos reais para este projeto acadêmico. Se quiser começar novamente, **pare o servidor e restaure o conteúdo inicial vazio do arquivo TXT**, guardando antes qualquer dado que queira preservar.
-
-## Limitações
-
-É um protótipo local de faculdade, **não um SaaS de produção**. Ele não inclui integração com prefeitura, hospedagem pública, LGPD completa, backups automáticos, multi-escolas, recuperação de senha ou escalabilidade. Para implantação real, use um banco de dados de verdade e revise a segurança.
-
-
-## Referências visuais
-Inspirado na apresentação do projeto B.A.S.E. e na referência de landing page `Jorgenador/B.A.S.E-Landing-page`. O código foi escrito de forma independente para a atividade.
-
-**Importante:** GitHub Pages é hospedagem estática. Para usar login e TXT, execute `node servidor.js` no computador com Node.js. Não publique dados reais de alunos neste projeto acadêmico.
+## Imagens
+- `preview_login_simples.png`: tela de matrícula e senha após configurar o administrador.
+- `preview_dashboard.png`: dashboard inicial com banco vazio (sem dados fictícios).
+- `preview_dashboard_ilustrativo.png`: **prévia visual com números fictícios gerados apenas para a imagem**, não gravados no projeto.
+- `preview_mobile.png`: visual do primeiro acesso no celular.

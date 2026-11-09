@@ -1,72 +1,63 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f8fc">
+  <meta name="theme-color" content="#2059ce">
   <title>B.A.S.E. | Gestão Escolar</title>
   <link rel="stylesheet" href="/style.css">
-  <script defer src="/app.js"></script>
+  <script src="/app.js" defer></script>
 </head>
 <body>
-  <main id="entrada" class="entrada" hidden>
-    <section class="entrada-marca">
-      <div class="marca-grande">◈ B<span>.</span>A<span>.</span>S<span>.</span>E<span>.</span></div>
-      <h1>Educação mais organizada,<br>em um só lugar.</h1>
-      <p>Controle alunos, turmas, professores, frequência e comunicados em um painel simples.</p>
-      <span class="marca-selo">Projeto acadêmico • funcionamento local</span>
-    </section>
-    <section class="entrada-formulario">
-      <div class="mobile-brand">B.A.S.E.</div>
-      <div class="entrada-card">
-        <div class="entrada-icone">◈</div>
-        <p class="legenda" id="entrada-legenda">ÁREA RESTRITA</p>
-        <h2 id="entrada-titulo">Acessar o sistema</h2>
-        <p id="entrada-texto">Entre com sua matrícula e senha cadastradas.</p>
-        <form id="form-acesso">
-          <div id="campos-configuracao" hidden>
-            <label>Nome da escola<input name="escola" placeholder="Nome da instituição"></label>
-            <label>Nome do administrador<input name="nome" placeholder="Seu nome completo"></label>
+  <main id="acesso" class="pagina-acesso" hidden>
+    <header class="acesso-topo"><div class="marca marca-login"><span class="marca-icone">✺</span><b>B.A.S.E.</b></div></header>
+    <div class="acesso-miolo">
+      <section class="acesso-faixa">
+        <form id="form-acesso" class="acesso-form" autocomplete="on">
+          <span class="sobretitulo" id="acesso-tipo">ÁREA RESTRITA</span>
+          <h1 id="acesso-titulo">Acesso ao sistema</h1>
+          <p id="acesso-desc">Entre com sua matrícula e senha cadastradas.</p>
+          <div id="campos-iniciais" hidden>
+            <label>Nome da escola<input name="escola" placeholder="Nome da escola" maxlength="120"></label>
+            <label>Administrador<input name="nome" placeholder="Nome completo" maxlength="150"></label>
           </div>
-          <label>Matrícula<input name="matricula" type="text" autocomplete="username" minlength="3" maxlength="24" required placeholder="Digite sua matrícula"></label>
-          <label>Senha<input id="senha-acesso" name="senha" type="password" required placeholder="Digite sua senha"></label>
-          <label class="ver-senha"><input type="checkbox" id="mostrar-senha"> Mostrar senha</label>
-          <p id="erro-entrada" class="erro" role="alert"></p>
-          <button class="botao primario largura-total" type="submit" id="btn-acesso">Entrar no sistema</button>
+          <label>Matrícula<input name="matricula" placeholder="Digite sua matrícula" minlength="3" maxlength="24" autocomplete="username" required></label>
+          <label>Senha<input name="senha" id="senha" type="password" placeholder="Digite sua senha" autocomplete="current-password" required></label>
+          <label class="mostrar-senha"><input id="mostrar-senha" type="checkbox"> Mostrar senha</label>
+          <p id="acesso-erro" class="mensagem-erro" role="alert" aria-live="polite"></p>
+          <button type="submit" id="acesso-enviar" class="botao primaria largura">Entrar</button>
+          <small class="login-nota">Somente matrículas cadastradas e senhas corretas permitem acessar.</small>
         </form>
-        <div class="aviso-seguranca">Somente contas cadastradas podem entrar. Não há senha padrão.</div>
-      </div>
-    </section>
+      </section>
+    </div>
+    <footer class="acesso-rodape">B.A.S.E. <span>Base de Acompanhamento do Sistema Escolar</span><small>Projeto acadêmico • Banco TXT local</small></footer>
   </main>
 
-  <div id="sistema" class="sistema" hidden>
-    <div class="tampa" id="tampa"></div>
-    <aside class="barra-lateral" id="barra-lateral">
-      <div class="logo-bloco"><div class="logo-simbolo">◈</div><div><strong>B.A.S.E.</strong><small>Gestão Educacional</small></div></div>
-      <div class="menu-descricao">MENU PRINCIPAL</div>
-      <nav id="navegacao" class="navegacao" aria-label="Menu principal"></nav>
-      <div class="lateral-rodape">
-        <div class="ajuda"><strong>Precisa de ajuda?</strong><span>Projeto acadêmico local</span></div>
-        <div class="usuario"><div class="avatar" id="avatar">A</div><div class="usuario-dados"><b id="nome-usuario">Administrador</b><small id="perfil-usuario">Administrador</small></div><button id="btn-sair" class="btn-icon" title="Sair da conta" aria-label="Sair da conta">⇥</button></div>
-      </div>
+  <div class="aplicacao" id="aplicacao" hidden>
+    <div class="sombra-menu" id="sombra-menu"></div>
+    <aside class="menu-lateral" id="menu-lateral">
+      <div class="marca marca-menu"><span class="marca-icone">✺</span><div><b>B.A.S.E.</b><small>Gestão Escolar</small></div></div>
+      <nav id="menu" class="itens-menu" aria-label="Menu principal"></nav>
+      <div class="menu-rodape"><div class="apoio"><b>Precisa de ajuda?</b><p>Projeto acadêmico local</p></div><div class="usuario-card"><span class="avatar" id="avatar">A</span><span><strong id="usuario-nome">Administrador</strong><small id="usuario-perfil">Administrador</small></span><button type="button" class="icone-botao" id="sair" title="Sair da conta" aria-label="Sair">⇥</button></div></div>
     </aside>
-    <div class="area-principal">
-      <header class="barra-superior">
-        <div class="topo-esquerda"><button class="menu-mobile btn-icon" id="btn-menu" aria-label="Abrir menu">☰</button><span class="trilha">Início <span>/</span> <b id="trilha-atual">Dashboard</b></span></div>
-        <div class="topo-direita"><div class="escola-topo">▣ <span id="nome-escola">Escola</span></div><span class="topo-avatar" id="avatar-topo">A</span></div>
+    <div class="corpo-app">
+      <header class="topbar">
+        <div class="topbar-titulo"><button class="icone-botao menu-mobile" id="abrir-menu" type="button" aria-label="Abrir menu">☰</button><div><strong id="topo-titulo">Dashboard</strong><small id="topo-legenda">Visão geral da sua escola</small></div></div>
+        <div class="topbar-direita"><span class="notificacoes" title="Comunicados">♧</span><span class="nome-escola" id="escola-nome">Escola</span><span class="avatar pequeno" id="avatar-topo">A</span></div>
       </header>
-      <div class="conteudo" id="conteudo"></div>
-      <footer class="rodape">© B.A.S.E. — Base de Acompanhamento do Sistema Escolar <span>Projeto da faculdade • dados locais em TXT</span></footer>
+      <div id="conteudo" class="conteudo" aria-live="polite"></div>
+      <footer class="rodape-app">© 2026 B.A.S.E. — Base de Acompanhamento do Sistema Escolar. Projeto acadêmico.</footer>
     </div>
   </div>
-  <dialog id="janela" class="janela">
-    <form id="form-registro" class="janela-card">
-      <div class="janela-topo"><div><p class="legenda">NOVO REGISTRO</p><h2 id="janela-titulo">Cadastrar</h2></div><button type="button" id="fechar-janela" class="btn-icon" aria-label="Fechar">✕</button></div>
-      <div id="janela-campos"></div>
-      <p class="erro" id="janela-erro" role="alert"></p>
-      <div class="janela-acoes"><button type="button" class="botao secundario" id="cancelar">Cancelar</button><button class="botao primario" type="submit">Salvar cadastro</button></div>
+
+  <dialog id="modal" class="modal">
+    <form id="form-cadastro" class="modal-conteudo">
+      <header class="modal-cabecalho"><div><span class="sobretitulo">CADASTRO</span><h2 id="modal-titulo">Novo registro</h2></div><button id="fechar-modal" type="button" class="icone-botao" aria-label="Fechar">✕</button></header>
+      <div id="modal-campos" class="modal-campos"></div>
+      <p id="modal-erro" class="mensagem-erro" role="alert"></p>
+      <div class="modal-acoes"><button id="cancelar-modal" type="button" class="botao neutra">Cancelar</button><button type="submit" class="botao primaria">Salvar</button></div>
     </form>
   </dialog>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="toast" id="toast" role="status"></div>
 </body>
 </html>

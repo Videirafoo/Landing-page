@@ -1,166 +1,187 @@
-// Frontend simples do B.A.S.E. - utiliza a API do servidor.js.
-const $ = (seletor) => document.querySelector(seletor);
-const escapar = (valor) => String(valor ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const nomes = {dashboard:'Dashboard', alunos:'Alunos', professores:'Professores', turmas:'Turmas', frequencias:'Frequência', avisos:'Comunicados', usuarios:'Usuários'};
-const icones = {dashboard:'▦', alunos:'♙', professores:'♧', turmas:'▤', frequencias:'✓', avisos:'✉', usuarios:'♙'};
-const definicoes = {
-  alunos: {titulo:'Alunos', subtitulo:'Cadastre e consulte os alunos da escola.', colunas:[['nome','Nome do aluno'],['matricula','Matrícula'],['turma','Turma']], campos:[['nome','Nome do aluno'],['matricula','Matrícula'],['turma','Turma']]},
-  professores: {titulo:'Professores', subtitulo:'Organize os docentes e suas disciplinas.', colunas:[['nome','Professor'],['disciplina','Disciplina'],['email','E-mail']], campos:[['nome','Nome do professor'],['disciplina','Disciplina'],['email','E-mail']]},
-  turmas: {titulo:'Turmas', subtitulo:'Organize as turmas e seus turnos.', colunas:[['nome','Nome da turma'],['ano','Ano escolar'],['turno','Turno']], campos:[['nome','Nome da turma'],['ano','Ano escolar'],['turno','Turno']]},
-  frequencias: {titulo:'Frequência', subtitulo:'Registre presença ou falta dos alunos por dia.', colunas:[['alunoId','Aluno'],['data','Data'],['presente','Situação']], campos:[['alunoId','Aluno'],['data','Data'],['presente','Presença']]},
-  avisos: {titulo:'Comunicados', subtitulo:'Registre avisos e recados da instituição.', colunas:[['titulo','Título'],['mensagem','Mensagem'],['criadoEm','Criado em']], campos:[['titulo','Título'],['mensagem','Mensagem']]},
-  usuarios: {titulo:'Usuários', subtitulo:'Somente o administrador cadastra novas pessoas com senha.', colunas:[['nome','Nome'],['matricula','Matrícula'],['perfil','Perfil']], campos:[['nome','Nome completo'],['matricula','Matrícula'],['senha','Senha de acesso']]}
+// B.A.S.E. — interface do protótipo acadêmico, sem dependências externas.
+// A autenticação REAL é feita no servidor.js com o arquivo dados/banco.txt.
+const $ = (q) => document.querySelector(q);
+const $$ = (q) => [...document.querySelectorAll(q)];
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hoje = () => new Date().toLocaleDateString('en-CA');
+const dataBR = v => v ? new Date(v.length === 10 ? v+'T12:00:00' : v).toLocaleDateString('pt-BR') : '—';
+const N = {
+  dashboard:'Dashboard', alunos:'Alunos', matriculas:'Matrículas', turmas:'Turmas', professores:'Professores',
+  frequencias:'Frequência', avaliacoes:'Avaliações', conteudos:'Conteúdos', avisos:'Comunicados',
+  relatorios:'Relatórios', indicadores:'Indicadores', configuracoes:'Configurações', usuarios:'Usuários'
 };
-let estado = {usuario:null, escola:'', secao:'dashboard', alunos:[]};
-let tempoToast;
+const I = {
+  dashboard:'▦',alunos:'♙',matriculas:'▤',turmas:'▥',professores:'♧',frequencias:'✓',avaliacoes:'◎',
+  conteudos:'▧',avisos:'♬',relatorios:'▤',indicadores:'▥',configuracoes:'⚙',usuarios:'♙'
+};
+const D = {
+  alunos: {titulo:'Alunos',desc:'Gerencie os alunos da escola.', cols:[['nome','Aluno'],['matricula','Matrícula'],['turma','Turma']],campos:[['nome','Nome do aluno'],['matricula','Matrícula do aluno'],['turma','Turma / série']]},
+  matriculas:{titulo:'Matrículas',desc:'Vincule alunos a turmas.',cols:[['alunoId','Aluno'],['turmaId','Turma'],['data','Data da matrícula']],campos:[['alunoId','Aluno'],['turmaId','Turma'],['data','Data']]},
+  turmas:{titulo:'Turmas',desc:'Organize suas turmas e turnos.',cols:[['nome','Turma'],['ano','Ano / série'],['turno','Turno']],campos:[['nome','Nome da turma'],['ano','Ano / série'],['turno','Turno']]},
+  professores:{titulo:'Professores',desc:'Cadastre os professores e suas disciplinas.',cols:[['nome','Professor'],['disciplina','Disciplina'],['email','E-mail']],campos:[['nome','Nome'],['disciplina','Disciplina'],['email','E-mail']]},
+  frequencias:{titulo:'Frequência',desc:'Registre presenças e faltas por data.',cols:[['alunoId','Aluno'],['data','Data'],['presente','Situação']],campos:[['alunoId','Aluno'],['data','Data'],['presente','Situação']]},
+  avaliacoes:{titulo:'Avaliações',desc:'Registre notas de 0 a 10 por disciplina.',cols:[['alunoId','Aluno'],['disciplina','Disciplina'],['nota','Nota'],['data','Data']],campos:[['alunoId','Aluno'],['disciplina','Disciplina'],['nota','Nota'],['data','Data']]},
+  conteudos:{titulo:'Conteúdos',desc:'Registre os conteúdos abordados em aula.',cols:[['titulo','Conteúdo'],['disciplina','Disciplina'],['data','Data']],campos:[['titulo','Título'],['disciplina','Disciplina'],['descricao','Descrição'],['data','Data']]},
+  avisos:{titulo:'Comunicados',desc:'Publique avisos para a escola.',cols:[['titulo','Título'],['mensagem','Mensagem'],['criadoEm','Publicado']],campos:[['titulo','Título'],['mensagem','Mensagem']]},
+  usuarios:{titulo:'Usuários',desc:'Apenas o administrador cadastra acessos.',cols:[['nome','Nome'],['matricula','Matrícula'],['perfil','Perfil']],campos:[['nome','Nome completo'],['matricula','Matrícula de acesso'],['senha','Senha (mínimo 8 caracteres)']]}
+};
+const cores=['#2b7bea','#34bf76','#f5a424','#9254de','#11baba','#e75197'];
+let estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};
+let timeout;
 
-async function requisitar(url, opcoes = {}) {
-  const resposta = await fetch(url, {...opcoes, headers:{'Content-Type':'application/json', ...(opcoes.headers || {})}});
-  let dados;
-  try {dados = await resposta.json();} catch {throw new Error('Servidor não respondeu corretamente.');}
-  if (!resposta.ok) throw new Error(dados.erro || 'Não foi possível concluir.');
-  return dados;
+async function api(url,op={}){
+  const r=await fetch(url,{...op,headers:{'Content-Type':'application/json',...(op.headers||{})},credentials:'same-origin'});
+  let d;try{d=await r.json();}catch{throw Error('Resposta inválida do servidor.');}
+  if(!r.ok)throw Error(d.erro||'Erro ao executar operação.');
+  return d;
 }
-function aviso(mensagem) {
-  const el = $('#toast'); el.textContent = mensagem; el.classList.add('ativo');
-  clearTimeout(tempoToast); tempoToast = setTimeout(() => el.classList.remove('ativo'), 3000);
+function alerta(msg){const el=$('#toast');el.textContent=msg;el.classList.add('mostrar');clearTimeout(timeout);timeout=setTimeout(()=>el.classList.remove('mostrar'),3500);}
+function entrarTela(configurar){
+  $('#aplicacao').hidden=true;$('#acesso').hidden=false;
+  $('#campos-iniciais').hidden=!configurar;
+  $('#form-acesso').dataset.modo=configurar?'configurar':'login';
+  $('#acesso-titulo').textContent=configurar?'Primeiro acesso':'Acesso ao sistema';
+  $('#acesso-tipo').textContent=configurar?'CONFIGURAÇÃO INICIAL':'ÁREA RESTRITA';
+  $('#acesso-desc').textContent=configurar?'Cadastre a escola e o primeiro administrador.':'Entre com a matrícula e a senha cadastradas.';
+  $('#acesso-enviar').textContent=configurar?'Criar administrador':'Entrar';
+  $('#senha').minLength=configurar?8:1;
+  $('#acesso-erro').textContent='';
 }
-function dataBR(data) {return data ? new Date(data.length === 10 ? data+'T12:00:00' : data).toLocaleDateString('pt-BR') : '—';}
-function mostrarEntrada(configurar) {
-  $('#entrada').hidden = false; $('#sistema').hidden = true;
-  $('#campos-configuracao').hidden = !configurar;
-  $('#entrada-titulo').textContent = configurar ? 'Primeiro acesso' : 'Acessar o sistema';
-  $('#entrada-legenda').textContent = configurar ? 'CONFIGURAÇÃO INICIAL' : 'ÁREA RESTRITA';
-  $('#entrada-texto').textContent = configurar ? 'Crie a escola e a conta administradora. Depois, só usuários cadastrados poderão entrar.' : 'Entre com sua matrícula e senha cadastradas.';
-  $('#btn-acesso').textContent = configurar ? 'Criar acesso administrador' : 'Entrar no sistema';
-  $('#senha-acesso').minLength = configurar ? 8 : 1;
-  $('#form-acesso').dataset.modo = configurar ? 'configurar' : 'login';
+function entrarApp(d){
+  estado.usuario=d.usuario;estado.escola=d.escola;
+  $('#acesso').hidden=true;$('#aplicacao').hidden=false;
+  $('#escola-nome').textContent=d.escola;
+  $('#usuario-nome').textContent=d.usuario.nome;
+  $('#usuario-perfil').textContent=d.usuario.perfil;
+  $('#avatar').textContent=d.usuario.nome.charAt(0).toUpperCase();
+  $('#avatar-topo').textContent=d.usuario.nome.charAt(0).toUpperCase();
+  montarMenu(); navegar('dashboard');
 }
-function abrirSistema(dados) {
-  estado.usuario = dados.usuario; estado.escola = dados.escola;
-  $('#entrada').hidden = true; $('#sistema').hidden = false;
-  $('#nome-escola').textContent = dados.escola;
-  $('#nome-usuario').textContent = dados.usuario.nome;
-  $('#perfil-usuario').textContent = dados.usuario.perfil;
-  $('#avatar').textContent = dados.usuario.nome.slice(0,1).toUpperCase();
-  $('#avatar-topo').textContent = dados.usuario.nome.slice(0,1).toUpperCase();
-  construirMenu(); navegar('dashboard');
+function montarMenu(){
+  $('#menu').innerHTML=Object.keys(N).filter(k=>k!=='usuarios'||estado.usuario.perfil==='Administrador').map(k=>
+    `<button class="item-menu" type="button" data-pagina="${k}"><span aria-hidden="true" class="item-icone">${I[k]}</span><span>${N[k]}</span></button>`).join('');
+  $$('#menu [data-pagina]').forEach(b=>b.onclick=()=>navegar(b.dataset.pagina));
 }
-function construirMenu() {
-  $('#navegacao').innerHTML = Object.keys(nomes).filter(secao => secao !== 'usuarios' || estado.usuario.perfil === 'Administrador').map(secao => `<button type="button" data-secao="${secao}" class="nav-item"><span class="nav-icone">${icones[secao]}</span>${nomes[secao]}</button>`).join('');
-  $('#navegacao').querySelectorAll('button').forEach(b => b.addEventListener('click', () => navegar(b.dataset.secao)));
+function fecharMenu(){$('#menu-lateral').classList.remove('aberto');$('#sombra-menu').classList.remove('aberto');}
+async function navegar(p){
+  fecharMenu();estado.pagina=p;
+  $('#topo-titulo').textContent=N[p];$('#topo-legenda').textContent=p==='dashboard'?'Visão geral da sua escola':'Base de Acompanhamento do Sistema Escolar';
+  $$('#menu .item-menu').forEach(b=>b.classList.toggle('ativo',b.dataset.pagina===p));
+  $('#conteudo').innerHTML='<div class="centro-vazio">Carregando...</div>';
+  try{
+    if(p==='dashboard')await dashboard();
+    else if(D[p])await listagem(p);
+    else if(p==='relatorios')await relatorios();
+    else if(p==='indicadores')await indicadores();
+    else if(p==='configuracoes')configuracoes();
+  }catch(e){$('#conteudo').innerHTML=`<section class="cartao centro-vazio">${esc(e.message)}</section>`;}
 }
-function cabecalho(titulo, descricao, acao='') {
-  return `<section class="pagina-cabecalho"><div><h1>${escapar(titulo)}</h1><p>${escapar(descricao)}</p></div><div class="paginas-acoes">${acao}</div></section>`;
+function topo(t,desc,acoes=''){
+  return `<div class="pagina-topo"><div><h1>${esc(t)}</h1><p>${esc(desc)}</p></div><div class="pagina-acoes">${acoes}</div></div>`;
 }
-function metrica(numero, titulo, icone, classe, secao) {
-  return `<div class="cartao metrica"><div class="metrica-topo"><div class="metrica-icone ${classe}">${icone}</div><button class="btn-icon" data-atalho="${secao}" aria-label="Abrir ${titulo}">↗</button></div><div><div class="metrica-valor">${numero}</div><div class="metrica-label">${titulo}</div></div></div>`;
+function kpi(numero,texto,icone,cor,link){return `<button class="kpi cartao" type="button" data-ir="${link}"><div class="kpi-icone" style="--cor:${cor}">${icone}</div><div><small>${esc(texto)}</small><strong>${esc(numero)}</strong><em>Ver registros ↗</em></div></button>`;}
+function painel(titulo,acoes,conteudo){return `<section class="cartao painel"><header class="painel-topo"><h2>${titulo}</h2>${acoes||''}</header>${conteudo}</section>`;}
+function vazio(texto){return `<div class="vazio">${esc(texto)}</div>`;}
+function meses6(){return Array.from({length:6},(_,i)=>{const d=new Date(new Date().getFullYear(),new Date().getMonth()-5+i,1);return {id:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,nome:d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}});}
+function graficoLinha(frequencias){
+  if(!frequencias.length)return vazio('Registre presenças e faltas para visualizar o gráfico.');
+  const meses=meses6();let total=0;
+  const serie=meses.map(m=>{const itens=frequencias.filter(f=>f.data.startsWith(m.id));total+=itens.length;return {nome:m.nome,presencas:itens.length?itens.filter(f=>f.presente).length/itens.length*100:null,faltas:itens.length?itens.filter(f=>!f.presente).length/itens.length*100:null};});
+  if(!total)return vazio('Sem registros de frequência nos últimos seis meses.');
+  function trajetoria(chave){return serie.map((m,i)=>m[chave]===null?null:[28+i*104,160-m[chave]*1.25]).reduce((a,pt)=>{if(pt===null){a.abrir=true;return a;}a.d+=`${a.abrir?'M':'L'}${pt[0]} ${pt[1]} `;a.abrir=false;return a;},{d:'',abrir:true}).d;}
+  const pontos=serie.flatMap((m,i)=>[['presencas','#39bd80'],['faltas','#ec7181']].filter(([ch])=>m[ch]!==null).map(([ch,cor])=>`<circle cx="${28+i*104}" cy="${160-m[ch]*1.25}" r="4" fill="${cor}" stroke="white" stroke-width="2"/>`)).join('');
+  return `<div class="legenda"><span><i style="background:#39bd80"></i>Presenças</span><span><i style="background:#ec7181"></i>Faltas</span></div><div class="svg-grafico"><svg viewBox="0 0 580 205" role="img" aria-label="Percentuais mensais de presença e faltas"><g stroke="#e9eef4" stroke-width="1">${[35,66,97,128,160].map(y=>`<line x1="28" y1="${y}" x2="558" y2="${y}"/>`).join('')}</g><path d="${trajetoria('presencas')}" fill="none" stroke="#39bd80" stroke-width="3" stroke-linecap="round"/><path d="${trajetoria('faltas')}" fill="none" stroke="#ec7181" stroke-width="3" stroke-linecap="round"/>${pontos}${serie.map((m,i)=>`<text x="${28+i*104}" y="192" text-anchor="middle" font-size="12" fill="#8493a7">${esc(m.nome)}</text>`).join('')}</svg></div>`;
 }
-async function navegar(secao) {
-  estado.secao = secao;
-  $('#barra-lateral').classList.remove('aberta'); $('#tampa').classList.remove('aberta');
-  $('#trilha-atual').textContent = nomes[secao];
-  $$('.nav-item');
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('ativo', b.dataset.secao === secao));
-  $('#conteudo').innerHTML = '<div class="pagina-vazia">Carregando...</div>';
-  try {
-    if (secao === 'dashboard') await dashboard();
-    else await tabela(secao);
-  } catch (e) { $('#conteudo').innerHTML = `<div class="cartao pagina-vazia">${escapar(e.message)}</div>`; }
+function graficoBarras(avaliacoes){
+  if(!avaliacoes.length)return vazio('Cadastre avaliações e notas para visualizar as disciplinas.');
+  const grupos={};for(const a of avaliacoes){(grupos[a.disciplina] ||= []).push(Number(a.nota));}
+  const medias=Object.entries(grupos).slice(0,6).map(([nome,notas])=>({nome,media:notas.reduce((a,b)=>a+b,0)/notas.length}));
+  return `<div class="barras">${medias.map((v,i)=>`<div class="barra-item" title="${esc(v.nome)}: ${v.media.toFixed(1)}/10"><div class="barra-trilho"><div class="barra-cor" style="height:${v.media*10}%;background:${cores[i]}"></div></div><strong>${esc(v.nome)}</strong><small>${v.media.toFixed(1)}</small></div>`).join('')}</div>`;
 }
-function $$(seletor){ return document.querySelectorAll(seletor); }
-async function dashboard() {
-  const [dados, frequencias] = await Promise.all([requisitar('/api/resumo'), requisitar('/api/frequencias')]);
-  const esteAno = new Date().getFullYear();
-  const meses = Array.from({length:6}, (_,i) => {
-    const d = new Date(esteAno, new Date().getMonth()-5+i,1);
-    const chave = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    const itens = frequencias.filter(f => f.data.startsWith(chave));
-    return {nome:d.toLocaleDateString('pt-BR',{month:'short'}).replace('.',''), total:itens.length, porcentagem:itens.length ? Math.round(itens.filter(f=>f.presente).length/itens.length*100) : 0};
-  });
-  const grafico = frequencias.length ? `<div class="grafico">${meses.map(m => `<div class="barra-grafico" title="${escapar(m.nome)}: ${m.total ? m.porcentagem+'%' : 'sem registros'}" style="height:${m.total ? m.porcentagem : 0}%"></div>`).join('')}</div><div class="legenda-grafico">${meses.map(m=>`<span>${escapar(m.nome)}</span>`).join('')}</div>` : `<div class="nenhum">Sem frequência cadastrada.<br>Registre presenças para gerar o gráfico.</div>`;
-  const avisos = dados.avisos.length ? dados.avisos.map(item => `<div class="aviso-item"><span class="item-icone">✉</span><div><strong>${escapar(item.titulo)}</strong><p>${escapar(item.mensagem)}</p><time>${dataBR(item.criadoEm)}</time></div></div>`).join('') : '<div class="nenhum">Nenhum comunicado cadastrado.</div>';
-  const atividades = dados.atividades.length ? dados.atividades.map(item=> `<div class="atividade-item"><span class="item-icone">✓</span><div><strong>${escapar(item.titulo)}</strong><p>${escapar(nomes[item.tipo] || item.tipo)}</p><time>${dataBR(item.criadoEm)}</time></div></div>`).join('') : '<div class="nenhum">Seus cadastros recentes aparecerão aqui.</div>';
-  $('#conteudo').innerHTML = cabecalho('Visão geral da escola', 'Acompanhe os principais indicadores da instituição.', '<button class="botao primario" data-atalho="alunos">+ Novo aluno</button>') + `
-    <div class="metricas">${metrica(dados.alunos,'Alunos matriculados','♙','azul','alunos')}${metrica(dados.turmas,'Turmas','▤','verde','turmas')}${metrica(dados.professores,'Professores','♧','laranja','professores')}${metrica(dados.frequencia === null ? '—' : dados.frequencia+'%','Frequência média','✓','roxo','frequencias')}</div>
-    <div class="grade-principal"><section class="cartao painel"><div class="painel-topo"><h2>Frequência dos alunos</h2><button class="link" data-atalho="frequencias">Ver registros</button></div>${grafico}</section><section class="cartao painel"><div class="painel-topo"><h2>Avisos e comunicados</h2><button class="link" data-atalho="avisos">Ver todos</button></div><div class="lista-avisos">${avisos}</div></section><section class="cartao painel"><div class="painel-topo"><h2>Atividades recentes</h2></div><div class="atividades">${atividades}</div></section><section class="cartao painel"><div class="painel-topo"><h2>Comece por aqui</h2></div><p style="color:#7d90a7;font-size:13px;line-height:1.8">1. Cadastre uma turma.<br>2. Cadastre os alunos e professores.<br>3. Registre a frequência.<br>4. Publique comunicados.<br><br>Registros salvos ${window.BASE_DEMO ? 'somente neste navegador (demonstração).' : 'no arquivo <b>dados/banco.txt</b>.'}</p></section></div>`;
-  document.querySelectorAll('[data-atalho]').forEach(el => el.addEventListener('click', () => navegar(el.dataset.atalho)));
+async function dashboard(){
+  const [resumo,freq,aval]=await Promise.all([api('/api/resumo'),api('/api/frequencias'),api('/api/avaliacoes')]);
+  const avisos=resumo.avisos.length?resumo.avisos.map(a=>`<div class="linha-atividade"><span class="bloco-icon azul">♬</span><div><b>${esc(a.titulo)}</b><p>${esc(a.mensagem)}</p></div><small>${dataBR(a.criadoEm)}</small></div>`).join(''):vazio('Nenhum comunicado cadastrado.');
+  const atividades=resumo.atividades.length?resumo.atividades.map(a=>`<div class="linha-atividade"><span class="bloco-icon verde">✓</span><div><b>${esc(a.titulo)}</b><p>${esc(N[a.tipo]||a.tipo)}</p></div><small>${dataBR(a.criadoEm)}</small></div>`).join(''):vazio('Os registros recentes aparecerão aqui.');
+  $('#conteudo').innerHTML=`<div class="metricas">
+    ${kpi(resumo.alunos,'Alunos matriculados','♙','#2775db','alunos')}
+    ${kpi(resumo.turmas,'Turmas','▥','#2fbe6b','turmas')}
+    ${kpi(resumo.professores,'Professores','♙','#eda019','professores')}
+    ${kpi(resumo.frequencia===null?'—':resumo.frequencia+'%','Frequência média','✓','#954de3','frequencias')}
+  </div><div class="grade-paineis">
+    ${painel('Frequência dos Alunos','<button class="link-texto" data-ir="frequencias">Últimos 6 meses ↗</button>',graficoLinha(freq))}
+    ${painel('Avisos e Comunicados','<button class="link-texto" data-ir="avisos">Ver todos</button>',`<div class="lista-interior">${avisos}</div>`)}
+    ${painel('Desempenho por Disciplina','<button class="link-texto" data-ir="avaliacoes">Ver notas</button>',graficoBarras(aval))}
+    ${painel('Atividades Recentes','<button class="link-texto" data-ir="relatorios">Ver todas</button>',`<div class="lista-interior">${atividades}</div>`)}
+  </div>`;
+  $$('#conteudo [data-ir]').forEach(b=>b.onclick=()=>navegar(b.dataset.ir));
 }
-function mostrarValor(chave, valor) {
-  if (chave === 'presente') return valor ? '<span class="tag">Presente</span>' : '<span class="tag nao">Falta</span>';
-  if (chave === 'criadoEm' || chave === 'data') return escapar(dataBR(valor));
-  if (chave === 'alunoId') return escapar(estado.alunos.find(a => a.id === valor)?.nome || 'Aluno excluído');
-  return escapar(valor);
+function nomeRelacao(c,v){
+  if(c==='alunoId')return estado.alunos.find(a=>a.id===v)?.nome||'Aluno removido';
+  if(c==='turmaId')return estado.turmas.find(t=>t.id===v)?.nome||'Turma removida';
+  if(c==='presente')return v?'<span class="status presente">Presente</span>':'<span class="status falta">Falta</span>';
+  if(c==='data'||c==='criadoEm')return esc(dataBR(v));
+  if(c==='nota')return esc(Number(v).toFixed(1));
+  return esc(v);
 }
-async function tabela(secao) {
-  const def = definicoes[secao];
-  if (!def) return;
-  const [registros, alunos] = await Promise.all([requisitar('/api/'+secao), secao === 'frequencias' ? requisitar('/api/alunos') : Promise.resolve([])]);
-  if (secao === 'frequencias') estado.alunos = alunos;
-  const podeExcluir = secao !== 'usuarios';
-  const botoes = `<button class="botao primario" id="adicionar">+ Cadastrar ${secao === 'usuarios' ? 'usuário' : secao === 'frequencias' ? 'frequência' : 'registro'}</button>`;
-  $('#conteudo').innerHTML = cabecalho(def.titulo,def.subtitulo,botoes) + `<div class="cartao tabela-painel"><div class="barra-tabela"><span>${registros.length} registro(s)</span><input id="busca" class="pesquisa" type="search" placeholder="Buscar nesta lista..." aria-label="Buscar"></div><div class="tabela-container"><table class="tabela"><thead><tr>${def.colunas.map(c=>`<th>${escapar(c[1])}</th>`).join('')}${podeExcluir ? '<th>Ações</th>' : ''}</tr></thead><tbody id="linhas"></tbody></table></div></div>`;
-  function renderLinhas(filtro='') {
-    const filtrados = registros.filter(r => Object.values(r).some(v=>String(v).toLowerCase().includes(filtro.toLowerCase())) || (secao === 'frequencias' && estado.alunos.some(a => a.id === r.alunoId && a.nome.toLowerCase().includes(filtro.toLowerCase()))));
-    $('#linhas').innerHTML = filtrados.length ? filtrados.map(registro => `<tr>${def.colunas.map(([campo])=>`<td class="${campo === def.colunas[0][0] ? 'primeira-coluna' : ''}">${mostrarValor(campo, registro[campo])}</td>`).join('')}${podeExcluir ? `<td><button class="btn-excluir" data-excluir="${escapar(registro.id)}">Excluir</button></td>` : ''}</tr>`).join('') : `<tr><td colspan="${def.colunas.length + (podeExcluir?1:0)}"><div class="pagina-vazia"><strong>Sem registros</strong>Cadastre um novo registro para começar.</div></td></tr>`;
-    $$('#linhas [data-excluir]').forEach(b => b.addEventListener('click', async () => {
-      if (!confirm('Deseja excluir este registro?')) return;
-      try {await requisitar('/api/'+secao+'/'+b.dataset.excluir,{method:'DELETE'}); aviso('Registro excluído.'); tabela(secao);} catch(e) {aviso(e.message);}
-    }));
+async function listagem(p){
+  const def=D[p];const [lista,alunos,turmas]=await Promise.all([api('/api/'+p),api('/api/alunos'),api('/api/turmas')]);
+  estado.alunos=alunos;estado.turmas=turmas;
+  const acoes=`<button id="novo" class="botao primaria">+ Novo cadastro</button>`;
+  $('#conteudo').innerHTML=topo(def.titulo,def.desc,acoes)+`<section class="cartao tabela-cartao"><div class="busca-linha"><span>${lista.length} registro(s)</span><input type="search" id="buscar" placeholder="Buscar registros" aria-label="Buscar registros"></div><div class="tabela-scroll"><table><thead><tr>${def.cols.map(c=>`<th>${esc(c[1])}</th>`).join('')}${p==='usuarios'?'':'<th>Ações</th>'}</tr></thead><tbody id="registros"></tbody></table></div></section>`;
+  function linhas(busca=''){
+    const reg=lista.filter(a=>(JSON.stringify(a)+' '+(estado.alunos.find(x=>x.id===a.alunoId)?.nome||'')).toLowerCase().includes(busca.toLowerCase()));
+    $('#registros').innerHTML=reg.length?reg.map(a=>`<tr>${def.cols.map(([c])=>`<td>${nomeRelacao(c,a[c])}</td>`).join('')}${p==='usuarios'?'':`<td><button class="apagar" data-id="${esc(a.id)}">Excluir</button></td>`}</tr>`).join(''):`<tr><td colspan="${def.cols.length+1}">${vazio('Nenhum registro encontrado.')}</td></tr>`;
+    $$('#registros [data-id]').forEach(b=>b.onclick=async()=>{
+      if(!confirm('Excluir este registro?'))return;
+      try{await api('/api/'+p+'/'+encodeURIComponent(b.dataset.id),{method:'DELETE'});alerta('Registro excluído.');navegar(p);}catch(e){alerta(e.message);}
+    });
   }
-  renderLinhas();
-  $('#busca').addEventListener('input', e=>renderLinhas(e.target.value));
-  $('#adicionar').addEventListener('click', ()=>abrirCadastro(secao));
+  linhas();$('#buscar').oninput=e=>linhas(e.target.value);$('#novo').onclick=()=>abrirCadastro(p);
 }
-function campoHTML(chave, rotulo) {
-  const atributos = `name="${chave}" id="campo-${chave}" required`;
-  if (chave === 'alunoId') return `<label>${rotulo}<select ${atributos}>${estado.alunos.length ? '<option value="">Selecione um aluno</option>'+estado.alunos.map(a=>`<option value="${escapar(a.id)}">${escapar(a.nome)}</option>`).join('') : '<option value="">Cadastre um aluno primeiro</option>'}</select></label>`;
-  if (chave === 'presente') return `<label>${rotulo}<select ${atributos}><option value="true">Presente</option><option value="false">Faltou</option></select></label>`;
-  if (chave === 'mensagem') return `<label>${rotulo}<textarea ${atributos} maxlength="400" placeholder="Texto do comunicado"></textarea></label>`;
-  const tipo = chave === 'data' ? 'date' : chave === 'email' ? 'email' : chave === 'senha' ? 'password' : 'text';
-  const extra = chave === 'senha' ? 'minlength="8" autocomplete="new-password" placeholder="No mínimo 8 caracteres"' : chave === 'data' ? `value="${new Date().toLocaleDateString('en-CA')}"` : '';
-  return `<label>${rotulo}<input ${atributos} type="${tipo}" ${extra} maxlength="150" placeholder="${escapar(rotulo)}"></label>`;
+function campo(chave,nome){
+  if(chave==='alunoId')return `<label>${esc(nome)}<select name="${chave}" required><option value="">Selecione um aluno</option>${estado.alunos.map(a=>`<option value="${esc(a.id)}">${esc(a.nome)}</option>`).join('')}</select></label>`;
+  if(chave==='turmaId')return `<label>${esc(nome)}<select name="${chave}" required><option value="">Selecione uma turma</option>${estado.turmas.map(t=>`<option value="${esc(t.id)}">${esc(t.nome)}</option>`).join('')}</select></label>`;
+  if(chave==='presente')return `<label>${esc(nome)}<select name="presente"><option value="true">Presente</option><option value="false">Falta</option></select></label>`;
+  if(['mensagem','descricao'].includes(chave))return `<label>${esc(nome)}<textarea name="${chave}" maxlength="400" required></textarea></label>`;
+  const tipo={data:'date',email:'email',senha:'password',nota:'number'}[chave]||'text';
+  const extra=chave==='data'?`value="${hoje()}"`:chave==='senha'?'minlength="8" autocomplete="new-password"':chave==='nota'?'min="0" max="10" step="0.1"':'';
+  return `<label>${esc(nome)}<input name="${chave}" type="${tipo}" ${extra} maxlength="150" required placeholder="${esc(nome)}"></label>`;
 }
-function abrirCadastro(secao) {
-  const def = definicoes[secao];
-  $('#janela-titulo').textContent = 'Cadastrar ' + (secao === 'usuarios' ? 'usuário' : def.titulo.toLowerCase());
-  $('#janela-campos').innerHTML = def.campos.map(c => campoHTML(...c)).join('');
-  $('#janela-erro').textContent = '';
-  $('#form-registro').dataset.secao = secao;
-  $('#janela').showModal();
+function abrirCadastro(p){
+  $('#modal-titulo').textContent='Novo registro • '+D[p].titulo;
+  $('#modal-campos').innerHTML=D[p].campos.map(([c,n])=>campo(c,n)).join('');
+  $('#modal-erro').textContent='';$('#form-cadastro').dataset.pagina=p;$('#modal').showModal();
 }
-async function inicializar() {
-  try {
-    const inicio = await requisitar('/api/inicio');
-    if (!inicio.configurado) return mostrarEntrada(true);
-    try { abrirSistema(await requisitar('/api/me')); }
-    catch { mostrarEntrada(false); }
-  } catch { mostrarEntrada(false); $('#erro-entrada').textContent = window.BASE_DEMO ? 'Erro ao iniciar a demonstração no navegador.' : 'Servidor não disponível. Execute node servidor.js no terminal.'; }
+async function relatorios(){
+  const resumo=await api('/api/resumo');
+  $('#conteudo').innerHTML=topo('Relatórios','Resumo da escola com informações do banco TXT.','<button id="imprimir" class="botao primaria">Imprimir relatório</button>')+`<div class="cartao resumo-cartao"><h2>${esc(estado.escola)}</h2><p>Data: ${dataBR(hoje())}</p><div class="resumo-linhas"><span>Alunos cadastrados <b>${resumo.alunos}</b></span><span>Turmas <b>${resumo.turmas}</b></span><span>Professores <b>${resumo.professores}</b></span><span>Frequência média <b>${resumo.frequencia===null?'Sem registros':resumo.frequencia+'%'}</b></span></div></div>`;
+  $('#imprimir').onclick=()=>window.print();
 }
-$('#form-acesso').addEventListener('submit', async event => {
-  event.preventDefault(); $('#erro-entrada').textContent = '';
-  const botao = $('#btn-acesso'); botao.disabled = true;
-  const dados = Object.fromEntries(new FormData(event.currentTarget));
-  try { abrirSistema(await requisitar('/api/'+event.currentTarget.dataset.modo,{method:'POST',body:JSON.stringify(dados)})); }
-  catch(e){ $('#erro-entrada').textContent = e.message; }
-  finally{ botao.disabled = false; }
-});
-$('#mostrar-senha').addEventListener('change', e => $('#senha-acesso').type = e.target.checked ? 'text' : 'password');
-$('#form-registro').addEventListener('submit', async e => {
-  e.preventDefault();
-  const secao = e.currentTarget.dataset.secao;
-  const dados = Object.fromEntries(new FormData(e.currentTarget));
-  if (secao === 'frequencias') dados.presente = dados.presente === 'true';
-  try {await requisitar('/api/'+secao,{method:'POST',body:JSON.stringify(dados)}); $('#janela').close(); aviso(window.BASE_DEMO ? 'Cadastro salvo neste navegador.' : 'Cadastro salvo no arquivo TXT.'); navegar(secao);}
-  catch(err){ $('#janela-erro').textContent = err.message; }
-});
-$('#fechar-janela').addEventListener('click',()=>$('#janela').close());
-$('#cancelar').addEventListener('click',()=>$('#janela').close());
-$('#btn-sair').addEventListener('click', async ()=>{
-  try {await requisitar('/api/sair',{method:'POST'});} catch{}
-  estado = {usuario:null,escola:'',secao:'dashboard',alunos:[]};
-  $('#form-acesso').reset(); mostrarEntrada(false);
-});
-$('#btn-menu').addEventListener('click',()=>{$('#barra-lateral').classList.add('aberta');$('#tampa').classList.add('aberta');});
-$('#tampa').addEventListener('click',()=>{$('#barra-lateral').classList.remove('aberta');$('#tampa').classList.remove('aberta');});
-inicializar();
+async function indicadores(){
+  const [r,avs,fr]=await Promise.all([api('/api/resumo'),api('/api/avaliacoes'),api('/api/frequencias')]);
+  const media=avs.length?(avs.reduce((s,v)=>s+Number(v.nota),0)/avs.length).toFixed(1):'—';
+  $('#conteudo').innerHTML=topo('Indicadores','Todos os dados são calculados a partir dos cadastros.')+`<div class="metricas">${kpi(r.alunos,'Alunos','♙','#2775db','alunos')}${kpi(r.turmas,'Turmas','▥','#2fbe6b','turmas')}${kpi(fr.length,'Registros de frequência','✓','#eda019','frequencias')}${kpi(media,'Média das avaliações','◎','#954de3','avaliacoes')}</div>`+painel('Notas por disciplina',null,graficoBarras(avs));
+  $$('#conteudo [data-ir]').forEach(b=>b.onclick=()=>navegar(b.dataset.ir));
+}
+function configuracoes(){
+  const admin=estado.usuario.perfil==='Administrador';
+  $('#conteudo').innerHTML=topo('Configurações','Dados básicos desta escola.')+`<div class="cartao configuracoes-cartao"><h2>Nome da instituição</h2><form id="form-escola"><label>Escola<input name="nome" value="${esc(estado.escola)}" maxlength="120" required ${admin?'':'disabled'}></label><button class="botao primaria" ${admin?'':'disabled'}>Salvar alteração</button></form><p>${admin?'Somente o administrador pode alterar o nome.':'Apenas administradores podem modificar as configurações.'}</p></div>`;
+  if(admin)$('#form-escola').onsubmit=async e=>{e.preventDefault();try{let r=await api('/api/escola',{method:'PUT',body:JSON.stringify({nome:new FormData(e.target).get('nome')})});estado.escola=r.escola;$('#escola-nome').textContent=r.escola;alerta('Escola atualizada.');}catch(err){alerta(err.message)}};
+}
+$('#form-acesso').onsubmit=async e=>{
+  e.preventDefault();$('#acesso-erro').textContent='';$('#acesso-enviar').disabled=true;
+  try{const d=Object.fromEntries(new FormData(e.target));entrarApp(await api('/api/'+e.target.dataset.modo,{method:'POST',body:JSON.stringify(d)}));}
+  catch(err){$('#acesso-erro').textContent=err.message;}finally{$('#acesso-enviar').disabled=false;}
+};
+$('#mostrar-senha').onchange=e=>$('#senha').type=e.target.checked?'text':'password';
+$('#form-cadastro').onsubmit=async e=>{
+  e.preventDefault();const p=e.target.dataset.pagina;const d=Object.fromEntries(new FormData(e.target));
+  if(p==='frequencias')d.presente=d.presente==='true';
+  try{await api('/api/'+p,{method:'POST',body:JSON.stringify(d)});$('#modal').close();alerta('Cadastro salvo no banco TXT.');navegar(p);}
+  catch(err){$('#modal-erro').textContent=err.message;}
+};
+$('#fechar-modal').onclick=()=>$('#modal').close();$('#cancelar-modal').onclick=()=>$('#modal').close();
+$('#sair').onclick=async()=>{try{await api('/api/sair',{method:'POST'});}catch{}estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};$('#form-acesso').reset();entrarTela(false);};
+$('#abrir-menu').onclick=()=>{$('#menu-lateral').classList.add('aberto');$('#sombra-menu').classList.add('aberto');};
+$('#sombra-menu').onclick=fecharMenu;
+(async function iniciar(){try{const s=await api('/api/inicio');if(!s.configurado)return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);$('#acesso-erro').textContent='Não foi possível conectar ao servidor. Execute node servidor.js.';}})();
