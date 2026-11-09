@@ -86,27 +86,27 @@ function topo(t,desc,acoes=''){
 }
 function kpi(numero,texto,icone,cor,link){return `<button class="kpi cartao" type="button" data-ir="${link}"><div class="kpi-icone" style="--cor:${cor}">${icone}</div><div><small>${esc(texto)}</small><strong>${esc(numero)}</strong><em>Ver registros ↗</em></div></button>`;}
 function painel(titulo,acoes,conteudo){return `<section class="cartao painel"><header class="painel-topo"><h2>${titulo}</h2>${acoes||''}</header>${conteudo}</section>`;}
-function vazio(texto){return `<div class="vazio">${esc(texto)}</div>`;}
+function vazio(texto,tipo=''){const imagens={frequencia:'vazio-frequencia.svg',comunicados:'vazio-comunicados.svg',desempenho:'vazio-desempenho.svg',atividades:'vazio-atividades.svg'};const arquivo=imagens[tipo];const base=emDemo?'../sistema-saas/public/assets/':'/assets/';return `<div class="vazio vazio-ilustrado">${arquivo?`<img src="${base+arquivo}" alt="" loading="lazy">`:''}<span>${esc(texto)}</span></div>`;} 
 function meses6(){return Array.from({length:6},(_,i)=>{const d=new Date(new Date().getFullYear(),new Date().getMonth()-5+i,1);return {id:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,nome:d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}});}
 function graficoLinha(frequencias){
-  if(!frequencias.length)return vazio('Registre presenças e faltas para visualizar o gráfico.');
+  if(!frequencias.length)return vazio('Registre presenças e faltas para visualizar o gráfico.','frequencia');
   const meses=meses6();let total=0;
   const serie=meses.map(m=>{const itens=frequencias.filter(f=>f.data.startsWith(m.id));total+=itens.length;return {nome:m.nome,presencas:itens.length?itens.filter(f=>f.presente).length/itens.length*100:null,faltas:itens.length?itens.filter(f=>!f.presente).length/itens.length*100:null};});
-  if(!total)return vazio('Sem registros de frequência nos últimos seis meses.');
+  if(!total)return vazio('Sem registros de frequência nos últimos seis meses.','frequencia');
   function trajetoria(chave){return serie.map((m,i)=>m[chave]===null?null:[28+i*104,160-m[chave]*1.25]).reduce((a,pt)=>{if(pt===null){a.abrir=true;return a;}a.d+=`${a.abrir?'M':'L'}${pt[0]} ${pt[1]} `;a.abrir=false;return a;},{d:'',abrir:true}).d;}
   const pontos=serie.flatMap((m,i)=>[['presencas','#39bd80'],['faltas','#ec7181']].filter(([ch])=>m[ch]!==null).map(([ch,cor])=>`<circle cx="${28+i*104}" cy="${160-m[ch]*1.25}" r="4" fill="${cor}" stroke="white" stroke-width="2"/>`)).join('');
   return `<div class="legenda"><span><i style="background:#39bd80"></i>Presenças</span><span><i style="background:#ec7181"></i>Faltas</span></div><div class="svg-grafico"><svg viewBox="0 0 580 205" role="img" aria-label="Percentuais mensais de presença e faltas"><g stroke="#e9eef4" stroke-width="1">${[35,66,97,128,160].map(y=>`<line x1="28" y1="${y}" x2="558" y2="${y}"/>`).join('')}</g><path d="${trajetoria('presencas')}" fill="none" stroke="#39bd80" stroke-width="3" stroke-linecap="round"/><path d="${trajetoria('faltas')}" fill="none" stroke="#ec7181" stroke-width="3" stroke-linecap="round"/>${pontos}${serie.map((m,i)=>`<text x="${28+i*104}" y="192" text-anchor="middle" font-size="12" fill="#8493a7">${esc(m.nome)}</text>`).join('')}</svg></div>`;
 }
 function graficoBarras(avaliacoes){
-  if(!avaliacoes.length)return vazio('Cadastre avaliações e notas para visualizar as disciplinas.');
+  if(!avaliacoes.length)return vazio('Cadastre avaliações e notas para visualizar as disciplinas.','desempenho');
   const grupos={};for(const a of avaliacoes){(grupos[a.disciplina] ||= []).push(Number(a.nota));}
   const medias=Object.entries(grupos).slice(0,6).map(([nome,notas])=>({nome,media:notas.reduce((a,b)=>a+b,0)/notas.length}));
   return `<div class="barras">${medias.map((v,i)=>`<div class="barra-item" title="${esc(v.nome)}: ${v.media.toFixed(1)}/10"><div class="barra-trilho"><div class="barra-cor" style="height:${v.media*10}%;background:${cores[i]}"></div></div><strong>${esc(v.nome)}</strong><small>${v.media.toFixed(1)}</small></div>`).join('')}</div>`;
 }
 async function dashboard(){
   const [resumo,freq,aval]=await Promise.all([api('/api/resumo'),api('/api/frequencias'),api('/api/avaliacoes')]);
-  const avisos=resumo.avisos.length?resumo.avisos.map(a=>`<div class="linha-atividade"><span class="bloco-icon azul">♬</span><div><b>${esc(a.titulo)}</b><p>${esc(a.mensagem)}</p></div><small>${dataBR(a.criadoEm)}</small></div>`).join(''):vazio('Nenhum comunicado cadastrado.');
-  const atividades=resumo.atividades.length?resumo.atividades.map(a=>`<div class="linha-atividade"><span class="bloco-icon verde">✓</span><div><b>${esc(a.titulo)}</b><p>${esc(N[a.tipo]||a.tipo)}</p></div><small>${dataBR(a.criadoEm)}</small></div>`).join(''):vazio('Os registros recentes aparecerão aqui.');
+  const avisos=resumo.avisos.length?resumo.avisos.map(a=>`<div class="linha-atividade"><span class="bloco-icon azul">♬</span><div><b>${esc(a.titulo)}</b><p>${esc(a.mensagem)}</p></div><small>${dataBR(a.criadoEm)}</small></div>`).join(''):vazio('Nenhum comunicado cadastrado.','comunicados');
+  const atividades=resumo.atividades.length?resumo.atividades.map(a=>`<div class="linha-atividade"><span class="bloco-icon verde">✓</span><div><b>${esc(a.titulo)}</b><p>${esc(N[a.tipo]||a.tipo)}</p></div><small>${dataBR(a.criadoEm)}</small></div>`).join(''):vazio('Os registros recentes aparecerão aqui.','atividades');
   $('#conteudo').innerHTML=`<div class="metricas">
     ${kpi(resumo.alunos,'Alunos matriculados','♙','#2775db','alunos')}
     ${kpi(resumo.turmas,'Turmas','▥','#2fbe6b','turmas')}

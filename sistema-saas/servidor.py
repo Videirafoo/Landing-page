@@ -334,6 +334,10 @@ class Servidor(BaseHTTPRequestHandler):
             '/index.html': 'inicio.html',
             '/style.css': 'style.css', '/app.js': 'app.js', '/inicio.css': 'inicio.css',
             '/logo-oficial.png': 'logo-oficial.png',
+            '/assets/vazio-frequencia.svg': 'assets/vazio-frequencia.svg',
+            '/assets/vazio-comunicados.svg': 'assets/vazio-comunicados.svg',
+            '/assets/vazio-desempenho.svg': 'assets/vazio-desempenho.svg',
+            '/assets/vazio-atividades.svg': 'assets/vazio-atividades.svg',
         }
         nome = mapa.get(rota)
         if not nome:
@@ -354,7 +358,7 @@ class Servidor(BaseHTTPRequestHandler):
         except FileNotFoundError:
             self.send_error(404, 'Arquivo não encontrado')
             return
-        tipo = 'image/png' if nome.endswith('.png') else 'text/html' if nome.endswith('.html') else 'text/css' if nome.endswith('.css') else 'text/javascript'
+        tipo = 'image/svg+xml' if nome.endswith('.svg') else 'image/png' if nome.endswith('.png') else 'text/html' if nome.endswith('.html') else 'text/css' if nome.endswith('.css') else 'text/javascript'
         self.send_response(200)
         self.send_header('Content-Type', tipo + '; charset=utf-8')
         self.send_header('Content-Length', str(len(conteudo)))
