@@ -28,11 +28,14 @@ const D = {
 const cores=['#2b7bea','#34bf76','#f5a424','#9254de','#11baba','#e75197'];
 let estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};
 let timeout;
+// No GitHub Pages o acesso é uma demonstração local; o Python é o acesso real.
+const emDemo=Boolean(window.BASE_STATIC_DEMO);
+const destino=rota=>emDemo?"/Landing-page/demo/"+(rota==="/cadastrar"?"?acao=cadastrar":""):rota;
 
 async function api(url,op={}){
   const r=await fetch(url,{...op,headers:{'Content-Type':'application/json',...(op.headers||{})},credentials:'same-origin'});
   let d;try{d=await r.json();}catch{throw Error('Resposta inválida do servidor.');}
-  if(!r.ok){if(r.status===401&&estado.usuario){estado.usuario=null;history.replaceState(null,'','/entrar');entrarTela(false);}throw Error(d.erro||'Erro ao executar operação.');}
+  if(!r.ok){if(r.status===401&&estado.usuario){estado.usuario=null;history.replaceState(null,'',destino('/entrar'));entrarTela(false);}throw Error(d.erro||'Erro ao executar operação.');}
   return d;
 }
 function alerta(msg){const el=$('#toast');el.textContent=msg;el.classList.add('mostrar');clearTimeout(timeout);timeout=setTimeout(()=>el.classList.remove('mostrar'),3500);}
@@ -58,7 +61,7 @@ function entrarApp(d){
   $('#usuario-perfil').textContent=d.usuario.perfil;
   $('#avatar').textContent=d.usuario.nome.charAt(0).toUpperCase();
   $('#avatar-topo').textContent=d.usuario.nome.charAt(0).toUpperCase();
-  history.replaceState(null,'','/painel');
+  history.replaceState(null,'',destino('/painel'));
   montarMenu(); navegar('dashboard');
 }
 function montarMenu(){
@@ -185,7 +188,7 @@ $('#form-cadastro').onsubmit=async e=>{
   catch(err){$('#modal-erro').textContent=err.message;}
 };
 $('#fechar-modal').onclick=()=>$('#modal').close();$('#cancelar-modal').onclick=()=>$('#modal').close();
-$('#sair').onclick=async()=>{try{await api('/api/sair',{method:'POST'});}catch{}estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};$('#form-acesso').reset();history.replaceState(null,'','/entrar');entrarTela(false);};
+$('#sair').onclick=async()=>{try{await api('/api/sair',{method:'POST'});}catch{}estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};$('#form-acesso').reset();history.replaceState(null,'',destino('/entrar'));entrarTela(false);};
 $('#abrir-menu').onclick=()=>{$('#menu-lateral').classList.add('aberto');$('#sombra-menu').classList.add('aberto');};
 $('#sombra-menu').onclick=fecharMenu;
-(async function iniciar(){try{if(location.pathname==='/cadastrar')return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);$('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();
+(async function iniciar(){try{if((location.pathname==='/cadastrar'||(emDemo&&new URLSearchParams(location.search).get('acao')==='cadastrar')))return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);$('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();

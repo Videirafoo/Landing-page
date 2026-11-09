@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#2059ce">
-  <title>B.A.S.E. | Gestão Escolar</title>
-  <link rel="stylesheet" href="../sistema-faculdade/public/style.css">
-  <script defer src="backend.js"></script>
-  <script defer src="../sistema-faculdade/public/app.js"></script>
+  <link rel="icon" type="image/png" href="../img/logo-oficial.png">
+  <title>B.A.S.E. | Demonstração Interativa</title>
+  <link rel="stylesheet" href="../sistema-saas/public/style.css">
+  <script src="backend.js" defer></script>
+  <script src="../sistema-saas/public/app.js" defer></script>
 </head>
 <body>
   <main id="acesso" class="pagina-acesso" hidden>
-    <header class="acesso-topo"><div class="marca marca-login"><span class="marca-icone">✺</span><b>B.A.S.E.</b></div></header>
+    <header class="acesso-topo"><a href="../" class="marca marca-login" title="Ir para a página inicial"><img class="logo-oficial login-logo" src="../img/logo-oficial.png" alt="Logo oficial B.A.S.E."></a></header>
     <div class="acesso-miolo">
       <section class="acesso-faixa">
         <form id="form-acesso" class="acesso-form" autocomplete="on">
@@ -22,32 +23,33 @@
             <label>Nome da escola<input name="escola" placeholder="Nome da escola" maxlength="120"></label>
             <label>Administrador<input name="nome" placeholder="Nome completo" maxlength="150"></label>
           </div>
-          <label>Matrícula<input name="matricula" placeholder="Digite sua matrícula" minlength="3" maxlength="24" autocomplete="username" required></label>
+          <label>Matrícula de acesso<input name="matricula" placeholder="Digite sua matrícula" minlength="3" maxlength="24" autocomplete="username" required></label>
           <label>Senha<input name="senha" id="senha" type="password" placeholder="Digite sua senha" autocomplete="current-password" required></label>
           <label class="mostrar-senha"><input id="mostrar-senha" type="checkbox"> Mostrar senha</label>
           <p id="acesso-erro" class="mensagem-erro" role="alert" aria-live="polite"></p>
           <button type="submit" id="acesso-enviar" class="botao primaria largura">Entrar</button>
-          <small class="login-nota">DEMONSTRAÇÃO VISUAL: contas e dados ficam somente neste navegador. Não use dados reais nem considere este login seguro.</small>
+          <div class="links-acesso"><a href="?acao=cadastrar" id="link-cadastrar">Cadastrar nova escola</a><a href="./" id="link-entrar" hidden>Já tenho cadastro • Entrar</a><a href="../">Voltar ao site</a></div>
+          <small class="login-nota">Acesso de demonstração: as contas ficam apenas neste navegador. Não insira dados reais. A autenticação com TXT exige executar o servidor Python.</small>
         </form>
       </section>
     </div>
-    <footer class="acesso-rodape">B.A.S.E. <span>Base de Acompanhamento do Sistema Escolar</span><small>Demonstração online • Banco no navegador (não TXT)</small></footer>
+    <footer class="acesso-rodape">B.A.S.E. <span>Base de Acompanhamento do Sistema Escolar</span><small>Demonstração no navegador • sem banco TXT</small></footer>
   </main>
 
   <div class="aplicacao" id="aplicacao" hidden>
     <div class="sombra-menu" id="sombra-menu"></div>
     <aside class="menu-lateral" id="menu-lateral">
-      <div class="marca marca-menu"><span class="marca-icone">✺</span><div><b>B.A.S.E.</b><small>Gestão Escolar</small></div></div>
+      <a href="../" class="marca marca-menu" aria-label="Voltar ao site B.A.S.E."><img class="logo-oficial menu-logo" src="../img/logo-oficial.png" alt="Logo oficial B.A.S.E."><small>Gestão Escolar</small></a>
       <nav id="menu" class="itens-menu" aria-label="Menu principal"></nav>
       <div class="menu-rodape"><div class="apoio"><b>Precisa de ajuda?</b><p>Projeto acadêmico local</p></div><div class="usuario-card"><span class="avatar" id="avatar">A</span><span><strong id="usuario-nome">Administrador</strong><small id="usuario-perfil">Administrador</small></span><button type="button" class="icone-botao" id="sair" title="Sair da conta" aria-label="Sair">⇥</button></div></div>
     </aside>
     <div class="corpo-app">
       <header class="topbar">
         <div class="topbar-titulo"><button class="icone-botao menu-mobile" id="abrir-menu" type="button" aria-label="Abrir menu">☰</button><div><strong id="topo-titulo">Dashboard</strong><small id="topo-legenda">Visão geral da sua escola</small></div></div>
-        <div class="topbar-direita"><span class="notificacoes" title="Comunicados">♧</span><span class="nome-escola" id="escola-nome">Escola</span><span class="avatar pequeno" id="avatar-topo">A</span></div>
+        <div class="topbar-direita"><span class="notificacoes" title="Comunicados">●</span><span class="nome-escola" id="escola-nome">Escola</span><span class="avatar pequeno" id="avatar-topo">A</span></div>
       </header>
       <div id="conteudo" class="conteudo" aria-live="polite"></div>
-      <footer class="rodape-app">© 2026 B.A.S.E. — Base de Acompanhamento do Sistema Escolar. Projeto acadêmico.</footer>
+      <footer class="rodape-app">B.A.S.E. — Demonstração acadêmica; sem autenticação de servidor.</footer>
     </div>
   </div>
 
