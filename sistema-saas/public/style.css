@@ -69,3 +69,8 @@ html,body{max-width:100%;overflow-x:clip}
 .topbar-titulo strong,.topbar-titulo small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .menu-logo{max-width:100%;object-fit:contain}
 @media(max-width:420px){.topbar-direita{gap:7px}.topbar{padding:10px 12px}.nome-escola{max-width:100px;padding:8px}.conteudo{padding:14px 11px}.grade-paineis{gap:11px}.kpi{padding:11px 9px}.kpi-icone{width:28px;height:28px}.kpi em{display:none}}
+
+.vazio-ilustrado{flex-direction:column;gap:4px;padding:16px 12px;font-size:12px;min-height:188px}
+.vazio-ilustrado img{width:112px;height:96px;max-width:50%;object-fit:contain;opacity:.92}
+.vazio-ilustrado span{display:block;max-width:95%;line-height:1.45}
+@media(max-width:540px){.vazio-ilustrado img{width:90px;height:82px}}
