@@ -1,6 +1,3 @@
-// Formulário acadêmico B.A.S.E.
-// Os registros ficam salvos no localStorage deste navegador.
-
 const form = document.querySelector("#contact-form");
 const statusText = document.querySelector("#form-status");
 const countText = document.querySelector("#contact-count");
@@ -47,3 +44,19 @@ form.addEventListener("submit", function (event) {
 });
 
 updateCount();
+const botaoMenu=document.querySelector(".nav-toggle");
+const navegacao=document.querySelector(".main-nav");
+if(botaoMenu&&navegacao){
+  function fecharMenu(){
+    navegacao.classList.remove("aberto");
+    botaoMenu.setAttribute("aria-expanded","false");
+  }
+  botaoMenu.addEventListener("click",()=>{
+    const aberto=navegacao.classList.toggle("aberto");
+    botaoMenu.setAttribute("aria-expanded",String(aberto));
+  });
+  navegacao.querySelectorAll("a").forEach(link=>link.addEventListener("click",fecharMenu));
+  document.addEventListener("keydown",event=>{
+    if(event.key==="Escape")fecharMenu();
+  });
+}

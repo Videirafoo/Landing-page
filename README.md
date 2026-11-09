@@ -73,5 +73,5 @@ O projeto é publicado como site estático pelo GitHub Pages.
 - A página estática não protege dados de escolas. Não use dados reais na demonstração pública.
 - O logotipo PNG oficial foi reaproveitado de `img/logo-oficial.png`, inclusive no backend Python.
 
-## Imagens profissionais do B.A.S.E.
-Os arquivos `img/painel-academico.svg` e `img/mobile-academico.svg` apresentam a interface sem informações escolares fictícias. As quatro ilustrações em `sistema-saas/public/assets/` aparecem nas áreas vazias do dashboard real, que continua interativo. O logotipo existente em `img/logo-oficial.png` não foi modificado.
+## Landing restaurada
+Visual e imagens originais preservados: `img/gestao-escolar-eficiente.webp`, `img/sistema-web-profissional.webp` e `img/aplicativo-mobile-original.png`. Acesso via `sistema/`; cadastro via `sistema/?acao=cadastrar`. Menu recolhível no celular. Backend Python, dados e ícones do SaaS preservados.
