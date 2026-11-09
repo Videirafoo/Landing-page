@@ -1,6 +1,3 @@
-"""B.A.S.E. acadêmico: servidor Python, múltiplas escolas, banco TXT/JSON.
-Execute: python servidor.py. Sem bibliotecas externas.
-"""
 import hashlib
 import hmac
 import json
@@ -11,7 +8,6 @@ import secrets
 import threading
 import time
 from datetime import datetime, timezone
-from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 from uuid import uuid4
@@ -23,6 +19,14 @@ PORTA = int(os.environ.get('PORT', '3000'))
 TRAVA = threading.RLock()
 SESSOES = {}
 FALHAS = {}
+CONTA_PADRAO = {
+    'id': 'base-admin',
+    'escolaId': 'base-academico',
+    'nome': 'Administrador B.A.S.E.',
+    'matricula': '202613078',
+    'hash': '5b2e6f88ac9e10d40495cc07bb3dc791:07bee5271cb3088e95f5a4475f3d7fbd7ca845f7d9e9e86fd54f89163b4945c0',
+    'perfil': 'Administrador'
+}
 CAMPOS = {
     'alunos': ['nome', 'matricula', 'turma'],
     'matriculas': ['alunoId', 'turmaId', 'data'],
@@ -49,7 +53,6 @@ def ler():
 
 
 def salvar(banco):
-    # Gravação atômica: o TXT nunca fica parcialmente escrito.
     temporario = BANCO.with_suffix('.tmp')
     temporario.write_text(json.dumps(banco, ensure_ascii=False, indent=2), encoding='utf-8')
     os.replace(temporario, BANCO)
@@ -227,7 +230,7 @@ class Servidor(BaseHTTPRequestHandler):
         escola = next((e for e in banco['escolas'] if e['id'] == usuario['escolaId']), None)
         if not escola:
             raise ApiErro(401, 'Escola indisponível.')
-        dados_escola = banco['dados'][escola['id']]  # isolamento obrigatório do tenant
+        dados_escola = banco['dados'][escola['id']]
 
         if rota == '/api/me' and metodo == 'GET':
             return self.enviar(200, {'usuario': ficha(usuario), 'escola': escola['nome']})
@@ -329,7 +332,8 @@ class Servidor(BaseHTTPRequestHandler):
             '/': 'inicio.html', '/inicio.html': 'inicio.html',
             '/entrar': 'index.html', '/cadastrar': 'index.html', '/painel': 'index.html',
             '/index.html': 'inicio.html',
-            '/style.css': 'style.css', '/app.js': 'app.js', '/inicio.css': 'inicio.css',\n            '/logo-oficial.png': 'logo-oficial.png',
+            '/style.css': 'style.css', '/app.js': 'app.js', '/inicio.css': 'inicio.css',
+            '/logo-oficial.png': 'logo-oficial.png',
         }
         nome = mapa.get(rota)
         if not nome:
@@ -345,7 +349,11 @@ class Servidor(BaseHTTPRequestHandler):
                     self.end_headers()
                     return
         arq = PUBLICO / nome
-        try:\n            conteudo = arq.read_bytes()\n        except FileNotFoundError:\n            self.send_error(404, "Arquivo não encontrado")\n            return
+        try:
+            conteudo = arq.read_bytes()
+        except FileNotFoundError:
+            self.send_error(404, 'Arquivo não encontrado')
+            return
         tipo = 'image/png' if nome.endswith('.png') else 'text/html' if nome.endswith('.html') else 'text/css' if nome.endswith('.css') else 'text/javascript'
         self.send_response(200)
         self.send_header('Content-Type', tipo + '; charset=utf-8')
@@ -358,8 +366,17 @@ class Servidor(BaseHTTPRequestHandler):
 
 def iniciar():
     BANCO.parent.mkdir(parents=True, exist_ok=True)
-    if not BANCO.exists():
-        salvar({'escolas': [], 'usuarios': [], 'dados': {}})
+    with TRAVA:
+        banco = ler() if BANCO.exists() else {'escolas': [], 'usuarios': [], 'dados': {}}
+        if not any(u['matricula'] == CONTA_PADRAO['matricula'] for u in banco['usuarios']):
+            escola_id = CONTA_PADRAO['escolaId']
+            if not any(e['id'] == escola_id for e in banco['escolas']):
+                banco['escolas'].append({'id': escola_id, 'nome': 'B.A.S.E. — Ambiente Acadêmico', 'criadoEm': agora()})
+            banco['usuarios'].append(CONTA_PADRAO.copy())
+            banco['dados'].setdefault(escola_id, padrao_escola())
+            salvar(banco)
+        elif not BANCO.exists():
+            salvar(banco)
     servidor = ThreadingHTTPServer(('127.0.0.1', PORTA), Servidor)
     print(f'B.A.S.E. multi-escola: http://127.0.0.1:{PORTA}')
     try: servidor.serve_forever()
