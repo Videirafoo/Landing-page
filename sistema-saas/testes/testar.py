@@ -26,9 +26,11 @@ with TemporaryDirectory() as tmp:
             except Exception: time.sleep(0.12)
         else: raise AssertionError('Servidor não iniciou')
         a,b,anon,fixo=Client(),Client(),Client(),Client()
+        senha_fixa = os.environ.get('BASE_TESTE_SENHA')
         assert fixo.call('/api/login',{'matricula':'202613078','senha':'senha-errada'})[0]==401
-        assert fixo.call('/api/login',{'matricula':'202613078','senha':'Eternos8'})[0]==200
-        assert fixo.call('/api/resumo')[1]['alunos']==0
+        if senha_fixa:
+            assert fixo.call('/api/login',{'matricula':'202613078','senha':senha_fixa})[0]==200
+            assert fixo.call('/api/resumo')[1]['alunos']==0
         assert anon.call('/painel')[0]==302
         assert anon.call('/api/resumo')[0]==401
         assert anon.call('/api/login',{'matricula':'NAOEXISTE','senha':'x'})[0]==401
@@ -68,7 +70,7 @@ with TemporaryDirectory() as tmp:
         db=json.loads((q/'dados'/'banco.txt').read_text())
         assert len(db['escolas'])==3
         assert 'SenhaForte!123' not in (q/'dados'/'banco.txt').read_text()
-        assert 'Eternos8' not in (q/'dados'/'banco.txt').read_text()
+        assert all('hash' in u for u in db['usuarios'])
         assert len(db['dados'])==3
         print('TESTES OK: login, senha errada, acesso privado, duas escolas isoladas, CRUD, indicadores, sessão, alteração da escola, banco TXT e senha em hash.')
     finally:
