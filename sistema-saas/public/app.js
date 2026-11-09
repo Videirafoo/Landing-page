@@ -30,7 +30,8 @@ let estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};
 let timeout;
 // No GitHub Pages o acesso é uma demonstração local; o Python é o acesso real.
 const emDemo=Boolean(window.BASE_STATIC_DEMO);
-const baseDemo = emDemo ? location.pathname.replace(/(?:index\.html)?$/, "") : "";\nconst destino=rota=>emDemo?baseDemo+(rota==="/cadastrar"?"?acao=cadastrar":""):rota;
+const baseDemo = emDemo ? location.pathname.replace(/(?:index\.html)?$/, "") : "";
+const destino=rota=>emDemo?baseDemo+(rota==="/cadastrar"?"?acao=cadastrar":""):rota;
 
 async function api(url,op={}){
   const r=await fetch(url,{...op,headers:{'Content-Type':'application/json',...(op.headers||{})},credentials:'same-origin'});
