@@ -43,3 +43,8 @@ Execute `python testes/testar.py` na pasta do projeto. O teste cria dois tenants
 O caminho `public/logo-oficial.png` contém **o mesmo arquivo binário oficial** de `img/logo-oficial.png`, sem redesenho. O servidor Python o entrega em `/logo-oficial.png`.
 Ao executar `python servidor.py`, a entrada funciona em `/`, o login em `/entrar`, o cadastro em `/cadastrar` e o dashboard autenticado em `/painel`.
 No GitHub Pages, há demonstração em `/Landing-page/sistema/`, mas **sem autenticação de servidor**.
+
+## Conta acadêmica inicial
+Uma conta administradora é criada automaticamente no primeiro início com a matrícula informada pelo responsável do projeto nesta conversa. A senha não é gravada em texto puro; somente o hash com sal é armazenado. O banco existente de outras escolas é preservado. Em caso de matrícula já cadastrada, o servidor não modifica essa conta.
+
+O login do GitHub Pages é uma simulação local. Para autenticação protegida e banco TXT, execute `python servidor.py` no VS Code. Não use a conta compartilhada para dados reais.

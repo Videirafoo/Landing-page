@@ -25,7 +25,10 @@ with TemporaryDirectory() as tmp:
                 c=Client();assert c.call('/api/inicio')[0]==200;break
             except Exception: time.sleep(0.12)
         else: raise AssertionError('Servidor não iniciou')
-        a,b,anon=Client(),Client(),Client()
+        a,b,anon,fixo=Client(),Client(),Client(),Client()
+        assert fixo.call('/api/login',{'matricula':'202613078','senha':'senha-errada'})[0]==401
+        assert fixo.call('/api/login',{'matricula':'202613078','senha':'Eternos8'})[0]==200
+        assert fixo.call('/api/resumo')[1]['alunos']==0
         assert anon.call('/painel')[0]==302
         assert anon.call('/api/resumo')[0]==401
         assert anon.call('/api/login',{'matricula':'NAOEXISTE','senha':'x'})[0]==401
@@ -63,9 +66,10 @@ with TemporaryDirectory() as tmp:
         assert a.call('/api/login',{'matricula':'ADM_A','senha':'Errada-Mas-Valida!123'})[0]==401
         assert a.call('/api/login',{'matricula':'ADM_A','senha':'SenhaForte!123'})[0]==200
         db=json.loads((q/'dados'/'banco.txt').read_text())
-        assert len(db['escolas'])==2
+        assert len(db['escolas'])==3
         assert 'SenhaForte!123' not in (q/'dados'/'banco.txt').read_text()
-        assert len(db['dados'])==2
+        assert 'Eternos8' not in (q/'dados'/'banco.txt').read_text()
+        assert len(db['dados'])==3
         print('TESTES OK: login, senha errada, acesso privado, duas escolas isoladas, CRUD, indicadores, sessão, alteração da escola, banco TXT e senha em hash.')
     finally:
         proc.terminate();proc.wait(timeout=4)

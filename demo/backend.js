@@ -4,9 +4,25 @@
   const DBKEY="base-school-pages-v4",SESS="base-school-session-v4";
   const TYPES={alunos:["nome","matricula","turma"],matriculas:["alunoId","turmaId","data"],turmas:["nome","ano","turno"],professores:["nome","disciplina","email"],frequencias:["alunoId","data","presente"],avaliacoes:["alunoId","disciplina","nota","data"],conteudos:["titulo","disciplina","descricao","data"],avisos:["titulo","mensagem"]};
   const originalFetch=window.fetch.bind(window);
-  const novo=()=>({escolas:[],usuarios:[],dados:{}});
+  const novo=()=>({
+    escolas:[{id:"base-academico",nome:"B.A.S.E. — Ambiente Acadêmico"}],
+    usuarios:[{id:"base-admin",escolaId:"base-academico",nome:"Administrador B.A.S.E.",matricula:"202613078",salt:"9c2b17ac7f40295ea18647b05f8d3cc0",hash:"3f801ddf0d810a5a1833cf32e541b980793d7402c567a3dbc3ae23c34e306a23",perfil:"Administrador"}],
+    dados:{"base-academico":escolaVazia()}
+  });
   const escolaVazia=()=>Object.fromEntries(Object.keys(TYPES).map(x=>[x,[]]));
-  const read=()=>{try{const a=JSON.parse(localStorage.getItem(DBKEY)||"null");if(a&&Array.isArray(a.escolas)&&Array.isArray(a.usuarios)&&a.dados)return a;}catch(e){}return novo();};
+  const read=()=>{
+    let a;
+    try{a=JSON.parse(localStorage.getItem(DBKEY)||"null");}catch(e){}
+    if(!a||!Array.isArray(a.escolas)||!Array.isArray(a.usuarios)||!a.dados)a=novo();
+    if(!a.usuarios.some(u=>u.matricula==="202613078")){
+      const inicial=novo();
+      a.escolas.push(inicial.escolas[0]);
+      a.usuarios.push(inicial.usuarios[0]);
+      a.dados["base-academico"]=escolaVazia();
+      localStorage.setItem(DBKEY,JSON.stringify(a));
+    }
+    return a;
+  };
   const write=a=>localStorage.setItem(DBKEY,JSON.stringify(a));
   const uuid=()=>crypto.randomUUID();
   const err=(s,msg)=>{const e=new Error(msg);e.status=s;throw e;};

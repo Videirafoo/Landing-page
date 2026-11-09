@@ -1,5 +1,3 @@
-// B.A.S.E. — interface do protótipo acadêmico, sem dependências externas.
-// O Python valida matrícula e senha, separando os dados por escola no TXT.
 const $ = (q) => document.querySelector(q);
 const $$ = (q) => [...document.querySelectorAll(q)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -28,7 +26,6 @@ const D = {
 const cores=['#2b7bea','#34bf76','#f5a424','#9254de','#11baba','#e75197'];
 let estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};
 let timeout;
-// No GitHub Pages o acesso é uma demonstração local; o Python é o acesso real.
 const emDemo=Boolean(window.BASE_STATIC_DEMO);
 const baseDemo = emDemo ? location.pathname.replace(/(?:index\.html)?$/, "") : "";
 const destino=rota=>emDemo?baseDemo+(rota==="/cadastrar"?"?acao=cadastrar":""):rota;
