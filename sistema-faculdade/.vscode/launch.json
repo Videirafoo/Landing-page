@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Iniciar B.A.S.E. (servidor)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/servidor.js",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}
