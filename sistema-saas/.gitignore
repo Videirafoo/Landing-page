@@ -1,0 +1,5 @@
+dados/banco.txt
+dados/*.tmp
+__pycache__/
+*.pyc
+.env
