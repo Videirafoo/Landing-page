@@ -38,3 +38,8 @@ Adequado para demonstração com dados fictícios criados voluntariamente no amb
 
 ## Rodar testes do backend
 Execute `python testes/testar.py` na pasta do projeto. O teste cria dois tenants temporários e não modifica seu banco real.
+
+## Logotipo oficial e acesso integrado
+O caminho `public/logo-oficial.png` contém **o mesmo arquivo binário oficial** de `img/logo-oficial.png`, sem redesenho. O servidor Python o entrega em `/logo-oficial.png`.
+Ao executar `python servidor.py`, a entrada funciona em `/`, o login em `/entrar`, o cadastro em `/cadastrar` e o dashboard autenticado em `/painel`.
+No GitHub Pages, há demonstração em `/Landing-page/sistema/`, mas **sem autenticação de servidor**.

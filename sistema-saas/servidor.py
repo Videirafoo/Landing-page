@@ -329,7 +329,7 @@ class Servidor(BaseHTTPRequestHandler):
             '/': 'inicio.html', '/inicio.html': 'inicio.html',
             '/entrar': 'index.html', '/cadastrar': 'index.html', '/painel': 'index.html',
             '/index.html': 'inicio.html',
-            '/style.css': 'style.css', '/app.js': 'app.js', '/inicio.css': 'inicio.css',
+            '/style.css': 'style.css', '/app.js': 'app.js', '/inicio.css': 'inicio.css',\n            '/logo-oficial.png': 'logo-oficial.png',
         }
         nome = mapa.get(rota)
         if not nome:
@@ -345,8 +345,8 @@ class Servidor(BaseHTTPRequestHandler):
                     self.end_headers()
                     return
         arq = PUBLICO / nome
-        conteudo = arq.read_bytes()
-        tipo = 'text/html' if nome.endswith('.html') else 'text/css' if nome.endswith('.css') else 'text/javascript'
+        try:\n            conteudo = arq.read_bytes()\n        except FileNotFoundError:\n            self.send_error(404, "Arquivo não encontrado")\n            return
+        tipo = 'image/png' if nome.endswith('.png') else 'text/html' if nome.endswith('.html') else 'text/css' if nome.endswith('.css') else 'text/javascript'
         self.send_response(200)
         self.send_header('Content-Type', tipo + '; charset=utf-8')
         self.send_header('Content-Length', str(len(conteudo)))

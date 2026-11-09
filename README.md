@@ -64,3 +64,11 @@ O projeto é publicado como site estático pelo GitHub Pages.
 - Demonstração interativa: https://videirafoo.github.io/Landing-page/demo/
 - A demonstração tem cadastro e login por matrícula e senha, mas **não é autenticação de servidor**: os dados ficam somente no navegador. Não inserir dados reais.
 - Para autenticação real via Python e arquivo TXT, siga `sistema-saas/README.md` e execute `python servidor.py` localmente. GitHub Pages não executa backend Python.
+
+## Entrar no B.A.S.E. pelo GitHub Pages
+- [Site público](https://videirafoo.github.io/Landing-page/)
+- [Login e dashboard de demonstração](https://videirafoo.github.io/Landing-page/sistema/)
+- [Cadastrar escola na demonstração](https://videirafoo.github.io/Landing-page/sistema/?acao=cadastrar)
+- Login REAL (Python + TXT) requer iniciar localmente o servidor em `sistema-saas/servidor.py`: rotas `/entrar`, `/cadastrar` e `/painel`.
+- A página estática não protege dados de escolas. Não use dados reais na demonstração pública.
+- O logotipo PNG oficial foi reaproveitado de `img/logo-oficial.png`, inclusive no backend Python.

@@ -421,3 +421,21 @@ body{background:#fdfdff}
 .main-nav .nav-access{background:#edf4ff;color:#164ba3}
 .main-nav .nav-signup{background:linear-gradient(105deg,#216fe1,#594bce);color:#fff}
 @media(max-width:620px){.main-nav{gap:8px 12px}.main-nav .nav-access,.main-nav .nav-signup{padding:8px 10px;font-size:12px}}
+
+/* Entrada direta: interface enxuta e clicável, com imagem original. */
+.hero-visual-click a,.visual-acesso a{position:relative;display:block;text-decoration:none}
+.hero-visual-click a:focus-visible,.visual-acesso a:focus-visible{outline:3px solid #1c74ee;outline-offset:4px}
+.visual-cta,.visual-acesso a>span{position:absolute;right:15px;bottom:15px;border-radius:12px;padding:11px 15px;background:linear-gradient(120deg,#0860df,#6344db);color:#fff;font-weight:800;font-size:.86rem;box-shadow:0 8px 24px #18366744}
+.hero-visual-click figcaption{font-size:.76rem;color:#667085;padding:10px 16px;text-align:center;background:#fff}
+.acesso-rapido{background:linear-gradient(140deg,#eef5ff 0%,#ffffff 55%,#f1edff 100%);padding:64px 0}
+.acesso-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.acesso-step{border:1px solid #dbe4f2;border-radius:18px;background:#fff;padding:23px;box-shadow:0 14px 35px #0f32700b;display:flex;flex-direction:column;align-items:flex-start;gap:10px;transition:transform .16s,box-shadow .16s}
+.acesso-step:hover{transform:translateY(-3px);box-shadow:0 16px 40px #164c9720}
+.etapa-numero{font-size:12px;font-weight:900;color:#fff;background:linear-gradient(120deg,#156bdf,#7650e2);display:grid;place-items:center;width:38px;height:38px;border-radius:11px}
+.acesso-step strong{color:#14345b;font-size:1.04rem;line-height:1.3}
+.acesso-step>span:not(.etapa-numero){color:#5d6a7b;font-size:.9rem}
+.acesso-step b{margin-top:auto;color:#145dde;font-size:.87rem}
+.fluxo-visual{width:min(100%,960px);height:auto;margin:26px auto 0;display:block;border-radius:12px}
+.nota-demo{max-width:920px;margin:18px auto 0;color:#667085;text-align:center;font-size:.83rem}
+.nota-demo a{color:#145dde;text-decoration:underline}
+@media(max-width:760px){.acesso-steps{grid-template-columns:1fr}.acesso-step{padding:18px}.visual-cta,.visual-acesso a>span{font-size:.72rem;padding:9px 10px;bottom:8px;right:8px}.acesso-rapido{padding:46px 0}}
