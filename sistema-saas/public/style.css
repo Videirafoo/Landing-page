@@ -74,3 +74,22 @@ html,body{max-width:100%;overflow-x:clip}
 .vazio-ilustrado img{width:112px;height:96px;max-width:50%;object-fit:contain;opacity:.92}
 .vazio-ilustrado span{display:block;max-width:95%;line-height:1.45}
 @media(max-width:540px){.vazio-ilustrado img{width:90px;height:82px}}
+
+.item-menu .item-icone{display:inline-block;width:23px;height:23px;flex:0 0 23px;background:linear-gradient(135deg,#153452,#1298a9);-webkit-mask:var(--icone) center / contain no-repeat;mask:var(--icone) center / contain no-repeat;transition:background .18s ease,transform .18s ease,filter .18s ease}
+.item-menu:hover .item-icone,.item-menu:focus-visible .item-icone{background:#f58220;transform:translateY(-1px) scale(1.09);filter:drop-shadow(0 1px 2px #ec842a2b)}
+.item-menu.ativo .item-icone{background:#ffae55;transform:scale(1.04)}
+.item-menu.ativo:hover .item-icone,.item-menu.ativo:focus-visible .item-icone{background:#ffc27c;transform:scale(1.09)}
+.item-menu:focus-visible{outline:2px solid #fa8e2b;outline-offset:2px}
+.item-menu[data-pagina="dashboard"] .item-icone{--icone:url("assets/icones/dashboard.svg")}
+.item-menu[data-pagina="alunos"] .item-icone{--icone:url("assets/icones/alunos.svg")}
+.item-menu[data-pagina="matriculas"] .item-icone{--icone:url("assets/icones/matriculas.svg")}
+.item-menu[data-pagina="turmas"] .item-icone{--icone:url("assets/icones/turmas.svg")}
+.item-menu[data-pagina="professores"] .item-icone{--icone:url("assets/icones/professores.svg")}
+.item-menu[data-pagina="frequencias"] .item-icone{--icone:url("assets/icones/frequencia.svg")}
+.item-menu[data-pagina="avaliacoes"] .item-icone{--icone:url("assets/icones/avaliacoes.svg")}
+.item-menu[data-pagina="conteudos"] .item-icone{--icone:url("assets/icones/conteudos.svg")}
+.item-menu[data-pagina="avisos"] .item-icone{--icone:url("assets/icones/comunicados.svg")}
+.item-menu[data-pagina="relatorios"] .item-icone{--icone:url("assets/icones/relatorios.svg")}
+.item-menu[data-pagina="indicadores"] .item-icone{--icone:url("assets/icones/indicadores.svg")}
+.item-menu[data-pagina="configuracoes"] .item-icone{--icone:url("assets/icones/configuracoes.svg")}
+.item-menu[data-pagina="usuarios"] .item-icone{--icone:url("assets/icones/usuarios.svg")}

@@ -339,7 +339,7 @@ class Servidor(BaseHTTPRequestHandler):
             '/assets/vazio-desempenho.svg': 'assets/vazio-desempenho.svg',
             '/assets/vazio-atividades.svg': 'assets/vazio-atividades.svg',
         }
-        nome = mapa.get(rota)
+        nome = rota.lstrip('/') if re.fullmatch(r'/assets/icones/[a-z]+\.svg', rota) else mapa.get(rota)
         if not nome:
             self.send_error(404, 'Página não encontrada')
             return
