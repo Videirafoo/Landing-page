@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="B.A.S.E. — Base de Acompanhamento do Sistema Escolar. Plataforma integrada para acompanhamento acadêmico, comunicação e gestão escolar.">
-  <meta name="theme-color" content="#123e9b">
-  <meta property="og:image" content="https://videirafoo.github.io/Landing-page/img/painel-academico.svg">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:image" content="https://videirafoo.github.io/Landing-page/img/gestao-escolar-eficiente.webp">
   <title>B.A.S.E. | Base de Acompanhamento do Sistema Escolar</title>
   <link rel="icon" type="image/png" href="img/logo-oficial.png">
   <link rel="stylesheet" href="style.css">
@@ -16,7 +16,8 @@
       <a class="brand" href="#inicio" aria-label="B.A.S.E. — Página inicial">
         <img src="img/logo-oficial.png" alt="Logo oficial B.A.S.E." class="brand-logo">
       </a>
-      <nav class="main-nav" aria-label="Navegação principal">
+      <button type="button" class="nav-toggle" aria-controls="navegacao-principal" aria-expanded="false">Menu <span aria-hidden="true">☰</span></button>
+      <nav class="main-nav" id="navegacao-principal" aria-label="Navegação principal">
         <a href="#solucao">Solução</a>
         <a href="#funcionalidades">Recursos</a>
         <a href="#plataformas">Web e Mobile</a>
@@ -44,31 +45,15 @@
             <a class="btn btn-primary" href="sistema/">Entrar no sistema</a>
             <a class="btn btn-secondary" href="sistema/?acao=cadastrar">Cadastrar escola</a>
             <a class="btn btn-primary" href="#funcionalidades">Conhecer os recursos</a>
-            <a class="btn btn-secondary" href="#plataformas">Conhecer as telas</a>
+            <a class="btn btn-secondary" href="#plataformas">Ver sistema web e mobile</a>
           </div>
         </div>
 
-        <figure class="hero-visual hero-visual-click">
-          <a href="sistema/" aria-label="Entrar no B.A.S.E. e abrir o painel escolar">
-            <img src="img/painel-academico.svg" alt="Prévia do layout escolar B.A.S.E. com indicadores vazios e menus reais" fetchpriority="high">
-            <span class="visual-cta">Abrir o painel interativo <span aria-hidden="true">↗</span></span>
+        <figure class="hero-visual">
+          <a href="sistema/" aria-label="Entrar no sistema B.A.S.E.">
+            <img src="img/gestao-escolar-eficiente.webp" alt="Tecnologia para a gestão escolar B.A.S.E." fetchpriority="high">
           </a>
-          <figcaption>Prévia visual do sistema com indicadores vazios. Os dados vêm dos cadastros.</figcaption>
         </figure>
-      </div>
-    </section>
-
-
-    <section class="section acesso-rapido" id="acesso-rapido" aria-labelledby="acesso-titulo">
-      <div class="container">
-        <div class="section-heading centered compact-heading"><span class="section-kicker">Acesso ao B.A.S.E.</span><h2 id="acesso-titulo">Da entrada ao dashboard em três cliques.</h2><p>O sistema abre o painel após validar a matrícula e a senha cadastradas.</p></div>
-        <div class="acesso-steps">
-          <a class="acesso-step" href="sistema/?acao=cadastrar"><span class="etapa-numero">01</span><strong>Cadastrar escola</strong><span>Informe a instituição e crie o primeiro usuário.</span><b>Cadastrar ↗</b></a>
-          <a class="acesso-step" href="sistema/"><span class="etapa-numero">02</span><strong>Entrar com login e senha</strong><span>Conta inexistente ou senha errada não permite acesso.</span><b>Entrar ↗</b></a>
-          <a class="acesso-step" href="sistema/"><span class="etapa-numero">03</span><strong>Dashboard e menus</strong><span>Alunos, matrículas, turmas, professores e relatórios.</span><b>Abrir sistema ↗</b></a>
-        </div>
-        <img class="fluxo-visual" src="img/fluxo-acesso.svg" alt="Etapas: cadastrar escola, entrar com login e senha, usar o dashboard B.A.S.E." loading="lazy">
-        <p class="nota-demo">Versão demonstrativa no GitHub Pages. O acesso protegido pelo servidor Python e banco TXT está no repositório em <a href="https://github.com/Videirafoo/Landing-page/tree/main/sistema-saas">sistema-saas</a>.</p>
       </div>
     </section>
 
@@ -155,8 +140,10 @@
               <li>Rotina acadêmica centralizada</li>
             </ul>
           </div>
-          <figure class="showcase-image visual-acesso">
-            <a href="sistema/" aria-label="Acessar o painel escolar B.A.S.E."><img src="img/painel-academico.svg" alt="Painel web do B.A.S.E. com logo oficial, indicadores e menus" loading="lazy"><span>Entrar no painel web ↗</span></a>
+          <figure class="showcase-image">
+            <a href="sistema/" aria-label="Abrir o painel web B.A.S.E.">
+              <img src="img/sistema-web-profissional.webp" alt="Sistema web profissional do B.A.S.E." loading="lazy">
+            </a>
           </figure>
         </article>
 
@@ -171,8 +158,10 @@
               <li>Acompanhamento da frequência</li>
             </ul>
           </div>
-          <figure class="showcase-image mobile-image visual-acesso">
-            <a href="sistema/" aria-label="Acessar a experiência mobile B.A.S.E."><img src="img/mobile-academico.svg" alt="Referência visual para o acesso do B.A.S.E. em dispositivos móveis" loading="lazy"><span>Abrir no celular ↗</span></a>
+          <figure class="showcase-image mobile-image">
+            <a href="sistema/" aria-label="Abrir o sistema B.A.S.E. no celular">
+              <img src="img/aplicativo-mobile-original.png" alt="Apresentação mobile do B.A.S.E." loading="lazy">
+            </a>
           </figure>
         </article>
       </div>
@@ -219,9 +208,9 @@
           <span class="section-kicker">Conheça o projeto por dentro</span>
           <h2>Da apresentação acadêmica a um painel que funciona.</h2>
           <p>Explore o painel diretamente no navegador ou execute a versão local no VS Code. Ambos incluem dashboard, cadastros, frequência, comunicados e login por matrícula e senha.</p>
-          <div class="prototype-tags"><span>HTML + CSS + JavaScript</span><span>Python</span><span>Banco TXT/JSON</span></div>
+          <div class="prototype-tags"><span>HTML + CSS + JavaScript</span><span>Python</span><span>Banco TXT local</span></div>
           <div class="prototype-actions"><a class="btn btn-primary prototype-button" href="sistema/">Abrir demonstração online <span aria-hidden="true">↗</span></a><a class="btn btn-secondary prototype-button" href="https://github.com/Videirafoo/Landing-page/tree/main/sistema-saas" target="_blank" rel="noopener noreferrer">Ver código para VS Code</a></div>
-          <small class="prototype-note">O GitHub Pages apresenta uma demonstração: as contas ficam neste navegador. Para login verdadeiro com banco TXT, execute o servidor Python. Não coloque dados reais de estudantes na demonstração.</small>
+          <small class="prototype-note">A demonstração online guarda os registros somente neste navegador. Não utilize dados pessoais reais. O banco TXT funciona apenas na versão local com Python.</small>
         </div>
         <div class="prototype-art" aria-label="Representação ilustrativa do painel B.A.S.E.">
           <div class="proto-top"><span class="proto-dot"></span><span class="proto-dot"></span><span class="proto-dot"></span><b>B.A.S.E. · Gestão Escolar</b></div>
