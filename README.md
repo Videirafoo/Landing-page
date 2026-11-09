@@ -57,3 +57,10 @@ O projeto é publicado como site estático pelo GitHub Pages.
 - Os dados da demonstração e as contas criadas ficam **somente no navegador e no dispositivo utilizado**. Não são compartilhados e não representam login seguro de produção. Não insira dados pessoais reais.
 - Para autenticação com backend e banco TXT, execute `node servidor.js` na pasta `sistema-faculdade` (VS Code). GitHub Pages não executa esse servidor.
 - Configure **Settings > Pages > Deploy from a branch > main > /(root)** caso a publicação ainda não esteja habilitada.
+
+## Acesso e painel no navegador
+
+- Landing: https://videirafoo.github.io/Landing-page/
+- Demonstração interativa: https://videirafoo.github.io/Landing-page/demo/
+- A demonstração tem cadastro e login por matrícula e senha, mas **não é autenticação de servidor**: os dados ficam somente no navegador. Não inserir dados reais.
+- Para autenticação real via Python e arquivo TXT, siga `sistema-saas/README.md` e execute `python servidor.py` localmente. GitHub Pages não executa backend Python.
