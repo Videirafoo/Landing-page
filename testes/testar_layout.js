@@ -2,9 +2,9 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const pasta = path.join(__dirname, '..', 'public');
-const css = fs.readFileSync(path.join(pasta, 'style.css'), 'utf8');
-const javascript = fs.readFileSync(path.join(pasta, 'app.js'), 'utf8');
+const pasta = path.join(__dirname, '..', 'sistema');
+const css = fs.readFileSync(path.join(pasta, 'painel.css'), 'utf8');
+const javascript = fs.readFileSync(path.join(pasta, 'painel.js'), 'utf8');
 
 new Function(javascript);
 

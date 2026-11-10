@@ -1,6 +1,6 @@
 (function demoCode(){
   "use strict";
-  window.BASE_STATIC_DEMO=true;
+  if (!window.BASE_STATIC_DEMO) return;
   const DBKEY="base-school-pages-v4",SESS="base-school-session-v4";
   const TYPES={alunos:["nome","matricula","turma"],matriculas:["alunoId","turmaId","data"],turmas:["nome","ano","turno"],professores:["nome","disciplina","email"],frequencias:["alunoId","data","presente"],avaliacoes:["alunoId","disciplina","nota","data"],conteudos:["titulo","disciplina","descricao","data"],avisos:["titulo","mensagem"]};
   const originalFetch=window.fetch.bind(window);

@@ -12,4 +12,8 @@ Preservar logo oficial, identidade B.A.S.E. e código simples de faculdade. Não
 
 
 ## Referências técnicas
-RosarioSIS serve apenas para estudar conceitos de gestão escolar; não copiar o código GPL para este projeto. Melhorias no banco são etapas separadas, com validação e migrações controladas. Ícones ficam em `public/assets/icones/` com licença, enquanto estilos exclusivos dos ícones ficam em `public/icones.css`.
+RosarioSIS serve apenas para estudar conceitos de gestão escolar; não copiar o código GPL para este projeto. Melhorias no banco são etapas separadas, com validação e migrações controladas. Ícones ficam em `sistema/assets/icones/` com licença, enquanto estilos exclusivos dos ícones ficam em `sistema/icones.css`.
+
+
+## Estrutura única
+Não recriar `demo/`, `sistema-saas/` nem outro painel. `sistema/index.html` é o único login e dashboard, servido tanto pelo GitHub Pages quanto por `servidor.py` local. `sistema/dados-navegador.js` atua apenas no GitHub Pages. Preservar o logo, os dados, os controles e a organização de 2º período.

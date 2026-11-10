@@ -1,6 +1,6 @@
 # Plano de testes
 
-1. Novo usuário recebe 401 sem login. 2. Cadastro da escola e login com senha correta retornam 201/200. 3. Matrícula desconhecida e senha errada dão 401. 4. Após logout, API e /painel não podem abrir. 5. Segunda escola nunca consulta dados da primeira. 6. Resumo calcula totais reais. 7. Exercitar os módulos e verificar layout a 360 e 1440 px.
+1. Novo usuário recebe 401 sem login. 2. Cadastro da escola e login com senha correta retornam 201/200. 3. Matrícula desconhecida e senha errada dão 401. 4. Após logout, API e /painel deve redirecionar visitantes sem sessão. 5. Segunda escola nunca consulta dados da primeira. 6. Resumo calcula totais reais. 7. Exercitar os módulos e verificar layout a 360 e 1440 px.
 
 
 ## Regressão visual da landing
@@ -38,3 +38,11 @@
 - Em 360/390px, os cartões não podem forçar rolagem horizontal da página; gráficos podem se adaptar internamente.
 - Em 390px, tocar no botão do topo deve expandir o menu, tocar em um módulo deve fechá-lo e carregar a seção correta.
 - Executar `node testes/testar_layout.js` e `node testes/testar_navegacao.js` antes de publicar.
+
+
+## Projeto com nomes únicos
+- Abrir `/`, `/sistema/` e `/sistema/?acao=cadastrar` no GitHub Pages.
+- Executar `python testes/testar_servidor.py` no terminal local/CI, cobrindo autenticação e isolamento.
+- Executar os dois testes JavaScript após mover `painel.js` e `painel.css`.
+- Verificar que `/sistema/dados/banco.txt` não é servido pelo Python e que o navegador não ativa a API simulada no localhost.
+- Confirmar que a URL pública existente `/Landing-page/sistema/` continua válida e que os dados do localStorage não são apagados.

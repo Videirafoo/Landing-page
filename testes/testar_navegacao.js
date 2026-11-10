@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const arquivo = path.join(__dirname, '..', 'public', 'app.js');
+const arquivo = path.join(__dirname, '..', 'sistema', 'painel.js');
 const codigo = fs.readFileSync(arquivo, 'utf8');
 
 new Function(codigo);

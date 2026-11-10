@@ -17,7 +17,7 @@ class Client:
         except HTTPError as e: status=e.code;raw=e.read();headers=e.headers
         return status,json.loads(raw) if raw and headers.get_content_type()=='application/json' else raw
 with TemporaryDirectory() as tmp:
-    q=Path(tmp);shutil.copytree(SRC/'public',q/'public');shutil.copy(SRC/'servidor.py',q/'servidor.py');(q/'dados').mkdir()
+    q=Path(tmp);shutil.copytree(SRC/'sistema',q/'sistema');shutil.copy(SRC/'servidor.py',q/'servidor.py');shutil.copytree(SRC/'img',q/'img');shutil.copy(SRC/'index.html',q/'index.html');shutil.copy(SRC/'pagina-inicial.css',q/'pagina-inicial.css');shutil.copy(SRC/'pagina-inicial.js',q/'pagina-inicial.js');(q/'dados').mkdir()
     proc=subprocess.Popen(['python',str(q/'servidor.py')],env={**os.environ,'PORT':'3189'},stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     try:
         for _ in range(30):
@@ -31,6 +31,16 @@ with TemporaryDirectory() as tmp:
         if senha_fixa:
             assert fixo.call('/api/login',{'matricula':'202613078','senha':senha_fixa})[0]==200
             assert fixo.call('/api/resumo')[1]['alunos']==0
+        assert anon.call('/')[0]==200
+        assert anon.call('/sistema/')[0]==200
+        assert anon.call('/sistema/painel.css')[0]==200
+        assert anon.call('/sistema/painel.js')[0]==200
+        assert anon.call('/sistema/icones.css')[0]==200
+        assert anon.call('/sistema/assets/icones/alunos.svg')[0]==200
+        assert anon.call('/img/logo-oficial.png')[0]==200
+        assert anon.call('/sistema/dados/banco.txt')[0]==404
+        assert anon.call('/servidor.py')[0]==404
+        assert anon.call('/cadastrar')[0]==302
         assert anon.call('/painel')[0]==302
         assert anon.call('/api/resumo')[0]==401
         assert anon.call('/api/login',{'matricula':'NAOEXISTE','senha':'x'})[0]==401

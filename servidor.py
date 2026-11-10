@@ -14,7 +14,7 @@ from uuid import uuid4
 
 RAIZ = Path(__file__).resolve().parent
 BANCO = RAIZ / 'dados' / 'banco.txt'
-PUBLICO = RAIZ / 'public'
+PUBLICO = RAIZ / 'sistema'
 PORTA = int(os.environ.get('PORT', '3000'))
 TRAVA = threading.RLock()
 SESSOES = {}
@@ -328,45 +328,71 @@ class Servidor(BaseHTTPRequestHandler):
         raise ApiErro(404, 'Recurso não encontrado.')
 
     def estatico(self, rota):
+        if rota in ('/entrar', '/cadastrar', '/painel', '/sistema'):
+            if rota == '/painel':
+                with TRAVA:
+                    try:
+                        self.usuario(ler())
+                    except ApiErro:
+                        return self.redirecionar('/sistema/')
+            destino = '/sistema/?acao=cadastrar' if rota == '/cadastrar' else '/sistema/'
+            return self.redirecionar(destino)
+
         mapa = {
-            '/': 'inicio.html', '/inicio.html': 'inicio.html',
-            '/entrar': 'index.html', '/cadastrar': 'index.html', '/painel': 'index.html',
-            '/index.html': 'inicio.html',
-            '/style.css': 'style.css', '/app.js': 'app.js', '/inicio.css': 'inicio.css', '/icones.css': 'icones.css',
-            '/logo-oficial.png': 'logo-oficial.png',
-            '/assets/vazio-frequencia.svg': 'assets/vazio-frequencia.svg',
-            '/assets/vazio-comunicados.svg': 'assets/vazio-comunicados.svg',
-            '/assets/vazio-desempenho.svg': 'assets/vazio-desempenho.svg',
-            '/assets/vazio-atividades.svg': 'assets/vazio-atividades.svg',
+            '/': RAIZ / 'index.html',
+            '/index.html': RAIZ / 'index.html',
+            '/pagina-inicial.css': RAIZ / 'pagina-inicial.css',
+            '/pagina-inicial.js': RAIZ / 'pagina-inicial.js',
+            '/sistema/': PUBLICO / 'index.html',
+            '/sistema/index.html': PUBLICO / 'index.html',
+            '/sistema/painel.css': PUBLICO / 'painel.css',
+            '/sistema/icones.css': PUBLICO / 'icones.css',
+            '/sistema/painel.js': PUBLICO / 'painel.js',
+            '/sistema/dados-navegador.js': PUBLICO / 'dados-navegador.js',
         }
-        nome = rota.lstrip('/') if re.fullmatch(r'/assets/icones/[a-z]+\.svg', rota) else mapa.get(rota)
-        if not nome:
-            self.send_error(404, 'Página não encontrada')
+        arquivo = mapa.get(rota)
+
+        if re.fullmatch(r'/img/[a-z0-9._-]+\.(?:png|webp)', rota):
+            arquivo = RAIZ / rota.lstrip('/')
+        elif re.fullmatch(
+            r'/sistema/assets/(?:icones/(?:[a-z]+\.svg|visualizacao\.html|LICENSE-LUCIDE\.txt)|vazio-(?:frequencia|comunicados|desempenho|atividades)\.svg)',
+            rota
+        ):
+            arquivo = RAIZ / rota.lstrip('/')
+
+        if arquivo is None:
+            self.send_error(404, 'Arquivo não encontrado')
             return
-        if rota == '/painel':
-            with TRAVA:
-                try: self.usuario(ler())
-                except ApiErro:
-                    self.send_response(302)
-                    self.send_header('Location', '/entrar')
-                    self.send_header('Content-Length', '0')
-                    self.end_headers()
-                    return
-        arq = PUBLICO / nome
+
         try:
-            conteudo = arq.read_bytes()
+            conteudo = arquivo.read_bytes()
         except FileNotFoundError:
             self.send_error(404, 'Arquivo não encontrado')
             return
-        tipo = 'image/svg+xml' if nome.endswith('.svg') else 'image/png' if nome.endswith('.png') else 'text/html' if nome.endswith('.html') else 'text/css' if nome.endswith('.css') else 'text/javascript'
+
+        tipos = {
+            '.html': 'text/html',
+            '.css': 'text/css',
+            '.js': 'text/javascript',
+            '.png': 'image/png',
+            '.webp': 'image/webp',
+            '.svg': 'image/svg+xml',
+            '.txt': 'text/plain',
+        }
+        tipo = tipos.get(arquivo.suffix, 'application/octet-stream')
         self.send_response(200)
         self.send_header('Content-Type', tipo + '; charset=utf-8')
         self.send_header('Content-Length', str(len(conteudo)))
-        self.send_header('X-Content-Type-Options', 'nosniff')
         self.send_header('Cache-Control', 'no-store')
+        self.send_header('X-Content-Type-Options', 'nosniff')
         self.end_headers()
         self.wfile.write(conteudo)
 
+    def redirecionar(self, destino):
+        self.send_response(302)
+        self.send_header('Location', destino)
+        self.send_header('Content-Length', '0')
+        self.end_headers()
 
 def iniciar():
     BANCO.parent.mkdir(parents=True, exist_ok=True)

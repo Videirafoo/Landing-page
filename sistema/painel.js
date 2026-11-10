@@ -27,9 +27,9 @@ const D = {
 const cores=['#2b7bea','#34bf76','#f5a424','#9254de','#11baba','#e75197'];
 let estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};
 let timeout;
-const emDemo=Boolean(window.BASE_STATIC_DEMO);
-const baseDemo = emDemo ? location.pathname.replace(/(?:index\.html)?$/, "") : "";
-const destino=rota=>emDemo?baseDemo+(rota==="/cadastrar"?"?acao=cadastrar":""):rota;
+const emDemo = Boolean(window.BASE_STATIC_DEMO);
+const pastaSistema = new URL('./', document.querySelector('script[src*="painel.js"]').src).pathname;
+const destino = rota => pastaSistema + (rota === '/cadastrar' ? '?acao=cadastrar' : '');
 
 async function api(url,op={}){
   const r=await fetch(url,{...op,headers:{'Content-Type':'application/json',...(op.headers||{})},credentials:'same-origin'});
@@ -151,7 +151,7 @@ function topo(t,desc,acoes=''){
 }
 function kpi(numero,texto,icone,cor,link){return `<button class="kpi cartao" type="button" data-ir="${link}"><div class="kpi-icone" style="--cor:${cor}"><span class="kpi-svg" data-icone="${icone}" aria-hidden="true"></span></div><div><small>${esc(texto)}</small><strong>${esc(numero)}</strong><em>Ver registros ↗</em></div></button>`;}
 function painel(titulo,acoes,conteudo){return `<section class="cartao painel"><header class="painel-topo"><h2>${titulo}</h2>${acoes||''}</header>${conteudo}</section>`;}
-function vazio(texto,tipo=''){const imagens={frequencia:'vazio-frequencia.svg',comunicados:'vazio-comunicados.svg',desempenho:'vazio-desempenho.svg',atividades:'vazio-atividades.svg'};const arquivo=imagens[tipo];const base=emDemo?'../sistema-saas/public/assets/':'/assets/';return `<div class="vazio vazio-ilustrado">${arquivo?`<img src="${base+arquivo}" alt="" loading="lazy">`:''}<span>${esc(texto)}</span></div>`;} 
+function vazio(texto,tipo=''){const imagens={frequencia:'vazio-frequencia.svg',comunicados:'vazio-comunicados.svg',desempenho:'vazio-desempenho.svg',atividades:'vazio-atividades.svg'};const arquivo=imagens[tipo];const base=pastaSistema+'assets/';return `<div class="vazio vazio-ilustrado">${arquivo?`<img src="${base+arquivo}" alt="" loading="lazy">`:''}<span>${esc(texto)}</span></div>`;} 
 function meses6(){return Array.from({length:6},(_,i)=>{const d=new Date(new Date().getFullYear(),new Date().getMonth()-5+i,1);return {id:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,nome:d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}});}
 function graficoLinha(frequencias){
   if(!frequencias.length)return vazio('Registre presenças e faltas para visualizar o gráfico.','frequencia');
@@ -263,4 +263,4 @@ document.addEventListener('keydown', e => {
 window.addEventListener('resize', () => {
   if (!selecionar('#aplicacao').hidden) atualizarMenu();
 });
-(async function iniciar(){try{if((location.pathname==='/cadastrar'||(emDemo&&new URLSearchParams(location.search).get('acao')==='cadastrar')))return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);selecionar('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();
+(async function iniciar(){try{if((location.pathname==='/cadastrar'||new URLSearchParams(location.search).get('acao')==='cadastrar'))return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);selecionar('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();
