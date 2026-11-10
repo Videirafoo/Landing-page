@@ -18,3 +18,10 @@ Usar **somente o logo oficial** do repositório `Videirafoo/Landing-page`. Palet
 - Estilo dos ícones concentrado em `public/icones.css`, não em blocos de overrides adicionados ao final de `style.css`.
 - Na seção Protótipo não usar gráficos inventados. Mostrar estados vazios da interface com acesso ao dashboard real.
 - A estrutura visual e as três imagens originais da landing devem permanecer inalteradas.
+
+
+## Navegação do painel
+- O menu lateral usa os SVGs Lucide existentes e apresenta azul no item ativo, cinza nos demais e realce laranja no hover.
+- No topo à direita, o sino abre Comunicados e o avatar abre Configurações; são botões funcionais.
+- Em telas até 1100px, o menu vira gaveta lateral, com botão de fechar e Escape para dispensar.
+- O login, a landing, o logo oficial e os dados não são alterados por esse refinamento.
