@@ -38,8 +38,10 @@ function criarClasses() {
     add: nome => lista.add(nome),
     remove: nome => lista.delete(nome),
     toggle: (nome, ativo) => {
-      if (ativo) lista.add(nome);
+      const adicionar = ativo === undefined ? !lista.has(nome) : Boolean(ativo);
+      if (adicionar) lista.add(nome);
       else lista.delete(nome);
+      return adicionar;
     }
   };
 }
