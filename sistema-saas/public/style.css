@@ -1058,6 +1058,135 @@ td:first-child {
 }
 
 .vazio-ilustrado {
+  flex-direction:column;
+  gap:4px;
+  padding:16px 12px;
+  font-size:12px;
+  min-height:188px
+}
+
+.vazio-ilustrado img {
+  width:112px;
+  height:96px;
+  max-width:50%;
+  object-fit:contain;
+  opacity:.92
+}
+
+.vazio-ilustrado span {
+  display:block;
+  max-width:95%;
+  line-height:1.45
+}
+
+@media(max-width:1150px) {
+  .metricas {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+}
+
+@media(max-width:1100px) {
+  .conteudo {
+    padding:20px 17px
+  }
+  .grade-paineis {
+    gap:12px
+  }
+}
+
+@media(max-width:760px) {
+  .menu-lateral {
+    width:76px;
+    min-width:76px;
+    position:sticky
+  }
+  .aplicacao:not(.menu-recolhido) .menu-lateral {
+    position:fixed;
+    left:0;
+    top:0;
+    width:225px;
+    min-width:225px;
+    height:100dvh;
+    z-index:20
+  }
+  .aplicacao:not(.menu-recolhido) .corpo-app {
+    margin-left:76px
+  }
+  .sombra-menu.aberto {
+    display:block;
+    position:fixed;
+    inset:0;
+    background:#192b4b77;
+    z-index:19
+  }
+  .conteudo {
+    padding:14px 9px
+  }
+  .grade-paineis {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px
+  }
+  .painel {
+    min-width:0;
+    min-height:205px;
+    padding:10px;
+    overflow:hidden
+  }
+  .painel-topo {
+    display:flex;
+    align-items:flex-start;
+    flex-direction:column;
+    gap:3px;
+    margin-bottom:6px
+  }
+  .painel h2 {
+    font-size:11px;
+    line-height:1.35
+  }
+  .link-texto {
+    padding:2px 0;
+    font-size:9px
+  }
+  .vazio {
+    min-height:130px;
+    padding:5px;
+    font-size:10px;
+    line-height:1.35
+  }
+  .lista-interior {
+    min-height:125px;
+    max-height:165px;
+    overflow-y:auto
+  }
+  .linha-atividade {
+    flex-wrap:wrap;
+    gap:4px;
+    padding:7px 0
+  }
+  .linha-atividade b {
+    font-size:10px
+  }
+  .linha-atividade p {
+    font-size:9px
+  }
+  .svg-grafico {
+    overflow-x:auto
+  }
+  .svg-grafico svg {
+    min-width:210px
+  }
+  .barras {
+    min-height:130px;
+    gap:2px;
+    padding:8px 2px 2px
+  }
+  .barra-trilho {
+    height:95px
+  }
+  .barra-item strong {
+    font-size:8px
+  }
+  .vazio-ilustrado {
     min-height:130px;
     padding:5px;
     gap:6px;
@@ -1276,133 +1405,3 @@ html,body {
     display:none
   }
 }
-
-.vazio-ilustrado {
-  flex-direction:column;
-  gap:4px;
-  padding:16px 12px;
-  font-size:12px;
-  min-height:188px
-}
-
-.vazio-ilustrado img {
-  width:112px;
-  height:96px;
-  max-width:50%;
-  object-fit:contain;
-  opacity:.92
-}
-
-.vazio-ilustrado span {
-  display:block;
-  max-width:95%;
-  line-height:1.45
-}
-
-@media(max-width:1150px) {
-  .metricas {
-    grid-template-columns:repeat(2,minmax(0,1fr))
-  }
-}
-
-@media(max-width:1100px) {
-  .conteudo {
-    padding:20px 17px
-  }
-  .grade-paineis {
-    gap:12px
-  }
-}
-
-@media(max-width:760px) {
-  .menu-lateral {
-    width:76px;
-    min-width:76px;
-    position:sticky
-  }
-  .aplicacao:not(.menu-recolhido) .menu-lateral {
-    position:fixed;
-    left:0;
-    top:0;
-    width:225px;
-    min-width:225px;
-    height:100dvh;
-    z-index:20
-  }
-  .aplicacao:not(.menu-recolhido) .corpo-app {
-    margin-left:76px
-  }
-  .sombra-menu.aberto {
-    display:block;
-    position:fixed;
-    inset:0;
-    background:#192b4b77;
-    z-index:19
-  }
-  .conteudo {
-    padding:14px 9px
-  }
-  .grade-paineis {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:9px
-  }
-  .painel {
-    min-width:0;
-    min-height:205px;
-    padding:10px;
-    overflow:hidden
-  }
-  .painel-topo {
-    display:flex;
-    align-items:flex-start;
-    flex-direction:column;
-    gap:3px;
-    margin-bottom:6px
-  }
-  .painel h2 {
-    font-size:11px;
-    line-height:1.35
-  }
-  .link-texto {
-    padding:2px 0;
-    font-size:9px
-  }
-  .vazio {
-    min-height:130px;
-    padding:5px;
-    font-size:10px;
-    line-height:1.35
-  }
-  .lista-interior {
-    min-height:125px;
-    max-height:165px;
-    overflow-y:auto
-  }
-  .linha-atividade {
-    flex-wrap:wrap;
-    gap:4px;
-    padding:7px 0
-  }
-  .linha-atividade b {
-    font-size:10px
-  }
-  .linha-atividade p {
-    font-size:9px
-  }
-  .svg-grafico {
-    overflow-x:auto
-  }
-  .svg-grafico svg {
-    min-width:210px
-  }
-  .barras {
-    min-height:130px;
-    gap:2px;
-    padding:8px 2px 2px
-  }
-  .barra-trilho {
-    height:95px
-  }
-  .barra-item strong {
-    font-size:8px
-  }
