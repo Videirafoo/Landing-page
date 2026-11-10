@@ -1,0 +1,31 @@
+{
+  "escolas": [
+    {
+      "id": "base-academico",
+      "nome": "B.A.S.E. — Ambiente Acadêmico",
+      "criadoEm": "2026-11-09T00:00:00+00:00"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "base-admin",
+      "escolaId": "base-academico",
+      "nome": "Administrador B.A.S.E.",
+      "matricula": "202613078",
+      "hash": "5b2e6f88ac9e10d40495cc07bb3dc791:07bee5271cb3088e95f5a4475f3d7fbd7ca845f7d9e9e86fd54f89163b4945c0",
+      "perfil": "Administrador"
+    }
+  ],
+  "dados": {
+    "base-academico": {
+      "alunos": [],
+      "matriculas": [],
+      "turmas": [],
+      "professores": [],
+      "frequencias": [],
+      "avaliacoes": [],
+      "conteudos": [],
+      "avisos": []
+    }
+  }
+}
