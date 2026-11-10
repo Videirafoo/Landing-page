@@ -16,3 +16,11 @@
 - A 390px e 980px, o menu deve permanecer fechado inicialmente e abrir por botão com `aria-expanded=true`.
 - Fechar por botão X, fundo escurecido e Escape; verificar ausência de sobreposição permanente do conteúdo.
 - Confirmar o uso do SVG de sair, o logo original e as mesmas rotas de login.
+
+
+## Falha de dashboard em branco — regressão
+- O menu deve ser selecionado com `selecionarTodos('#menu .item-menu')` antes de executar `.forEach()`.
+- Clicar em Dashboard, Alunos e Comunicados não pode lançar exceções antes de carregar a página.
+- Verificar que a área `#conteudo` mostra carregando e em seguida cartões ou mensagem de erro.
+- Executar `node testes/testar_navegacao.js` para a regressão de JavaScript, sem bibliotecas extras.
+- Não alterar o conteúdo de `dados/banco.txt` nem publicar dados reais na demonstração.

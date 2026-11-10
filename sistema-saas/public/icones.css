@@ -1,31 +1,142 @@
-.item-menu .item-icone { display:block; width:20px; height:20px; flex:0 0 20px; background-color:#66758a; -webkit-mask:var(--icone) center / contain no-repeat; mask:var(--icone) center / contain no-repeat; transition:background-color .16s ease; }
-.item-menu:hover .item-icone,.item-menu:focus-visible .item-icone { background-color:#f58220; }
-.item-menu.ativo .item-icone { background-color:#ffb15d; }
-.item-menu.ativo:hover .item-icone { background-color:#ffd093; }
-.item-menu:focus-visible { outline:2px solid #f58220; outline-offset:2px; }
-.icone-topo { display:block; width:19px; height:19px; background:currentColor; -webkit-mask:var(--icone) center/contain no-repeat; mask:var(--icone) center/contain no-repeat; }
-.icone-topo[data-icone="sino"] { --icone:url("assets/icones/bell.svg"); }
-.icone-topo[data-icone="menu"] { --icone:url("assets/icones/menu.svg"); }
-.icone-topo[data-icone="fechar"] { --icone:url("assets/icones/x.svg"); }
-.icone-topo[data-icone="sair"] { --icone:url("assets/icones/logout.svg"); }
-.kpi-svg,.mini-svg { display:block; width:21px; height:21px; background:currentColor; -webkit-mask:var(--icone) center / contain no-repeat; mask:var(--icone) center / contain no-repeat; }
-.mini-svg { width:17px; height:17px; }
-.item-menu[data-pagina="dashboard"] .item-icone { --icone: url("assets/icones/dashboard.svg"); }
-.item-menu[data-pagina="alunos"] .item-icone { --icone: url("assets/icones/alunos.svg"); }
-.item-menu[data-pagina="matriculas"] .item-icone { --icone: url("assets/icones/matriculas.svg"); }
-.item-menu[data-pagina="turmas"] .item-icone { --icone: url("assets/icones/turmas.svg"); }
-.item-menu[data-pagina="professores"] .item-icone { --icone: url("assets/icones/professores.svg"); }
-.item-menu[data-pagina="frequencias"] .item-icone { --icone: url("assets/icones/frequencia.svg"); }
-.item-menu[data-pagina="avaliacoes"] .item-icone { --icone: url("assets/icones/avaliacoes.svg"); }
-.item-menu[data-pagina="conteudos"] .item-icone { --icone: url("assets/icones/conteudos.svg"); }
-.item-menu[data-pagina="avisos"] .item-icone { --icone: url("assets/icones/comunicados.svg"); }
-.item-menu[data-pagina="relatorios"] .item-icone { --icone: url("assets/icones/relatorios.svg"); }
-.item-menu[data-pagina="indicadores"] .item-icone { --icone: url("assets/icones/indicadores.svg"); }
-.item-menu[data-pagina="configuracoes"] .item-icone { --icone: url("assets/icones/configuracoes.svg"); }
-.item-menu[data-pagina="usuarios"] .item-icone { --icone: url("assets/icones/usuarios.svg"); }
-.kpi-svg[data-icone="alunos"] { --icone: url("assets/icones/alunos.svg"); }
-.kpi-svg[data-icone="turmas"] { --icone: url("assets/icones/turmas.svg"); }
-.kpi-svg[data-icone="professores"] { --icone: url("assets/icones/professores.svg"); }
-.kpi-svg[data-icone="frequencias"] { --icone: url("assets/icones/frequencia.svg"); }
-.mini-svg[data-icone="avisos"] { --icone: url("assets/icones/comunicados.svg"); }
-.mini-svg[data-icone="avaliacoes"] { --icone: url("assets/icones/avaliacoes.svg"); }
+.item-menu .item-icone {
+  display:block;
+  width:20px;
+  height:20px;
+  flex:0 0 20px;
+  background-color:#66758a;
+  -webkit-mask:var(--icone) center / contain no-repeat;
+  mask:var(--icone) center / contain no-repeat;
+  transition:background-color .16s ease;
+}
+
+.item-menu:hover .item-icone,.item-menu:focus-visible .item-icone {
+  background-color:#f58220;
+}
+
+.item-menu.ativo .item-icone {
+  background-color:#ffb15d;
+}
+
+.item-menu.ativo:hover .item-icone {
+  background-color:#ffd093;
+}
+
+.item-menu:focus-visible {
+  outline:2px solid #f58220;
+  outline-offset:2px;
+}
+
+.icone-topo {
+  display:block;
+  width:19px;
+  height:19px;
+  background:currentColor;
+  -webkit-mask:var(--icone) center/contain no-repeat;
+  mask:var(--icone) center/contain no-repeat;
+}
+
+.icone-topo[data-icone="sino"] {
+  --icone:url("assets/icones/bell.svg");
+}
+
+.icone-topo[data-icone="menu"] {
+  --icone:url("assets/icones/menu.svg");
+}
+
+.icone-topo[data-icone="fechar"] {
+  --icone:url("assets/icones/x.svg");
+}
+
+.icone-topo[data-icone="sair"] {
+  --icone:url("assets/icones/logout.svg");
+}
+
+.kpi-svg,.mini-svg {
+  display:block;
+  width:21px;
+  height:21px;
+  background:currentColor;
+  -webkit-mask:var(--icone) center / contain no-repeat;
+  mask:var(--icone) center / contain no-repeat;
+}
+
+.mini-svg {
+  width:17px;
+  height:17px;
+}
+
+.item-menu[data-pagina="dashboard"] .item-icone {
+  --icone: url("assets/icones/dashboard.svg");
+}
+
+.item-menu[data-pagina="alunos"] .item-icone {
+  --icone: url("assets/icones/alunos.svg");
+}
+
+.item-menu[data-pagina="matriculas"] .item-icone {
+  --icone: url("assets/icones/matriculas.svg");
+}
+
+.item-menu[data-pagina="turmas"] .item-icone {
+  --icone: url("assets/icones/turmas.svg");
+}
+
+.item-menu[data-pagina="professores"] .item-icone {
+  --icone: url("assets/icones/professores.svg");
+}
+
+.item-menu[data-pagina="frequencias"] .item-icone {
+  --icone: url("assets/icones/frequencia.svg");
+}
+
+.item-menu[data-pagina="avaliacoes"] .item-icone {
+  --icone: url("assets/icones/avaliacoes.svg");
+}
+
+.item-menu[data-pagina="conteudos"] .item-icone {
+  --icone: url("assets/icones/conteudos.svg");
+}
+
+.item-menu[data-pagina="avisos"] .item-icone {
+  --icone: url("assets/icones/comunicados.svg");
+}
+
+.item-menu[data-pagina="relatorios"] .item-icone {
+  --icone: url("assets/icones/relatorios.svg");
+}
+
+.item-menu[data-pagina="indicadores"] .item-icone {
+  --icone: url("assets/icones/indicadores.svg");
+}
+
+.item-menu[data-pagina="configuracoes"] .item-icone {
+  --icone: url("assets/icones/configuracoes.svg");
+}
+
+.item-menu[data-pagina="usuarios"] .item-icone {
+  --icone: url("assets/icones/usuarios.svg");
+}
+
+.kpi-svg[data-icone="alunos"] {
+  --icone: url("assets/icones/alunos.svg");
+}
+
+.kpi-svg[data-icone="turmas"] {
+  --icone: url("assets/icones/turmas.svg");
+}
+
+.kpi-svg[data-icone="professores"] {
+  --icone: url("assets/icones/professores.svg");
+}
+
+.kpi-svg[data-icone="frequencias"] {
+  --icone: url("assets/icones/frequencia.svg");
+}
+
+.mini-svg[data-icone="avisos"] {
+  --icone: url("assets/icones/comunicados.svg");
+}
+
+.mini-svg[data-icone="avaliacoes"] {
+  --icone: url("assets/icones/avaliacoes.svg");
+}

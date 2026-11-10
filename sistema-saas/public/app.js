@@ -1,5 +1,10 @@
-const $ = (q) => document.querySelector(q);
-const $$ = (q) => [...document.querySelectorAll(q)];
+function selecionar(seletor) {
+  return document.querySelector(seletor);
+}
+
+function selecionarTodos(seletor) {
+  return document.querySelectorAll(seletor);
+}
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const hoje = () => new Date().toLocaleDateString('en-CA');
 const dataBR = v => v ? new Date(v.length === 10 ? v+'T12:00:00' : v).toLocaleDateString('pt-BR') : '—';
@@ -32,51 +37,90 @@ async function api(url,op={}){
   if(!r.ok){if(r.status===401&&estado.usuario){estado.usuario=null;history.replaceState(null,'',destino('/entrar'));entrarTela(false);}throw Error(d.erro||'Erro ao executar operação.');}
   return d;
 }
-function alerta(msg){const el=$('#toast');el.textContent=msg;el.classList.add('mostrar');clearTimeout(timeout);timeout=setTimeout(()=>el.classList.remove('mostrar'),3500);}
+function alerta(msg){const el=selecionar('#toast');el.textContent=msg;el.classList.add('mostrar');clearTimeout(timeout);timeout=setTimeout(()=>el.classList.remove('mostrar'),3500);}
 function entrarTela(configurar){
   document.title='B.A.S.E. | '+(configurar?'Cadastrar escola':'Entrar');
-  $('#aplicacao').hidden=true;$('#acesso').hidden=false;
-  $('#campos-iniciais').hidden=!configurar;
-  $('#form-acesso').dataset.modo=configurar?'cadastrar':'login';
-  $('#link-cadastrar').hidden=configurar;$('#link-entrar').hidden=!configurar;
-  $('#acesso-titulo').textContent=configurar?'Cadastrar escola':'Acesso ao sistema';
-  $('#acesso-tipo').textContent=configurar?'NOVO CADASTRO':'ÁREA RESTRITA';
-  $('#acesso-desc').textContent=configurar?'Cadastre sua escola e crie seu acesso.':'Entre com matrícula e senha. Cada escola acessa apenas seus dados.';
-  $('#acesso-enviar').textContent=configurar?'Cadastrar escola':'Entrar';
-  $('#senha').minLength=configurar?8:1;
-  $('#acesso-erro').textContent='';
+  selecionar('#aplicacao').hidden=true;selecionar('#acesso').hidden=false;
+  selecionar('#campos-iniciais').hidden=!configurar;
+  selecionar('#form-acesso').dataset.modo=configurar?'cadastrar':'login';
+  selecionar('#link-cadastrar').hidden=configurar;selecionar('#link-entrar').hidden=!configurar;
+  selecionar('#acesso-titulo').textContent=configurar?'Cadastrar escola':'Acesso ao sistema';
+  selecionar('#acesso-tipo').textContent=configurar?'NOVO CADASTRO':'ÁREA RESTRITA';
+  selecionar('#acesso-desc').textContent=configurar?'Cadastre sua escola e crie seu acesso.':'Entre com matrícula e senha. Cada escola acessa apenas seus dados.';
+  selecionar('#acesso-enviar').textContent=configurar?'Cadastrar escola':'Entrar';
+  selecionar('#senha').minLength=configurar?8:1;
+  selecionar('#acesso-erro').textContent='';
 }
 function entrarApp(d){
   document.title='B.A.S.E. | Dashboard';
   estado.usuario=d.usuario;estado.escola=d.escola;
-  $('#acesso').hidden=true;$('#aplicacao').hidden=false;
-  $('#escola-nome').textContent=d.escola;
-  $('#usuario-nome').textContent=d.usuario.nome;
-  $('#usuario-perfil').textContent=d.usuario.perfil;
-  $('#avatar').textContent=d.usuario.nome.charAt(0).toUpperCase();
-  $('#avatar-topo').textContent=d.usuario.nome.charAt(0).toUpperCase();
+  selecionar('#acesso').hidden=true;selecionar('#aplicacao').hidden=false;
+  selecionar('#escola-nome').textContent=d.escola;
+  selecionar('#usuario-nome').textContent=d.usuario.nome;
+  selecionar('#usuario-perfil').textContent=d.usuario.perfil;
+  selecionar('#avatar').textContent=d.usuario.nome.charAt(0).toUpperCase();
+  selecionar('#avatar-topo').textContent=d.usuario.nome.charAt(0).toUpperCase();
   history.replaceState(null,'',destino('/painel'));
   montarMenu(); navegar('dashboard');
 }
-function montarMenu(){
-  $('#menu').innerHTML=Object.keys(N).filter(k=>k!=='usuarios'||estado.usuario.perfil==='Administrador').map(k=>
-    `<button class="item-menu" type="button" data-pagina="${k}" title="${N[k]}" ${k==="dashboard"?'aria-current="page"':''}><span aria-hidden="true" class="item-icone"></span><span>${N[k]}</span></button>`).join('');
-  $$('#menu [data-pagina]').forEach(b=>b.onclick=()=>navegar(b.dataset.pagina));
+function montarMenu() {
+  const menu = selecionar('#menu');
+  const paginas = Object.keys(N).filter(pagina =>
+    pagina !== 'usuarios' || estado.usuario.perfil === 'Administrador'
+  );
+
+  menu.innerHTML = paginas.map(pagina => `
+    <button class="item-menu" type="button" data-pagina="${pagina}" title="${N[pagina]}">
+      <span class="item-icone" aria-hidden="true"></span>
+      <span>${N[pagina]}</span>
+    </button>
+  `).join('');
+
+  selecionarTodos('#menu [data-pagina]').forEach(botao => {
+    botao.onclick = () => navegar(botao.dataset.pagina);
+  });
 }
-function fecharMenu(){$('#menu-lateral').classList.remove('aberto');$('#sombra-menu').classList.remove('aberto');$('#abrir-menu').setAttribute('aria-expanded','false');}
-async function navegar(p){
-  fecharMenu();estado.pagina=p;
-  $('#topo-titulo').textContent=N[p];$('#topo-legenda').textContent=p==='dashboard'?'Visão geral da sua escola':'Base de Acompanhamento do Sistema Escolar';
-  $('#menu .item-menu').forEach(b=>{const ativo=b.dataset.pagina===p;b.classList.toggle('ativo',ativo);if(ativo)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-  $('#conteudo').innerHTML='<div class="centro-vazio">Carregando...</div>';
-  try{
-    if(p==='dashboard')await dashboard();
-    else if(D[p])await listagem(p);
-    else if(p==='relatorios')await relatorios();
-    else if(p==='indicadores')await indicadores();
-    else if(p==='configuracoes')configuracoes();
-  }catch(e){$('#conteudo').innerHTML=`<section class="cartao centro-vazio">${esc(e.message)}</section>`;}
+
+function fecharMenu() {
+  selecionar('#menu-lateral').classList.remove('aberto');
+  selecionar('#sombra-menu').classList.remove('aberto');
+  selecionar('#abrir-menu').setAttribute('aria-expanded', 'false');
 }
+
+async function navegar(pagina) {
+  fecharMenu();
+  estado.pagina = pagina;
+
+  selecionar('#topo-titulo').textContent = N[pagina];
+  selecionar('#topo-legenda').textContent = pagina === 'dashboard'
+    ? 'Visão geral da sua escola'
+    : 'Base de Acompanhamento do Sistema Escolar';
+
+  selecionarTodos('#menu .item-menu').forEach(botao => {
+    const ativo = botao.dataset.pagina === pagina;
+    botao.classList.toggle('ativo', ativo);
+
+    if (ativo) {
+      botao.setAttribute('aria-current', 'page');
+    } else {
+      botao.removeAttribute('aria-current');
+    }
+  });
+
+  const conteudo = selecionar('#conteudo');
+  conteudo.innerHTML = '<div class="centro-vazio">Carregando...</div>';
+
+  try {
+    if (pagina === 'dashboard') await dashboard();
+    else if (D[pagina]) await listagem(pagina);
+    else if (pagina === 'relatorios') await relatorios();
+    else if (pagina === 'indicadores') await indicadores();
+    else if (pagina === 'configuracoes') configuracoes();
+  } catch (erro) {
+    conteudo.innerHTML = `<section class="cartao centro-vazio">${esc(erro.message)}</section>`;
+  }
+}
+
 function topo(t,desc,acoes=''){
   return `<div class="pagina-topo"><div><h1>${esc(t)}</h1><p>${esc(desc)}</p></div><div class="pagina-acoes">${acoes}</div></div>`;
 }
@@ -103,7 +147,7 @@ async function dashboard(){
   const [resumo,freq,aval]=await Promise.all([api('/api/resumo'),api('/api/frequencias'),api('/api/avaliacoes')]);
   const avisos=resumo.avisos.length?resumo.avisos.map(a=>`<div class="linha-atividade"><span class="bloco-icon azul"><span class="mini-svg" data-icone="avisos" aria-hidden="true"></span></span><div><b>${esc(a.titulo)}</b><p>${esc(a.mensagem)}</p></div><small>${dataBR(a.criadoEm)}</small></div>`).join(''):vazio('Nenhum comunicado cadastrado.','comunicados');
   const atividades=resumo.atividades.length?resumo.atividades.map(a=>`<div class="linha-atividade"><span class="bloco-icon verde"><span class="mini-svg" data-icone="avaliacoes" aria-hidden="true"></span></span><div><b>${esc(a.titulo)}</b><p>${esc(N[a.tipo]||a.tipo)}</p></div><small>${dataBR(a.criadoEm)}</small></div>`).join(''):vazio('Os registros recentes aparecerão aqui.','atividades');
-  $('#conteudo').innerHTML=`<div class="metricas">
+  selecionar('#conteudo').innerHTML=`<div class="metricas">
     ${kpi(resumo.alunos,'Alunos matriculados','alunos','#2775db','alunos')}
     ${kpi(resumo.turmas,'Turmas','turmas','#2fbe6b','turmas')}
     ${kpi(resumo.professores,'Professores','professores','#eda019','professores')}
@@ -114,7 +158,7 @@ async function dashboard(){
     ${painel('Desempenho por Disciplina','<button class="link-texto" data-ir="avaliacoes">Ver notas</button>',graficoBarras(aval))}
     ${painel('Atividades Recentes','<button class="link-texto" data-ir="relatorios">Ver todas</button>',`<div class="lista-interior">${atividades}</div>`)}
   </div>`;
-  $$('#conteudo [data-ir]').forEach(b=>b.onclick=()=>navegar(b.dataset.ir));
+  selecionarTodos('#conteudo [data-ir]').forEach(b=>b.onclick=()=>navegar(b.dataset.ir));
 }
 function nomeRelacao(c,v){
   if(c==='alunoId')return estado.alunos.find(a=>a.id===v)?.nome||'Aluno removido';
@@ -128,16 +172,16 @@ async function listagem(p){
   const def=D[p];const [lista,alunos,turmas]=await Promise.all([api('/api/'+p),api('/api/alunos'),api('/api/turmas')]);
   estado.alunos=alunos;estado.turmas=turmas;
   const acoes=`<button id="novo" class="botao primaria">+ Novo cadastro</button>`;
-  $('#conteudo').innerHTML=topo(def.titulo,def.desc,acoes)+`<section class="cartao tabela-cartao"><div class="busca-linha"><span>${lista.length} registro(s)</span><input type="search" id="buscar" placeholder="Buscar registros" aria-label="Buscar registros"></div><div class="tabela-scroll"><table><thead><tr>${def.cols.map(c=>`<th>${esc(c[1])}</th>`).join('')}${p==='usuarios'?'':'<th>Ações</th>'}</tr></thead><tbody id="registros"></tbody></table></div></section>`;
+  selecionar('#conteudo').innerHTML=topo(def.titulo,def.desc,acoes)+`<section class="cartao tabela-cartao"><div class="busca-linha"><span>${lista.length} registro(s)</span><input type="search" id="buscar" placeholder="Buscar registros" aria-label="Buscar registros"></div><div class="tabela-scroll"><table><thead><tr>${def.cols.map(c=>`<th>${esc(c[1])}</th>`).join('')}${p==='usuarios'?'':'<th>Ações</th>'}</tr></thead><tbody id="registros"></tbody></table></div></section>`;
   function linhas(busca=''){
     const reg=lista.filter(a=>(JSON.stringify(a)+' '+(estado.alunos.find(x=>x.id===a.alunoId)?.nome||'')).toLowerCase().includes(busca.toLowerCase()));
-    $('#registros').innerHTML=reg.length?reg.map(a=>`<tr>${def.cols.map(([c])=>`<td>${nomeRelacao(c,a[c])}</td>`).join('')}${p==='usuarios'?'':`<td><button class="apagar" data-id="${esc(a.id)}">Excluir</button></td>`}</tr>`).join(''):`<tr><td colspan="${def.cols.length+1}">${vazio('Nenhum registro encontrado.')}</td></tr>`;
-    $$('#registros [data-id]').forEach(b=>b.onclick=async()=>{
+    selecionar('#registros').innerHTML=reg.length?reg.map(a=>`<tr>${def.cols.map(([c])=>`<td>${nomeRelacao(c,a[c])}</td>`).join('')}${p==='usuarios'?'':`<td><button class="apagar" data-id="${esc(a.id)}">Excluir</button></td>`}</tr>`).join(''):`<tr><td colspan="${def.cols.length+1}">${vazio('Nenhum registro encontrado.')}</td></tr>`;
+    selecionarTodos('#registros [data-id]').forEach(b=>b.onclick=async()=>{
       if(!confirm('Excluir este registro?'))return;
       try{await api('/api/'+p+'/'+encodeURIComponent(b.dataset.id),{method:'DELETE'});alerta('Registro excluído.');navegar(p);}catch(e){alerta(e.message);}
     });
   }
-  linhas();$('#buscar').oninput=e=>linhas(e.target.value);$('#novo').onclick=()=>abrirCadastro(p);
+  linhas();selecionar('#buscar').oninput=e=>linhas(e.target.value);selecionar('#novo').onclick=()=>abrirCadastro(p);
 }
 function campo(chave,nome){
   if(chave==='alunoId')return `<label>${esc(nome)}<select name="${chave}" required><option value="">Selecione um aluno</option>${estado.alunos.map(a=>`<option value="${esc(a.id)}">${esc(a.nome)}</option>`).join('')}</select></label>`;
@@ -149,44 +193,44 @@ function campo(chave,nome){
   return `<label>${esc(nome)}<input name="${chave}" type="${tipo}" ${extra} maxlength="150" required placeholder="${esc(nome)}"></label>`;
 }
 function abrirCadastro(p){
-  $('#modal-titulo').textContent='Novo registro • '+D[p].titulo;
-  $('#modal-campos').innerHTML=D[p].campos.map(([c,n])=>campo(c,n)).join('');
-  $('#modal-erro').textContent='';$('#form-cadastro').dataset.pagina=p;$('#modal').showModal();
+  selecionar('#modal-titulo').textContent='Novo registro • '+D[p].titulo;
+  selecionar('#modal-campos').innerHTML=D[p].campos.map(([c,n])=>campo(c,n)).join('');
+  selecionar('#modal-erro').textContent='';selecionar('#form-cadastro').dataset.pagina=p;selecionar('#modal').showModal();
 }
 async function relatorios(){
   const resumo=await api('/api/resumo');
-  $('#conteudo').innerHTML=topo('Relatórios','Resumo da escola com informações do banco TXT.','<button id="imprimir" class="botao primaria">Imprimir relatório</button>')+`<div class="cartao resumo-cartao"><h2>${esc(estado.escola)}</h2><p>Data: ${dataBR(hoje())}</p><div class="resumo-linhas"><span>Alunos cadastrados <b>${resumo.alunos}</b></span><span>Turmas <b>${resumo.turmas}</b></span><span>Professores <b>${resumo.professores}</b></span><span>Frequência média <b>${resumo.frequencia===null?'Sem registros':resumo.frequencia+'%'}</b></span></div></div>`;
-  $('#imprimir').onclick=()=>window.print();
+  selecionar('#conteudo').innerHTML=topo('Relatórios','Resumo da escola com informações do banco TXT.','<button id="imprimir" class="botao primaria">Imprimir relatório</button>')+`<div class="cartao resumo-cartao"><h2>${esc(estado.escola)}</h2><p>Data: ${dataBR(hoje())}</p><div class="resumo-linhas"><span>Alunos cadastrados <b>${resumo.alunos}</b></span><span>Turmas <b>${resumo.turmas}</b></span><span>Professores <b>${resumo.professores}</b></span><span>Frequência média <b>${resumo.frequencia===null?'Sem registros':resumo.frequencia+'%'}</b></span></div></div>`;
+  selecionar('#imprimir').onclick=()=>window.print();
 }
 async function indicadores(){
   const [r,avs,fr]=await Promise.all([api('/api/resumo'),api('/api/avaliacoes'),api('/api/frequencias')]);
   const media=avs.length?(avs.reduce((s,v)=>s+Number(v.nota),0)/avs.length).toFixed(1):'—';
-  $('#conteudo').innerHTML=topo('Indicadores','Todos os dados são calculados a partir dos cadastros.')+`<div class="metricas">${kpi(r.alunos,'Alunos','♙','#2775db','alunos')}${kpi(r.turmas,'Turmas','▥','#2fbe6b','turmas')}${kpi(fr.length,'Registros de frequência','✓','#eda019','frequencias')}${kpi(media,'Média das avaliações','◎','#954de3','avaliacoes')}</div>`+painel('Notas por disciplina',null,graficoBarras(avs));
-  $$('#conteudo [data-ir]').forEach(b=>b.onclick=()=>navegar(b.dataset.ir));
+  selecionar('#conteudo').innerHTML=topo('Indicadores','Todos os dados são calculados a partir dos cadastros.')+`<div class="metricas">${kpi(r.alunos,'Alunos','♙','#2775db','alunos')}${kpi(r.turmas,'Turmas','▥','#2fbe6b','turmas')}${kpi(fr.length,'Registros de frequência','✓','#eda019','frequencias')}${kpi(media,'Média das avaliações','◎','#954de3','avaliacoes')}</div>`+painel('Notas por disciplina',null,graficoBarras(avs));
+  selecionarTodos('#conteudo [data-ir]').forEach(b=>b.onclick=()=>navegar(b.dataset.ir));
 }
 function configuracoes(){
   const admin=estado.usuario.perfil==='Administrador';
-  $('#conteudo').innerHTML=topo('Configurações','Dados básicos desta escola.')+`<div class="cartao configuracoes-cartao"><h2>Nome da instituição</h2><form id="form-escola"><label>Escola<input name="nome" value="${esc(estado.escola)}" maxlength="120" required ${admin?'':'disabled'}></label><button class="botao primaria" ${admin?'':'disabled'}>Salvar alteração</button></form><p>${admin?'Somente o administrador pode alterar o nome.':'Apenas administradores podem modificar as configurações.'}</p></div>`;
-  if(admin)$('#form-escola').onsubmit=async e=>{e.preventDefault();try{let r=await api('/api/escola',{method:'PUT',body:JSON.stringify({nome:new FormData(e.target).get('nome')})});estado.escola=r.escola;$('#escola-nome').textContent=r.escola;alerta('Escola atualizada.');}catch(err){alerta(err.message)}};
+  selecionar('#conteudo').innerHTML=topo('Configurações','Dados básicos desta escola.')+`<div class="cartao configuracoes-cartao"><h2>Nome da instituição</h2><form id="form-escola"><label>Escola<input name="nome" value="${esc(estado.escola)}" maxlength="120" required ${admin?'':'disabled'}></label><button class="botao primaria" ${admin?'':'disabled'}>Salvar alteração</button></form><p>${admin?'Somente o administrador pode alterar o nome.':'Apenas administradores podem modificar as configurações.'}</p></div>`;
+  if(admin)selecionar('#form-escola').onsubmit=async e=>{e.preventDefault();try{let r=await api('/api/escola',{method:'PUT',body:JSON.stringify({nome:new FormData(e.target).get('nome')})});estado.escola=r.escola;selecionar('#escola-nome').textContent=r.escola;alerta('Escola atualizada.');}catch(err){alerta(err.message)}};
 }
-$('#form-acesso').onsubmit=async e=>{
-  e.preventDefault();$('#acesso-erro').textContent='';$('#acesso-enviar').disabled=true;
+selecionar('#form-acesso').onsubmit=async e=>{
+  e.preventDefault();selecionar('#acesso-erro').textContent='';selecionar('#acesso-enviar').disabled=true;
   try{const d=Object.fromEntries(new FormData(e.target));entrarApp(await api('/api/'+e.target.dataset.modo,{method:'POST',body:JSON.stringify(d)}));}
-  catch(err){$('#acesso-erro').textContent=err.message;}finally{$('#acesso-enviar').disabled=false;}
+  catch(err){selecionar('#acesso-erro').textContent=err.message;}finally{selecionar('#acesso-enviar').disabled=false;}
 };
-$('#mostrar-senha').onchange=e=>$('#senha').type=e.target.checked?'text':'password';
-$('#form-cadastro').onsubmit=async e=>{
+selecionar('#mostrar-senha').onchange=e=>selecionar('#senha').type=e.target.checked?'text':'password';
+selecionar('#form-cadastro').onsubmit=async e=>{
   e.preventDefault();const p=e.target.dataset.pagina;const d=Object.fromEntries(new FormData(e.target));
   if(p==='frequencias')d.presente=d.presente==='true';
-  try{await api('/api/'+p,{method:'POST',body:JSON.stringify(d)});$('#modal').close();alerta('Cadastro salvo somente na sua escola.');navegar(p);}
-  catch(err){$('#modal-erro').textContent=err.message;}
+  try{await api('/api/'+p,{method:'POST',body:JSON.stringify(d)});selecionar('#modal').close();alerta('Cadastro salvo somente na sua escola.');navegar(p);}
+  catch(err){selecionar('#modal-erro').textContent=err.message;}
 };
-$('#fechar-modal').onclick=()=>$('#modal').close();$('#cancelar-modal').onclick=()=>$('#modal').close();
-$('#sair').onclick=async()=>{try{await api('/api/sair',{method:'POST'});}catch{}estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};$('#form-acesso').reset();history.replaceState(null,'',destino('/entrar'));entrarTela(false);};
-$('#abrir-menu').onclick=()=>{$('#menu-lateral').classList.add('aberto');$('#sombra-menu').classList.add('aberto');$('#abrir-menu').setAttribute('aria-expanded','true');$('#fechar-menu-lateral').focus();};
-$('#fechar-menu-lateral').onclick=fecharMenu;
-$('#sombra-menu').onclick=fecharMenu;
-$('#abrir-avisos').onclick=()=>navegar('avisos');
-$('#abrir-perfil').onclick=()=>navegar('configuracoes');
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#menu-lateral').classList.contains('aberto'))fecharMenu();});
-(async function iniciar(){try{if((location.pathname==='/cadastrar'||(emDemo&&new URLSearchParams(location.search).get('acao')==='cadastrar')))return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);$('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();
+selecionar('#fechar-modal').onclick=()=>selecionar('#modal').close();selecionar('#cancelar-modal').onclick=()=>selecionar('#modal').close();
+selecionar('#sair').onclick=async()=>{try{await api('/api/sair',{method:'POST'});}catch{}estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};selecionar('#form-acesso').reset();history.replaceState(null,'',destino('/entrar'));entrarTela(false);};
+selecionar('#abrir-menu').onclick=()=>{selecionar('#menu-lateral').classList.add('aberto');selecionar('#sombra-menu').classList.add('aberto');selecionar('#abrir-menu').setAttribute('aria-expanded','true');selecionar('#fechar-menu-lateral').focus();};
+selecionar('#fechar-menu-lateral').onclick=fecharMenu;
+selecionar('#sombra-menu').onclick=fecharMenu;
+selecionar('#abrir-avisos').onclick=()=>navegar('avisos');
+selecionar('#abrir-perfil').onclick=()=>navegar('configuracoes');
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selecionar('#menu-lateral').classList.contains('aberto'))fecharMenu();});
+(async function iniciar(){try{if((location.pathname==='/cadastrar'||(emDemo&&new URLSearchParams(location.search).get('acao')==='cadastrar')))return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);selecionar('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();
