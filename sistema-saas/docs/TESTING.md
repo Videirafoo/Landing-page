@@ -8,3 +8,11 @@
 - Verificar hero, seção web e seção mobile, sem repetições nem seção de acesso adicional.
 - Testar Entrar, Cadastrar escola, links nas três imagens e menu móvel em 360/390 px.
 - Verificar que o dashboard, os 13 ícones SVG, o backend Python e o banco TXT não sofreram alteração.
+
+
+## Controles e ícones
+- Verificar 13 botões com ícones e `aria-current` atualizado ao navegar.
+- Clicar no sino deve abrir Comunicados; clicar no avatar deve abrir Configurações.
+- A 390px e 980px, o menu deve permanecer fechado inicialmente e abrir por botão com `aria-expanded=true`.
+- Fechar por botão X, fundo escurecido e Escape; verificar ausência de sobreposição permanente do conteúdo.
+- Confirmar o uso do SVG de sair, o logo original e as mesmas rotas de login.

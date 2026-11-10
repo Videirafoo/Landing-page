@@ -60,14 +60,14 @@ function entrarApp(d){
 }
 function montarMenu(){
   $('#menu').innerHTML=Object.keys(N).filter(k=>k!=='usuarios'||estado.usuario.perfil==='Administrador').map(k=>
-    `<button class="item-menu" type="button" data-pagina="${k}"><span aria-hidden="true" class="item-icone"></span><span>${N[k]}</span></button>`).join('');
+    `<button class="item-menu" type="button" data-pagina="${k}" title="${N[k]}" ${k==="dashboard"?'aria-current="page"':''}><span aria-hidden="true" class="item-icone"></span><span>${N[k]}</span></button>`).join('');
   $$('#menu [data-pagina]').forEach(b=>b.onclick=()=>navegar(b.dataset.pagina));
 }
-function fecharMenu(){$('#menu-lateral').classList.remove('aberto');$('#sombra-menu').classList.remove('aberto');}
+function fecharMenu(){$('#menu-lateral').classList.remove('aberto');$('#sombra-menu').classList.remove('aberto');$('#abrir-menu').setAttribute('aria-expanded','false');}
 async function navegar(p){
   fecharMenu();estado.pagina=p;
   $('#topo-titulo').textContent=N[p];$('#topo-legenda').textContent=p==='dashboard'?'Visão geral da sua escola':'Base de Acompanhamento do Sistema Escolar';
-  $$('#menu .item-menu').forEach(b=>b.classList.toggle('ativo',b.dataset.pagina===p));
+  $('#menu .item-menu').forEach(b=>{const ativo=b.dataset.pagina===p;b.classList.toggle('ativo',ativo);if(ativo)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   $('#conteudo').innerHTML='<div class="centro-vazio">Carregando...</div>';
   try{
     if(p==='dashboard')await dashboard();
@@ -183,6 +183,10 @@ $('#form-cadastro').onsubmit=async e=>{
 };
 $('#fechar-modal').onclick=()=>$('#modal').close();$('#cancelar-modal').onclick=()=>$('#modal').close();
 $('#sair').onclick=async()=>{try{await api('/api/sair',{method:'POST'});}catch{}estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};$('#form-acesso').reset();history.replaceState(null,'',destino('/entrar'));entrarTela(false);};
-$('#abrir-menu').onclick=()=>{$('#menu-lateral').classList.add('aberto');$('#sombra-menu').classList.add('aberto');};
+$('#abrir-menu').onclick=()=>{$('#menu-lateral').classList.add('aberto');$('#sombra-menu').classList.add('aberto');$('#abrir-menu').setAttribute('aria-expanded','true');$('#fechar-menu-lateral').focus();};
+$('#fechar-menu-lateral').onclick=fecharMenu;
 $('#sombra-menu').onclick=fecharMenu;
+$('#abrir-avisos').onclick=()=>navegar('avisos');
+$('#abrir-perfil').onclick=()=>navegar('configuracoes');
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#menu-lateral').classList.contains('aberto'))fecharMenu();});
 (async function iniciar(){try{if((location.pathname==='/cadastrar'||(emDemo&&new URLSearchParams(location.search).get('acao')==='cadastrar')))return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);$('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();
