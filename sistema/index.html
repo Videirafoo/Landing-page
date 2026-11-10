@@ -6,10 +6,11 @@
   <meta name="theme-color" content="#2059ce">
   <link rel="icon" type="image/png" href="../img/logo-oficial.png">
   <title>B.A.S.E. | Acesso ao Sistema Escolar</title>
-  <link rel="stylesheet" href="../sistema-saas/public/style.css?v=20261109-menu-ajustado">
-  <link rel="stylesheet" href="../sistema-saas/public/icones.css">
-  <script src="backend.js" defer></script>
-  <script src="../sistema-saas/public/app.js?v=20261109-menu-2x2" defer></script>
+  <link rel="stylesheet" href="painel.css?v=20261109-unificado">
+  <link rel="stylesheet" href="icones.css?v=20261109-unificado">
+  <script>window.BASE_STATIC_DEMO = location.hostname.endsWith(".github.io");</script>
+  <script src="dados-navegador.js?v=20261109-unificado" defer></script>
+  <script src="painel.js?v=20261109-unificado" defer></script>
 </head>
 <body>
   <main id="acesso" class="pagina-acesso" hidden>
@@ -30,7 +31,7 @@
           <p id="acesso-erro" class="mensagem-erro" role="alert" aria-live="polite"></p>
           <button type="submit" id="acesso-enviar" class="botao primaria largura">Entrar</button>
           <div class="links-acesso"><a href="?acao=cadastrar" id="link-cadastrar">Cadastrar nova escola</a><a href="./" id="link-entrar" hidden>Já tenho cadastro • Entrar</a><a href="../">Voltar ao site</a></div>
-          <small class="login-nota">Acesso de demonstração: as contas ficam apenas neste navegador. Não insira dados reais. A autenticação com TXT exige executar o servidor Python.</small>
+          <small class="login-nota">No GitHub Pages os cadastros ficam somente neste navegador. Com Python, a senha é validada no servidor e os cadastros são gravados em TXT local.</small>
         </form>
       </section>
     </div>
@@ -50,7 +51,7 @@
         <div class="topbar-direita"><button type="button" class="icone-botao topbar-acao" id="abrir-avisos" title="Ver comunicados" aria-label="Abrir comunicados"><span class="icone-topo" data-icone="sino" aria-hidden="true"></span></button><span class="nome-escola" id="escola-nome">Escola</span><button type="button" class="perfil-acesso" id="abrir-perfil" title="Configurações da escola" aria-label="Abrir configurações"><span class="avatar pequeno" id="avatar-topo">A</span></button></div>
       </header>
       <div id="conteudo" class="conteudo" aria-live="polite"></div>
-      <footer class="rodape-app">B.A.S.E. — Demonstração acadêmica; sem autenticação de servidor.</footer>
+      <footer class="rodape-app">B.A.S.E. — Projeto acadêmico. Não utilize dados pessoais reais de estudantes.</footer>
     </div>
   </div>
 
