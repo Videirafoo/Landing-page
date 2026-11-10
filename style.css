@@ -1136,130 +1136,132 @@ body {
 }
 
 .prototype-art {
+  display:block;
   background:#f9fbff;
   border:1px solid #b8c8ff4a;
   border-radius:22px;
-  box-shadow:0 32px 80px #020b2d77;
+  box-shadow:0 30px 65px #020b2d65;
   overflow:hidden;
-  transform:rotate(1.8deg)
+  text-decoration:none;
+  transform:rotate(1.1deg);
+  transition:transform .2s ease,box-shadow .2s ease
 }
-
+.prototype-art:hover {
+  transform:rotate(0);
+  box-shadow:0 36px 80px #020b2d80
+}
+.prototype-art:focus-visible {
+  outline:3px solid #f58220;
+  outline-offset:4px
+}
 .proto-top {
-  height:48px;
   display:flex;
   align-items:center;
   gap:6px;
-  padding:0 18px;
-  background:#f0f3fc;
-  color:#536486;
-  font-size:.7rem
+  height:40px;
+  padding:0 17px;
+  background:#eef3fd;
+  color:#526684;
+  font-size:.73rem
 }
-
 .proto-top b {
   margin-left:auto;
-  font-size:.75rem
+  font-weight:700
 }
-
 .proto-dot {
-  width:9px;
-  height:9px;
+  width:8px;
+  height:8px;
   border-radius:50%;
-  background:#9cb1d3
+  background:#a0b2ce
 }
-
-.proto-dot:first-child {
-  background:#f2a0aa
-}
-
-.proto-dot:nth-child(2) {
-  background:#f5cb6f
-}
-
+.proto-dot:first-child { background:#ed99a9 }
+.proto-dot:nth-child(2) { background:#f8cc69 }
 .proto-body {
   display:grid;
-  grid-template-columns:74px 1fr;
-  min-height:310px
+  grid-template-columns:56px minmax(0,1fr);
+  min-height:320px
 }
-
 .proto-side {
-  background:linear-gradient(180deg,#153c8a,#233ba5);
-  padding:25px 19px;
-  display:grid;
-  align-content:start;
-  gap:19px
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:22px;
+  padding:27px 0;
+  background:#102a5c
 }
-
-.proto-side i {
-  background:#ffffff35;
-  height:12px;
-  border-radius:4px
+.proto-side span {
+  display:block;
+  width:18px;
+  height:18px;
+  border:2px solid #b9d1ff;
+  border-radius:5px
 }
-
-.proto-side i:nth-child(2) {
-  background:#a5b4ff
-}
-
+.proto-side span:first-child { border-color:#ffbd73 }
 .proto-dashboard {
-  padding:24px 28px;
-  background:linear-gradient(150deg,#f9faff,#eef2ff);
-  color:#1c2e50
+  min-width:0;
+  padding:19px;
+  background:#f4f7fd;
+  color:#183456
 }
-
-.proto-dashboard h3 {
-  margin-bottom:20px;
-  font-size:1.1rem
+.proto-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:17px
 }
-
+.proto-head strong { font-size:1.1rem }
+.proto-head small { font-size:.73rem;color:#667b9c }
 .proto-metrics {
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:10px
 }
-
-.proto-metrics span {
-  min-height:73px;
-  border:1px solid #e1e8f8;
-  background:white;
-  border-radius:11px;
-  padding:11px;
-  font-size:.68rem;
+.proto-metric {
   display:flex;
-  align-items:start;
-  justify-content:space-between
-}
-
-.proto-metrics em {
-  font-style:normal;
-  color:#5964d6;
-  font-size:1rem
-}
-
-.proto-chart {
-  height:108px;
-  border:1px solid #e1e8f8;
-  background:white;
+  flex-direction:column;
+  gap:7px;
+  padding:14px 11px;
+  min-width:0;
+  min-height:93px;
+  border:1px solid #dfe7f3;
   border-radius:12px;
-  margin-top:15px;
-  padding:17px 21px 0;
+  background:#fff
+}
+.proto-metric span {
+  color:#71809a;
+  font-size:.68rem;
+  line-height:1.35
+}
+.proto-metric strong { color:#1d3b61;font-size:1.55rem }
+.proto-panels {
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:10px;
+  margin-top:12px
+}
+.proto-panels>div {
   display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:8px
+  flex-direction:column;
+  gap:18px;
+  padding:13px;
+  min-height:112px;
+  border:1px solid #e0e8f5;
+  border-radius:12px;
+  background:#fff
 }
-
-.proto-chart i {
-  display:block;
-  flex:1;
-  max-width:25px;
-  background:linear-gradient(180deg,#5ca2ff,#6260e3);
-  border-radius:5px 5px 0 0
+.proto-panels strong { font-size:.78rem }
+.proto-panels span {
+  margin:auto 0;
+  color:#9aa9bb;
+  font-size:.7rem;
+  text-align:center
 }
-
 .proto-dashboard>small {
   display:block;
-  margin-top:10px;
-  color:#7e8ba5;
-  font-size:.65rem
+  margin-top:11px;
+  color:#8191a5;
+  font-size:.67rem
 }
 
 .site-footer {
@@ -1307,10 +1309,7 @@ body {
   .proto-dashboard {
     padding:18px 12px
   }
-  .proto-metrics span {
-    padding:7px;
-    font-size:.56rem
-  }
+  .proto-metric { padding:9px }
   .proto-top b {
     font-size:.63rem
   }

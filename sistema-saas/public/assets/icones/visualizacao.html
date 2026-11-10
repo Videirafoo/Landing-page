@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>B.A.S.E. | Biblioteca de ícones</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f4f7fc;color:#1c344f;font:15px Inter,system-ui,Arial,sans-serif}
+    main{max-width:980px;margin:auto;padding:34px 20px}
+    header{margin-bottom:24px}
+    h1{margin:0 0 6px;font-size:clamp(1.6rem,4vw,2.2rem)}
+    p{margin:0;color:#718096}
+    .grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+    .cartao{display:flex;flex-direction:column;gap:13px;align-items:center;justify-content:center;min-height:163px;padding:20px;background:#fff;border:1px solid #e0e8f4;border-radius:16px;box-shadow:0 5px 17px #1336680a;transition:transform .2s ease,box-shadow .2s ease}
+    .cartao:hover{transform:translateY(-3px);box-shadow:0 14px 25px #1336681a}
+    .imagem{width:41px;height:41px;background:#526780;mask:var(--icone) center/contain no-repeat;-webkit-mask:var(--icone) center/contain no-repeat}
+    .cartao:hover .imagem{background:#f58220}
+    .cartao strong{font-size:14px}
+    .cartao small{font-size:11px;color:#98a5b6}
+    footer{margin:24px 0;color:#70809a;font-size:12px}
+    footer a{color:#1461be}
+  </style>
+</head>
+<body>
+<main>
+  <header><h1>Ícones escolares B.A.S.E.</h1><p>Biblioteca Lucide: cinza normal, laranja ao passar o mouse.</p></header>
+  <div class="grade"><div class="cartao" style="--icone:url('dashboard.svg')"><span class="imagem" aria-hidden="true"></span><strong>Dashboard</strong><small>dashboard.svg</small></div>
+<div class="cartao" style="--icone:url('alunos.svg')"><span class="imagem" aria-hidden="true"></span><strong>Alunos</strong><small>alunos.svg</small></div>
+<div class="cartao" style="--icone:url('matriculas.svg')"><span class="imagem" aria-hidden="true"></span><strong>Matrículas</strong><small>matriculas.svg</small></div>
+<div class="cartao" style="--icone:url('turmas.svg')"><span class="imagem" aria-hidden="true"></span><strong>Turmas</strong><small>turmas.svg</small></div>
+<div class="cartao" style="--icone:url('professores.svg')"><span class="imagem" aria-hidden="true"></span><strong>Professores</strong><small>professores.svg</small></div>
+<div class="cartao" style="--icone:url('frequencia.svg')"><span class="imagem" aria-hidden="true"></span><strong>Frequência</strong><small>frequencia.svg</small></div>
+<div class="cartao" style="--icone:url('avaliacoes.svg')"><span class="imagem" aria-hidden="true"></span><strong>Avaliações</strong><small>avaliacoes.svg</small></div>
+<div class="cartao" style="--icone:url('conteudos.svg')"><span class="imagem" aria-hidden="true"></span><strong>Conteúdos</strong><small>conteudos.svg</small></div>
+<div class="cartao" style="--icone:url('comunicados.svg')"><span class="imagem" aria-hidden="true"></span><strong>Comunicados</strong><small>comunicados.svg</small></div>
+<div class="cartao" style="--icone:url('relatorios.svg')"><span class="imagem" aria-hidden="true"></span><strong>Relatórios</strong><small>relatorios.svg</small></div>
+<div class="cartao" style="--icone:url('indicadores.svg')"><span class="imagem" aria-hidden="true"></span><strong>Indicadores</strong><small>indicadores.svg</small></div>
+<div class="cartao" style="--icone:url('configuracoes.svg')"><span class="imagem" aria-hidden="true"></span><strong>Configurações</strong><small>configuracoes.svg</small></div>
+<div class="cartao" style="--icone:url('usuarios.svg')"><span class="imagem" aria-hidden="true"></span><strong>Usuários</strong><small>usuarios.svg</small></div></div>
+  <footer>Arquivos SVG individuais e leves. <a href="LICENSE-LUCIDE.txt">Ver licença</a>.</footer>
+</main>
+</body>
+</html>

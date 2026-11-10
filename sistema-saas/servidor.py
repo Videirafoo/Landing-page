@@ -332,7 +332,7 @@ class Servidor(BaseHTTPRequestHandler):
             '/': 'inicio.html', '/inicio.html': 'inicio.html',
             '/entrar': 'index.html', '/cadastrar': 'index.html', '/painel': 'index.html',
             '/index.html': 'inicio.html',
-            '/style.css': 'style.css', '/app.js': 'app.js', '/inicio.css': 'inicio.css',
+            '/style.css': 'style.css', '/app.js': 'app.js', '/inicio.css': 'inicio.css', '/icones.css': 'icones.css',
             '/logo-oficial.png': 'logo-oficial.png',
             '/assets/vazio-frequencia.svg': 'assets/vazio-frequencia.svg',
             '/assets/vazio-comunicados.svg': 'assets/vazio-comunicados.svg',

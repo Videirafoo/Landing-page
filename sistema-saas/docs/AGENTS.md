@@ -9,3 +9,7 @@ Preservar logo oficial, identidade B.A.S.E. e código simples de faculdade. Não
 3. Não modificar login, cadastros, dados multi-escola ou backend quando o pedido é exclusivamente visual.
 4. Manter HTML semântico, CSS legível e JavaScript simples, sem bibliotecas novas.
 5. Validar responsividade e acesso pelo teclado; usar revisão em branch e CI antes de publicar.
+
+
+## Referências técnicas
+RosarioSIS serve apenas para estudar conceitos de gestão escolar; não copiar o código GPL para este projeto. Melhorias no banco são etapas separadas, com validação e migrações controladas. Ícones ficam em `public/assets/icones/` com licença, enquanto estilos exclusivos dos ícones ficam em `public/icones.css`.
