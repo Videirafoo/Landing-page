@@ -7,7 +7,7 @@
 .icone-topo[data-icone="sino"] { --icone:url("assets/icones/bell.svg"); }
 .icone-topo[data-icone="menu"] { --icone:url("assets/icones/menu.svg"); }
 .icone-topo[data-icone="fechar"] { --icone:url("assets/icones/x.svg"); }
-.icone-topo[data-icone="sair"] { --icone:url("assets/icones/log-out.svg"); }
+.icone-topo[data-icone="sair"] { --icone:url("assets/icones/logout.svg"); }
 .kpi-svg,.mini-svg { display:block; width:21px; height:21px; background:currentColor; -webkit-mask:var(--icone) center / contain no-repeat; mask:var(--icone) center / contain no-repeat; }
 .mini-svg { width:17px; height:17px; }
 .item-menu[data-pagina="dashboard"] .item-icone { --icone: url("assets/icones/dashboard.svg"); }
