@@ -253,7 +253,75 @@ a {
   height:100vh;
   background:#fff;
   border-right:1px solid var(--borda);
-  z-index:9
+  z-index:9;
+  overflow:hidden;
+  transition:width .18s ease,min-width .18s ease
+}
+
+.aplicacao.menu-recolhido .menu-lateral {
+  width:76px;
+  min-width:76px
+}
+
+.aplicacao.menu-recolhido .marca-menu {
+  padding:18px 5px 12px;
+  align-items:center
+}
+
+.aplicacao.menu-recolhido .menu-logo {
+  width:54px;
+  max-height:46px
+}
+
+.aplicacao.menu-recolhido .marca-menu small,
+.aplicacao.menu-recolhido .apoio,
+.aplicacao.menu-recolhido .usuario-card>span:nth-child(2),
+.aplicacao.menu-recolhido .usuario-card>.avatar,
+.aplicacao.menu-recolhido .fechar-menu-lateral {
+  display:grid;
+  place-items:center;
+  position:absolute;
+  right:9px;
+  top:12px;
+  width:32px;
+  height:32px;
+  background:#f2f6fd;
+  z-index:1
+}
+
+.aplicacao.menu-recolhido .itens-menu {
+  padding:0 5px
+}
+
+.aplicacao.menu-recolhido .item-menu {
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  min-height:49px;
+  padding:7px 3px;
+  text-align:center;
+  font-size:9px;
+  line-height:1.1
+}
+
+.aplicacao.menu-recolhido .item-menu>span:last-child {
+  display:block;
+  width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+
+.aplicacao.menu-recolhido .item-menu .item-icone {
+  width:19px;
+  height:19px;
+  flex:none
+}
+
+.aplicacao.menu-recolhido .usuario-card {
+  justify-content:center;
+  padding:5px 0;
+  border:0
 }
 
 .marca-menu {
@@ -484,7 +552,10 @@ a {
 }
 
 .menu-mobile {
-  display:none
+  display:grid;
+  place-items:center;
+  width:36px;
+  height:36px
 }
 
 .conteudo {
@@ -562,8 +633,8 @@ a {
 
 .grade-paineis {
   display:grid;
-  grid-template-columns:1.12fr 1fr;
-  gap:17px
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px
 }
 
 .painel {
@@ -986,52 +1057,19 @@ td:first-child {
   display:none
 }
 
-@media(max-width:1150px) {
-  .metricas {
-    grid-template-columns:repeat(2,minmax(0,1fr))
+.vazio-ilustrado {
+    min-height:130px;
+    padding:5px;
+    gap:6px;
+    font-size:10px
   }
-}
-
-@media(max-width:1100px) {
-  .menu-lateral {
-    position:fixed;
-    width:min(268px,calc(100vw - 54px));
-    min-width:0;
-    transform:translateX(-105%);
-    transition:transform .2s
+  .vazio-ilustrado img {
+    width:62px;
+    height:62px;
+    max-width:82%
   }
-  .menu-lateral.aberto {
-    transform:translateX(0)
-  }
-  .sombra-menu.aberto {
-    display:block;
-    position:fixed;
-    inset:0;
-    background:#192b4b77;
-    z-index:8
-  }
-  .menu-mobile {
-    display:grid;
-    place-items:center
-  }
-  .fechar-menu-lateral {
-    display:grid;
-    place-items:center;
-    position:absolute;
-    right:10px;
-    top:14px;
-    width:32px;
-    height:32px;
-    background:#f2f6fd
-  }
-  .topbar {
-    padding:12px 17px
-  }
-  .conteudo {
-    padding:20px 17px
-  }
-  .grade-paineis {
-    grid-template-columns:1fr
+  .vazio-ilustrado span {
+    max-width:100%
   }
 }
 
@@ -1083,7 +1121,7 @@ td:first-child {
     font-size:9px
   }
   .painel {
-    padding:15px
+    padding:10px
   }
   .pagina-topo {
     flex-direction:column;
@@ -1216,17 +1254,16 @@ html,body {
     gap:7px
   }
   .topbar {
-    padding:10px 12px
+    padding:10px 7px
   }
   .nome-escola {
-    max-width:100px;
-    padding:8px
+    display:none
   }
   .conteudo {
-    padding:14px 11px
+    padding:12px 7px
   }
   .grade-paineis {
-    gap:11px
+    gap:8px
   }
   .kpi {
     padding:11px 9px
@@ -1262,9 +1299,110 @@ html,body {
   line-height:1.45
 }
 
-@media(max-width:540px) {
-  .vazio-ilustrado img {
-    width:90px;
-    height:82px
+@media(max-width:1150px) {
+  .metricas {
+    grid-template-columns:repeat(2,minmax(0,1fr))
   }
 }
+
+@media(max-width:1100px) {
+  .conteudo {
+    padding:20px 17px
+  }
+  .grade-paineis {
+    gap:12px
+  }
+}
+
+@media(max-width:760px) {
+  .menu-lateral {
+    width:76px;
+    min-width:76px;
+    position:sticky
+  }
+  .aplicacao:not(.menu-recolhido) .menu-lateral {
+    position:fixed;
+    left:0;
+    top:0;
+    width:225px;
+    min-width:225px;
+    height:100dvh;
+    z-index:20
+  }
+  .aplicacao:not(.menu-recolhido) .corpo-app {
+    margin-left:76px
+  }
+  .sombra-menu.aberto {
+    display:block;
+    position:fixed;
+    inset:0;
+    background:#192b4b77;
+    z-index:19
+  }
+  .conteudo {
+    padding:14px 9px
+  }
+  .grade-paineis {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px
+  }
+  .painel {
+    min-width:0;
+    min-height:205px;
+    padding:10px;
+    overflow:hidden
+  }
+  .painel-topo {
+    display:flex;
+    align-items:flex-start;
+    flex-direction:column;
+    gap:3px;
+    margin-bottom:6px
+  }
+  .painel h2 {
+    font-size:11px;
+    line-height:1.35
+  }
+  .link-texto {
+    padding:2px 0;
+    font-size:9px
+  }
+  .vazio {
+    min-height:130px;
+    padding:5px;
+    font-size:10px;
+    line-height:1.35
+  }
+  .lista-interior {
+    min-height:125px;
+    max-height:165px;
+    overflow-y:auto
+  }
+  .linha-atividade {
+    flex-wrap:wrap;
+    gap:4px;
+    padding:7px 0
+  }
+  .linha-atividade b {
+    font-size:10px
+  }
+  .linha-atividade p {
+    font-size:9px
+  }
+  .svg-grafico {
+    overflow-x:auto
+  }
+  .svg-grafico svg {
+    min-width:210px
+  }
+  .barras {
+    min-height:130px;
+    gap:2px;
+    padding:8px 2px 2px
+  }
+  .barra-trilho {
+    height:95px
+  }
+  .barra-item strong {
+    font-size:8px
+  }

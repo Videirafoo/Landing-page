@@ -1,6 +1,6 @@
 # Design visual
 
-Usar **somente o logo oficial** do repositório `Videirafoo/Landing-page`. Paleta: azul #2368d7, azul escuro #163b85, fundo #f6f8fc, branco para cards, violeta #954de3 para frequência. Grid com quatro KPIs e quatro painéis, menu fixo no desktop e recolhível no celular. Tamanhos responsivos e campos com foco visível.
+Usar **somente o logo oficial** do repositório `Videirafoo/Landing-page`. Paleta: azul #2368d7, azul escuro #163b85, fundo #f6f8fc, branco para cards, violeta #954de3 para frequência. Grid com quatro KPIs e quatro painéis, menu lateral visível e recolhível com acesso aos módulos no celular. Tamanhos responsivos e campos com foco visível.
 
 
 ## Landing preservada
@@ -25,3 +25,7 @@ Usar **somente o logo oficial** do repositório `Videirafoo/Landing-page`. Palet
 - No topo à direita, o sino abre Comunicados e o avatar abre Configurações; são botões funcionais.
 - Em telas até 1100px, o menu vira gaveta lateral, com botão de fechar e Escape para dispensar.
 - O login, a landing, o logo oficial e os dados não são alterados por esse refinamento.
+
+
+## Distribuição do painel
+Os quatro indicadores ficam em cartões independentes. Os quatro blocos abaixo são organizados em duas colunas e duas linhas, inclusive no celular. Em telas pequenas, o menu mostra uma faixa lateral com ícones e nomes abreviados; o usuário pode expandi-lo e recolhê-lo com o botão de menu. No desktop, o menu aparece aberto inicialmente e pode ser recolhido. Nenhum dado de escola é preenchido artificialmente.
