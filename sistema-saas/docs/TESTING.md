@@ -13,7 +13,7 @@
 ## Controles e ícones
 - Verificar 13 botões com ícones e `aria-current` atualizado ao navegar.
 - Clicar no sino deve abrir Comunicados; clicar no avatar deve abrir Configurações.
-- A 390px e 980px, o menu deve permanecer fechado inicialmente e abrir por botão com `aria-expanded=true`.
+- A 390px, o menu deve ficar visível como faixa de ícones e permitir expansão; em 980px, deve aparecer expandido e permitir recolher. O botão atualiza `aria-expanded`.
 - Fechar por botão X, fundo escurecido e Escape; verificar ausência de sobreposição permanente do conteúdo.
 - Confirmar o uso do SVG de sair, o logo original e as mesmas rotas de login.
 
@@ -24,3 +24,9 @@
 - Verificar que a área `#conteudo` mostra carregando e em seguida cartões ou mensagem de erro.
 - Executar `node testes/testar_navegacao.js` para a regressão de JavaScript, sem bibliotecas extras.
 - Não alterar o conteúdo de `dados/banco.txt` nem publicar dados reais na demonstração.
+
+
+## Regressão da grade 2 × 2
+- Verificar em 360px, 390px, 768px e 1440px que os painéis Frequência, Comunicados, Desempenho e Atividades são quatro cartões numa grade de duas colunas.
+- Testar abrir/recolher o menu, navegar com os ícones e manter o painel visível.
+- O logo, a landing, o login, a API e o banco TXT devem permanecer inalterados.

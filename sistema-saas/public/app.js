@@ -61,7 +61,9 @@ function entrarApp(d){
   selecionar('#avatar').textContent=d.usuario.nome.charAt(0).toUpperCase();
   selecionar('#avatar-topo').textContent=d.usuario.nome.charAt(0).toUpperCase();
   history.replaceState(null,'',destino('/painel'));
-  montarMenu(); navegar('dashboard');
+  montarMenu();
+  iniciarMenu();
+  navegar('dashboard');
 }
 function montarMenu() {
   const menu = selecionar('#menu');
@@ -81,10 +83,33 @@ function montarMenu() {
   });
 }
 
+function atualizarMenu() {
+  const recolhido = selecionar('#aplicacao').classList.contains('menu-recolhido');
+  const noCelular = window.innerWidth <= 760;
+  selecionar('#abrir-menu').setAttribute('aria-expanded', String(!recolhido));
+  selecionar('#abrir-menu').setAttribute('aria-label', recolhido ? 'Expandir menu' : 'Recolher menu');
+  selecionar('#sombra-menu').classList.toggle('aberto', !recolhido && noCelular);
+}
+
+function iniciarMenu() {
+  selecionar('#aplicacao').classList.toggle('menu-recolhido', window.innerWidth <= 760);
+  atualizarMenu();
+}
+
+function recolherMenu() {
+  selecionar('#aplicacao').classList.add('menu-recolhido');
+  atualizarMenu();
+}
+
+function alternarMenu() {
+  selecionar('#aplicacao').classList.toggle('menu-recolhido');
+  atualizarMenu();
+}
+
 function fecharMenu() {
-  selecionar('#menu-lateral').classList.remove('aberto');
-  selecionar('#sombra-menu').classList.remove('aberto');
-  selecionar('#abrir-menu').setAttribute('aria-expanded', 'false');
+  if (window.innerWidth <= 760 && !selecionar('#aplicacao').classList.contains('menu-recolhido')) {
+    recolherMenu();
+  }
 }
 
 async function navegar(pagina) {
@@ -227,10 +252,15 @@ selecionar('#form-cadastro').onsubmit=async e=>{
 };
 selecionar('#fechar-modal').onclick=()=>selecionar('#modal').close();selecionar('#cancelar-modal').onclick=()=>selecionar('#modal').close();
 selecionar('#sair').onclick=async()=>{try{await api('/api/sair',{method:'POST'});}catch{}estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};selecionar('#form-acesso').reset();history.replaceState(null,'',destino('/entrar'));entrarTela(false);};
-selecionar('#abrir-menu').onclick=()=>{selecionar('#menu-lateral').classList.add('aberto');selecionar('#sombra-menu').classList.add('aberto');selecionar('#abrir-menu').setAttribute('aria-expanded','true');selecionar('#fechar-menu-lateral').focus();};
-selecionar('#fechar-menu-lateral').onclick=fecharMenu;
-selecionar('#sombra-menu').onclick=fecharMenu;
+selecionar('#abrir-menu').onclick=alternarMenu;
+selecionar('#fechar-menu-lateral').onclick=recolherMenu;
+selecionar('#sombra-menu').onclick=recolherMenu;
 selecionar('#abrir-avisos').onclick=()=>navegar('avisos');
 selecionar('#abrir-perfil').onclick=()=>navegar('configuracoes');
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selecionar('#menu-lateral').classList.contains('aberto'))fecharMenu();});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && window.innerWidth <= 760) fecharMenu();
+});
+window.addEventListener('resize', () => {
+  if (!selecionar('#aplicacao').hidden) atualizarMenu();
+});
 (async function iniciar(){try{if((location.pathname==='/cadastrar'||(emDemo&&new URLSearchParams(location.search).get('acao')==='cadastrar')))return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);selecionar('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();
