@@ -75,3 +75,9 @@ O projeto é publicado como site estático pelo GitHub Pages.
 
 ## Landing restaurada
 Visual e imagens originais preservados: `img/gestao-escolar-eficiente.webp`, `img/sistema-web-profissional.webp` e `img/aplicativo-mobile-original.png`. Acesso via `sistema/`; cadastro via `sistema/?acao=cadastrar`. Menu recolhível no celular. Backend Python, dados e ícones do SaaS preservados.
+
+
+## Ícones e dados
+- Menu: Lucide SVGs separados, ativados por `sistema-saas/public/icones.css` com cinza e laranja.
+- Prévia: o painel de apresentação usa estados vazios, não números ou gráficos inventados.
+- Referência de dados: `sistema-saas/docs/ROSARIOSIS_REFERENCIA.md`. RosarioSIS é referência funcional, não uma dependência do B.A.S.E.
