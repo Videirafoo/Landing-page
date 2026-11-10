@@ -8,6 +8,14 @@ const javascript = fs.readFileSync(path.join(pasta, 'app.js'), 'utf8');
 
 new Function(javascript);
 
+assert.match(
+  css,
+  /\.aplicacao\.menu-recolhido \.marca-menu small,[\s\S]*?\.aplicacao\.menu-recolhido \.fechar-menu-lateral\s*\{\s*display:none\s*\}/
+);
+assert.match(css, /\.corpo-app\s*\{[^}]*min-width:0/);
+assert.match(css, /\.metricas\s*\{[^}]*grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+assert.match(css, /@media\(max-width:760px\)\s*\{[\s\S]*?\.aplicacao\.menu-recolhido \.menu-lateral\s*\{[^}]*width:68px/);
+
 assert.match(css, /\.grade-paineis\s*\{[^}]*grid-template-columns:\s*repeat\(2,minmax\(0,1fr\)\)/);
 assert.match(css, /@media\(max-width:760px\)/);
 assert.match(css, /\.aplicacao\.menu-recolhido \.menu-lateral/);

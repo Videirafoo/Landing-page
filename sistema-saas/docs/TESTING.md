@@ -30,3 +30,11 @@
 - Verificar em 360px, 390px, 768px e 1440px que os painéis Frequência, Comunicados, Desempenho e Atividades são quatro cartões numa grade de duas colunas.
 - Testar abrir/recolher o menu, navegar com os ícones e manter o painel visível.
 - O logo, a landing, o login, a API e o banco TXT devem permanecer inalterados.
+
+
+## Regressão da faixa lateral recolhida
+- Ao recolher, confirmar que Gestão Escolar, Precisa de ajuda e dados do usuário não ficam sobre o logotipo.
+- O botão Sair permanece acessível no rodapé da faixa.
+- Em 360/390px, os cartões não podem forçar rolagem horizontal da página; gráficos podem se adaptar internamente.
+- Em 390px, tocar no botão do topo deve expandir o menu, tocar em um módulo deve fechá-lo e carregar a seção correta.
+- Executar `node testes/testar_layout.js` e `node testes/testar_navegacao.js` antes de publicar.
