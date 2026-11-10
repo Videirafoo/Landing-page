@@ -121,3 +121,7 @@ A landing page apresenta o projeto. O B.A.S.E. é o sistema que está sendo apre
 ## Resumo de 30 segundos
 
 “Eu construí a landing page com HTML, CSS e JavaScript. O HTML organiza as seções e o formulário, o CSS cria o layout responsivo e o JavaScript registra os contatos no localStorage. O código fica versionado no GitHub e a página é publicada pelo GitHub Pages. O site apresenta o B.A.S.E., seus módulos e os públicos que utilizariam o sistema.”
+
+
+## O que é o B.A.S.E. por dentro?
+A landing e o sistema estão em um único repositório. Há somente uma interface de painel em `sistema/index.html`. No GitHub Pages, `dados-navegador.js` simula a API e salva registros no navegador. No VS Code, `python servidor.py` serve a mesma interface, valida a senha e grava dados em TXT local. O professor pode observar responsabilidades diferentes entre HTML, CSS, JavaScript e Python.

@@ -1,0 +1,24 @@
+name: Testes B.A.S.E.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validar sintaxe Python
+        run: python -m py_compile servidor.py
+      - name: Testar login e dados
+        run: python testes/testar_servidor.py
+      - name: Testar JavaScript
+        run: |
+          node testes/testar_navegacao.js
+          node testes/testar_layout.js
