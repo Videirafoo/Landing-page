@@ -264,8 +264,12 @@ a {
 }
 
 .aplicacao.menu-recolhido .marca-menu {
-  padding:18px 5px 12px;
-  align-items:center
+  padding:16px 4px 10px;
+  min-height:86px;
+  align-items:center;
+  justify-content:center;
+  max-width:100%;
+  overflow:hidden
 }
 
 .aplicacao.menu-recolhido .menu-logo {
@@ -278,15 +282,7 @@ a {
 .aplicacao.menu-recolhido .usuario-card>span:nth-child(2),
 .aplicacao.menu-recolhido .usuario-card>.avatar,
 .aplicacao.menu-recolhido .fechar-menu-lateral {
-  display:grid;
-  place-items:center;
-  position:absolute;
-  right:9px;
-  top:12px;
-  width:32px;
-  height:32px;
-  background:#f2f6fd;
-  z-index:1
+  display:none
 }
 
 .aplicacao.menu-recolhido .itens-menu {
@@ -308,8 +304,10 @@ a {
   display:block;
   width:100%;
   overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
+  overflow-wrap:anywhere;
+  white-space:normal;
+  line-height:1.2;
+  text-align:center
 }
 
 .aplicacao.menu-recolhido .item-menu .item-icone {
@@ -320,8 +318,12 @@ a {
 
 .aplicacao.menu-recolhido .usuario-card {
   justify-content:center;
-  padding:5px 0;
-  border:0
+  padding:8px 0;
+  border-top:1px solid var(--borda)
+}
+
+.aplicacao.menu-recolhido .menu-rodape {
+  padding:8px 4px
 }
 
 .marca-menu {
@@ -464,8 +466,9 @@ a {
 }
 
 .corpo-app {
+  width:0;
   min-width:0;
-  flex:1;
+  flex:1 1 0%;
   display:flex;
   flex-direction:column
 }
@@ -560,6 +563,7 @@ a {
 
 .conteudo {
   width:100%;
+  min-width:0;
   max-width:1560px;
   padding:26px 27px 36px;
   margin:auto;
@@ -575,6 +579,8 @@ a {
 
 .metricas {
   display:grid;
+  width:100%;
+  min-width:0;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:16px;
   margin-bottom:19px
@@ -589,12 +595,18 @@ a {
   align-items:center;
   background:white;
   transition:transform .15s,box-shadow .15s;
-  width:100%
+  width:100%;
+  min-width:0;
+  overflow:hidden
 }
 
 .kpi:hover {
   transform:translateY(-2px);
   box-shadow:0 9px 23px #204e991b
+}
+
+.kpi>div:last-child {
+  min-width:0
 }
 
 .kpi-icone {
@@ -633,12 +645,17 @@ a {
 
 .grade-paineis {
   display:grid;
+  width:100%;
+  min-width:0;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:16px
 }
 
 .painel {
   min-height:278px;
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
   padding:18px
 }
 
@@ -1095,9 +1112,10 @@ td:first-child {
 }
 
 @media(max-width:760px) {
-  .menu-lateral {
-    width:76px;
-    min-width:76px;
+  .menu-lateral,
+  .aplicacao.menu-recolhido .menu-lateral {
+    width:68px;
+    min-width:68px;
     position:sticky
   }
   .aplicacao:not(.menu-recolhido) .menu-lateral {
@@ -1110,7 +1128,7 @@ td:first-child {
     z-index:20
   }
   .aplicacao:not(.menu-recolhido) .corpo-app {
-    margin-left:76px
+    margin-left:68px
   }
   .sombra-menu.aberto {
     display:block;
@@ -1121,6 +1139,21 @@ td:first-child {
   }
   .conteudo {
     padding:14px 9px
+  }
+  .metricas {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+  .kpi {
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+    min-width:0;
+    min-height:116px;
+    padding:10px
+  }
+  .kpi small {
+    line-height:1.25;
+    overflow-wrap:anywhere
   }
   .grade-paineis {
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -1173,7 +1206,8 @@ td:first-child {
     overflow-x:auto
   }
   .svg-grafico svg {
-    min-width:210px
+    min-width:0;
+    width:100%
   }
   .barras {
     min-height:130px;

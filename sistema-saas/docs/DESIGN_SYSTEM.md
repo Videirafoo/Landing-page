@@ -29,3 +29,10 @@ Usar **somente o logo oficial** do repositório `Videirafoo/Landing-page`. Palet
 
 ## Distribuição do painel
 Os quatro indicadores ficam em cartões independentes. Os quatro blocos abaixo são organizados em duas colunas e duas linhas, inclusive no celular. Em telas pequenas, o menu mostra uma faixa lateral com ícones e nomes abreviados; o usuário pode expandi-lo e recolhê-lo com o botão de menu. No desktop, o menu aparece aberto inicialmente e pode ser recolhido. Nenhum dado de escola é preenchido artificialmente.
+
+
+## Refinamento do menu recolhido
+- No celular, a faixa recolhida ocupa 68 px e preserva ícone e rótulo de cada opção.
+- No modo recolhido, ocultar legenda do logotipo, ajuda e dados do usuário; manter o logotipo oficial e o botão Sair.
+- Ao expandir, mostrar o menu completo sem mover o conteúdo para fora da largura da tela.
+- Preservar os quatro indicadores em duas colunas no celular, seguidos dos quatro painéis em grade 2 × 2, sem transbordamento horizontal.
