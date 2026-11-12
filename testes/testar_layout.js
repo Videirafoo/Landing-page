@@ -5,6 +5,7 @@ const path = require('node:path');
 const pasta = path.join(__dirname, '..', 'sistema');
 const css = fs.readFileSync(path.join(pasta, 'painel.css'), 'utf8');
 const javascript = fs.readFileSync(path.join(pasta, 'painel.js'), 'utf8');
+const html = fs.readFileSync(path.join(pasta, 'index.html'), 'utf8');
 
 new Function(javascript);
 
@@ -14,11 +15,17 @@ assert.match(
 );
 assert.match(css, /\.corpo-app\s*\{[^}]*min-width:0/);
 assert.match(css, /\.metricas\s*\{[^}]*grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
-assert.match(css, /@media\(max-width:760px\)\s*\{[\s\S]*?\.aplicacao\.menu-recolhido \.menu-lateral\s*\{[^}]*width:68px/);
+assert.match(css, /@media\(max-width:760px\)\s*\{[\s\S]*?\.aplicacao\.menu-recolhido \.menu-lateral\s*\{[^}]*display:none;[^}]*width:0/);
 
 assert.match(css, /\.grade-paineis\s*\{[^}]*grid-template-columns:\s*repeat\(2,minmax\(0,1fr\)\)/);
 assert.match(css, /@media\(max-width:760px\)/);
 assert.match(css, /\.aplicacao\.menu-recolhido \.menu-lateral/);
+assert.match(css, /@media\(max-width:760px\)[\s\S]*?\.grade-paineis\s*\{[^}]*grid-template-columns:1fr/);
+assert.match(css, /\.aviso-rolagem\s*\{\s*display:none/);
+assert.match(css, /\.acesso-miolo\s*\{[^}]*align-items:stretch/);
+assert.match(html, /<a href="\.\/" class="marca marca-menu"/);
+assert.match(javascript, /const sessao = await api\('\/api\/me'\);\s*entrarApp\(sessao\);/);
+assert.ok(javascript.indexOf("await api('/api/me')") < javascript.indexOf('entrarTela(cadastrar)'));
 
 const paineis = [
   'Frequência dos Alunos',
@@ -84,4 +91,4 @@ assert.equal(elementos['#aplicacao'].classList.contains('menu-recolhido'), false
 funcoes.alternarMenu();
 assert.equal(elementos['#aplicacao'].classList.contains('menu-recolhido'), true);
 
-console.log('OK: menu visível, recolhimento e quatro painéis 2 × 2.');
+console.log('OK: menu mobile, sessão, logo e painéis responsivos.');

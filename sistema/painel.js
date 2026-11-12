@@ -194,10 +194,15 @@ function nomeRelacao(c,v){
   return esc(v);
 }
 async function listagem(p){
-  const def=D[p];const [lista,alunos,turmas]=await Promise.all([api('/api/'+p),api('/api/alunos'),api('/api/turmas')]);
+  const def = D[p];
+  const [lista, alunos, turmas] = await Promise.all([
+    api('/api/' + p),
+    api('/api/alunos'),
+    api('/api/turmas')
+  ]);
   estado.alunos=alunos;estado.turmas=turmas;
-  const acoes=`<button id="novo" class="botao primaria">+ Novo cadastro</button>`;
-  selecionar('#conteudo').innerHTML=topo(def.titulo,def.desc,acoes)+`<section class="cartao tabela-cartao"><div class="busca-linha"><span>${lista.length} registro(s)</span><input type="search" id="buscar" placeholder="Buscar registros" aria-label="Buscar registros"></div><div class="tabela-scroll"><table><thead><tr>${def.cols.map(c=>`<th>${esc(c[1])}</th>`).join('')}${p==='usuarios'?'':'<th>Ações</th>'}</tr></thead><tbody id="registros"></tbody></table></div></section>`;
+  const acoes = `<button id="novo" class="botao primaria">+ Novo cadastro</button>`;
+  selecionar('#conteudo').innerHTML=topo(def.titulo,def.desc,acoes)+`<section class="cartao tabela-cartao"><div class="busca-linha"><span>${lista.length} registro(s)</span><input type="search" id="buscar" placeholder="Buscar registros" aria-label="Buscar registros"></div><p class="aviso-rolagem">Deslize a tabela para ver as outras colunas.</p><div class="tabela-scroll" role="region" aria-label="Tabela de registros" tabindex="0"><table><thead><tr>${def.cols.map(c=>`<th>${esc(c[1])}</th>`).join('')}${p==='usuarios'?'':'<th>Ações</th>'}</tr></thead><tbody id="registros"></tbody></table></div></section>`;
   function linhas(busca=''){
     const reg=lista.filter(a=>(JSON.stringify(a)+' '+(estado.alunos.find(x=>x.id===a.alunoId)?.nome||'')).toLowerCase().includes(busca.toLowerCase()));
     selecionar('#registros').innerHTML=reg.length?reg.map(a=>`<tr>${def.cols.map(([c])=>`<td>${nomeRelacao(c,a[c])}</td>`).join('')}${p==='usuarios'?'':`<td><button class="apagar" data-id="${esc(a.id)}">Excluir</button></td>`}</tr>`).join(''):`<tr><td colspan="${def.cols.length+1}">${vazio('Nenhum registro encontrado.')}</td></tr>`;
@@ -263,4 +268,20 @@ document.addEventListener('keydown', e => {
 window.addEventListener('resize', () => {
   if (!selecionar('#aplicacao').hidden) atualizarMenu();
 });
-(async function iniciar(){try{if((location.pathname==='/cadastrar'||new URLSearchParams(location.search).get('acao')==='cadastrar'))return entrarTela(true);try{entrarApp(await api('/api/me'));}catch{entrarTela(false);}}catch{entrarTela(false);selecionar('#acesso-erro').textContent='Servidor indisponível. Execute python servidor.py no terminal.';}})();
+(async function iniciar() {
+  const cadastrar = location.pathname === '/cadastrar' ||
+    new URLSearchParams(location.search).get('acao') === 'cadastrar';
+
+  // Verifica a sessão antes de apresentar o formulário de cadastro.
+  try {
+    const sessao = await api('/api/me');
+    entrarApp(sessao);
+  } catch (erro) {
+    entrarTela(cadastrar);
+    // Apenas o ambiente Python precisa de um servidor executando.
+    if (!emDemo && erro.message !== 'Entre com sua matrícula e senha.') {
+      selecionar('#acesso-erro').textContent =
+        'Não foi possível acessar o servidor. Execute python servidor.py.';
+    }
+  }
+})();

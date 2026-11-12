@@ -89,15 +89,15 @@ a {
 .acesso-miolo {
   flex:1;
   display:flex;
-  align-items:center;
+  align-items:stretch;
   justify-content:center;
-  padding:38px 0
+  padding:0
 }
 
 .acesso-faixa {
   background:linear-gradient(125deg,#1543b9 0%,#2359ec 45%,#4235dc 100%);
   width:100%;
-  min-height:390px;
+  min-height:calc(100dvh - 160px);
   display:grid;
   place-items:center;
   padding:35px 16px
@@ -893,6 +893,10 @@ a {
   overflow-x:auto
 }
 
+.aviso-rolagem {
+  display:none
+}
+
 table {
   width:100%;
   border-collapse:collapse;
@@ -1114,21 +1118,22 @@ td:first-child {
 @media(max-width:760px) {
   .menu-lateral,
   .aplicacao.menu-recolhido .menu-lateral {
-    width:68px;
-    min-width:68px;
-    position:sticky
+    display:none;
+    width:0;
+    min-width:0
   }
   .aplicacao:not(.menu-recolhido) .menu-lateral {
+    display:flex;
     position:fixed;
     left:0;
     top:0;
-    width:225px;
-    min-width:225px;
+    width:min(280px,88vw);
+    min-width:0;
     height:100dvh;
     z-index:20
   }
   .aplicacao:not(.menu-recolhido) .corpo-app {
-    margin-left:68px
+    margin-left:0
   }
   .sombra-menu.aberto {
     display:block;
@@ -1137,11 +1142,21 @@ td:first-child {
     background:#192b4b77;
     z-index:19
   }
+  .aplicacao {
+    min-height:0
+  }
   .conteudo {
-    padding:14px 9px
+    flex:none;
+    padding:14px 12px 20px
   }
   .metricas {
     grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+  .aviso-rolagem {
+    display:block;
+    margin:10px 14px 0;
+    color:var(--cinza);
+    font-size:12px
   }
   .kpi {
     flex-direction:column;
@@ -1156,8 +1171,8 @@ td:first-child {
     overflow-wrap:anywhere
   }
   .grade-paineis {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:9px
+    grid-template-columns:1fr;
+    gap:12px
   }
   .painel {
     min-width:0;
@@ -1244,7 +1259,7 @@ td:first-child {
     padding:0
   }
   .acesso-faixa {
-    min-height:calc(100vh - 175px);
+    min-height:calc(100dvh - 175px);
     padding:35px 20px
   }
   .acesso-form {
