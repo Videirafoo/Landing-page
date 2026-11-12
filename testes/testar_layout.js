@@ -45,6 +45,26 @@ for (const titulo of paineis) {
   assert.ok(javascript.includes("painel('" + titulo + "'"));
 }
 
+const iconesLucide = [
+  'vazio-frequencia.svg',
+  'vazio-comunicados.svg',
+  'vazio-desempenho.svg',
+  'vazio-atividades.svg'
+];
+
+for (const arquivo of iconesLucide) {
+  const svg = fs.readFileSync(path.join(pasta, 'assets', arquivo), 'utf8');
+  assert.match(svg, /viewBox="0 0 24 24"/, arquivo + ': viewBox Lucide');
+  assert.match(svg, /stroke-width="2"/, arquivo + ': traço Lucide');
+  assert.match(svg, /stroke-linecap="round"/, arquivo + ': pontas arredondadas');
+  assert.match(svg, /fill="none"/, arquivo + ': sem preenchimento ilustrativo');
+  assert.doesNotMatch(svg, /opacity=|<g |<circle[^>]*fill=/, arquivo + ': sem decoração extra');
+}
+assert.match(css, /\.vazio-ilustrado img\s*\{[^}]*width:64px;[^}]*height:64px/);
+assert.match(css, /@media \(min-width:761px\) and \(max-width:1024px\)/);
+assert.match(javascript, /\?v=20261112-lucide/);
+assert.match(html, /painel\.css\?v=20261112-lucide/);
+
 function criarClasses() {
   const lista = new Set();
   return {
