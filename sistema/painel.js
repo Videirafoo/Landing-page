@@ -196,7 +196,19 @@ function topo(t,desc,acoes=''){
 }
 function kpi(numero,texto,icone,cor,link){return `<button class="kpi cartao" type="button" data-ir="${link}"><div class="kpi-icone" style="--cor:${cor}"><span class="kpi-svg" data-icone="${icone}" aria-hidden="true"></span></div><div><small>${esc(texto)}</small><strong>${esc(numero)}</strong><em>Ver registros ↗</em></div></button>`;}
 function painel(titulo,acoes,conteudo){return `<section class="cartao painel"><header class="painel-topo"><h2>${titulo}</h2>${acoes||''}</header>${conteudo}</section>`;}
-function vazio(texto,tipo=''){const imagens={frequencia:'vazio-frequencia.svg',comunicados:'vazio-comunicados.svg',desempenho:'vazio-desempenho.svg',atividades:'vazio-atividades.svg'};const arquivo=imagens[tipo];const base=pastaSistema+'assets/';return `<div class="vazio vazio-ilustrado">${arquivo?`<img src="${base+arquivo}" alt="" loading="lazy">`:''}<span>${esc(texto)}</span></div>`;} 
+function vazio(texto, tipo = '') {
+  const imagens = {
+    frequencia: 'vazio-frequencia.svg',
+    comunicados: 'vazio-comunicados.svg',
+    desempenho: 'vazio-desempenho.svg',
+    atividades: 'vazio-atividades.svg'
+  };
+  const arquivo = imagens[tipo];
+  const imagem = arquivo
+    ? `<img src="${pastaSistema}assets/${arquivo}?v=20261112-lucide" alt="" loading="lazy">`
+    : '';
+  return `<div class="vazio vazio-ilustrado">${imagem}<span>${esc(texto)}</span></div>`;
+} 
 function meses6(){return Array.from({length:6},(_,i)=>{const d=new Date(new Date().getFullYear(),new Date().getMonth()-5+i,1);return {id:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,nome:d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}});}
 function graficoLinha(frequencias){
   if(!frequencias.length)return vazio('Registre presenças e faltas para visualizar o gráfico.','frequencia');
