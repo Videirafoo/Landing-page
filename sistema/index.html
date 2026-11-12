@@ -43,7 +43,7 @@
     <aside class="menu-lateral" id="menu-lateral" aria-label="Navegação do sistema"><button type="button" class="icone-botao fechar-menu-lateral" id="fechar-menu-lateral" aria-label="Recolher menu"><span class="icone-topo" data-icone="fechar" aria-hidden="true"></span></button>
       <a href="./" class="marca marca-menu" aria-label="Voltar ao painel B.A.S.E."><img class="logo-oficial menu-logo" src="../img/logo-oficial.png" alt="Logo oficial B.A.S.E."><small>Gestão Escolar</small></a>
       <nav id="menu" class="itens-menu" aria-label="Menu principal"></nav>
-      <div class="menu-rodape"><div class="apoio"><b>Precisa de ajuda?</b><p>Projeto acadêmico local</p></div><div class="usuario-card"><span class="avatar" id="avatar">A</span><span><strong id="usuario-nome">Administrador</strong><small id="usuario-perfil">Administrador</small></span><button type="button" class="icone-botao" id="sair" title="Sair da conta" aria-label="Sair"><span class="icone-topo" data-icone="sair" aria-hidden="true"></span></button></div></div>
+      <div class="menu-rodape"><div class="apoio"><button type="button" id="abrir-ajuda" class="apoio-abrir" aria-haspopup="dialog" aria-controls="janela-ajuda"><strong>Precisa de ajuda?</strong><span>Encontre o que procura</span></button></div><div class="usuario-card"><span class="avatar" id="avatar">A</span><span><strong id="usuario-nome">Administrador</strong><small id="usuario-perfil">Administrador</small></span><button type="button" class="icone-botao" id="sair" title="Sair da conta" aria-label="Sair"><span class="icone-topo" data-icone="sair" aria-hidden="true"></span></button></div></div>
     </aside>
     <div class="corpo-app">
       <header class="topbar">
@@ -54,6 +54,19 @@
       <footer class="rodape-app">B.A.S.E. — Projeto acadêmico. Não utilize dados pessoais reais de estudantes.</footer>
     </div>
   </div>
+
+  <dialog id="janela-ajuda" class="modal ajuda-modal" aria-labelledby="ajuda-titulo">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2 id="ajuda-titulo">Onde você quer ir?</h2>
+        <button type="button" id="fechar-ajuda" class="icone-botao" aria-label="Fechar ajuda">✕</button>
+      </header>
+      <label for="busca-ajuda" class="ajuda-label">Buscar uma área do sistema</label>
+      <input type="search" id="busca-ajuda" class="ajuda-busca" placeholder="Ex.: alunos, faltas, notas" autocomplete="off">
+      <p class="ajuda-orientacao">Escolha uma opção para abrir a página correspondente.</p>
+      <div id="resultados-ajuda" class="ajuda-resultados" aria-live="polite"></div>
+    </div>
+  </dialog>
 
   <dialog id="modal" class="modal">
     <form id="form-cadastro" class="modal-conteudo">
