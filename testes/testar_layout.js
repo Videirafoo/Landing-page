@@ -24,6 +24,13 @@ assert.match(css, /@media\(max-width:760px\)[\s\S]*?\.grade-paineis\s*\{[^}]*gri
 assert.match(css, /\.aviso-rolagem\s*\{\s*display:none/);
 assert.match(css, /\.acesso-miolo\s*\{[^}]*align-items:stretch/);
 assert.match(html, /<a href="\.\/" class="marca marca-menu"/);
+assert.match(html, /id="abrir-ajuda"/);
+assert.match(html, /id="janela-ajuda"/);
+assert.match(html, /id="busca-ajuda"/);
+assert.match(css, /\.itens-menu\s*\{[^}]*flex:0 1 auto/);
+assert.match(css, /\.menu-rodape\s*\{[^}]*margin-top:8px/);
+assert.match(javascript, /function pesquisarAjuda\(\)/);
+assert.match(javascript, /selecionar\('#resultados-ajuda'\)\.onclick/);
 assert.match(javascript, /const sessao = await api\('\/api\/me'\);\s*entrarApp\(sessao\);/);
 assert.ok(javascript.indexOf("await api('/api/me')") < javascript.indexOf('entrarTela(cadastrar)'));
 
