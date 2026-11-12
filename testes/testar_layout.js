@@ -98,4 +98,35 @@ assert.equal(elementos['#aplicacao'].classList.contains('menu-recolhido'), false
 funcoes.alternarMenu();
 assert.equal(elementos['#aplicacao'].classList.contains('menu-recolhido'), true);
 
-console.log('OK: menu mobile, sessão, logo e painéis responsivos.');
+// Verifica que a ajuda encontra módulos e respeita os itens do menu.
+const inicioAjuda = javascript.indexOf('const termosAjuda =');
+const fimAjuda = javascript.indexOf('function atualizarMenu()', inicioAjuda);
+assert.ok(inicioAjuda >= 0 && fimAjuda > inicioAjuda);
+
+const busca = { value: 'faltas' };
+const resultados = { innerHTML: '' };
+const opcoes = ['alunos', 'frequencias', 'avaliacoes'].map(pagina => ({
+  dataset: { pagina }
+}));
+
+const pesquisarAjuda = new Function(
+  'selecionar', 'selecionarTodos', 'N', 'D', 'esc',
+  javascript.slice(inicioAjuda, fimAjuda) + '\nreturn pesquisarAjuda;'
+)(
+  seletor => seletor === '#busca-ajuda' ? busca : resultados,
+  () => opcoes,
+  { alunos: 'Alunos', frequencias: 'Frequência', avaliacoes: 'Avaliações' },
+  {},
+  valor => valor
+);
+
+pesquisarAjuda();
+assert.match(resultados.innerHTML, /data-ajuda="frequencias"/);
+assert.doesNotMatch(resultados.innerHTML, /data-ajuda="alunos"/);
+
+busca.value = 'notas';
+pesquisarAjuda();
+assert.match(resultados.innerHTML, /data-ajuda="avaliacoes"/);
+assert.doesNotMatch(resultados.innerHTML, /data-ajuda="usuarios"/);
+
+console.log('OK: menu, sessão, ajuda e painéis responsivos.');
