@@ -347,7 +347,8 @@ a {
   padding:0 10px;
   gap:3px;
   overflow-y:auto;
-  flex:1;
+  flex:0 1 auto;
+  min-height:0;
   scrollbar-width:thin;
   scrollbar-color:#d5deeb transparent
 }
@@ -381,8 +382,9 @@ a {
 }
 
 .menu-rodape {
-  margin-top:auto;
-  padding:11px
+  margin-top:8px;
+  padding:11px;
+  flex-shrink:0
 }
 
 .apoio {
@@ -393,15 +395,29 @@ a {
   margin-bottom:10px
 }
 
-.apoio b {
-  font-size:11px
+.apoio-abrir {
+  width:100%;
+  border:0;
+  background:transparent;
+  color:inherit;
+  padding:0;
+  text-align:left;
+  display:grid;
+  gap:4px
 }
 
-.apoio p {
-  font-size:10px;
-  color:#8193ac;
-  line-height:1.6;
-  margin:5px 0 0
+.apoio-abrir strong {
+  font-size:12px;
+  color:#285aa0
+}
+
+.apoio-abrir span {
+  font-size:11px;
+  color:#697d98
+}
+
+.apoio-abrir:hover strong {
+  text-decoration:underline
 }
 
 .usuario-card {
@@ -963,6 +979,64 @@ td:first-child {
 
 .modal::backdrop {
   background:#172743a1
+}
+
+/* Ajuda: busca simples que leva às áreas já disponíveis. */
+.ajuda-label {
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  color:#566782;
+  margin-bottom:7px
+}
+
+.ajuda-busca {
+  display:block;
+  width:100%;
+  min-height:44px;
+  padding:10px 12px;
+  border:1px solid #c9d6e9;
+  border-radius:8px;
+  background:#fff
+}
+
+.ajuda-orientacao {
+  color:#667a94;
+  font-size:12px;
+  margin:12px 0
+}
+
+.ajuda-resultados {
+  display:grid;
+  gap:7px;
+  max-height:min(42vh,350px);
+  overflow-y:auto
+}
+
+.ajuda-opcao {
+  display:block;
+  width:100%;
+  border:1px solid #e1e9f4;
+  background:#f8fbff;
+  color:#274b78;
+  border-radius:8px;
+  text-align:left;
+  padding:11px 12px
+}
+
+.ajuda-opcao:hover,.ajuda-opcao:focus-visible {
+  border-color:#6aa0ed;
+  background:#ecf4ff
+}
+
+.ajuda-opcao strong,.ajuda-opcao small {
+  display:block
+}
+
+.ajuda-opcao small,.ajuda-sem-resultado {
+  margin-top:3px;
+  font-size:11px;
+  color:#6b7f99
 }
 
 .modal-conteudo {

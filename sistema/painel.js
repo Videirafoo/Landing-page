@@ -83,6 +83,51 @@ function montarMenu() {
   });
 }
 
+// Pesquisa entre os mesmos módulos disponíveis no menu do usuário.
+const termosAjuda = {
+  dashboard: 'início resumo visão geral',
+  alunos: 'estudantes cadastro',
+  matriculas: 'matrícula vincular aluno turma',
+  turmas: 'classes séries turnos',
+  professores: 'docentes disciplinas',
+  frequencias: 'presença falta faltas chamada',
+  avaliacoes: 'notas provas desempenho',
+  conteudos: 'aulas matérias',
+  avisos: 'avisos mensagens notificações',
+  relatorios: 'imprimir resumo documentos',
+  indicadores: 'médias estatísticas',
+  configuracoes: 'nome da escola ajustes',
+  usuarios: 'contas acessos senhas funcionários'
+};
+
+function normalizarAjuda(texto) {
+  return String(texto).normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
+function pesquisarAjuda() {
+  const termo = normalizarAjuda(selecionar('#busca-ajuda').value);
+  const disponiveis = Array.from(selecionarTodos('#menu [data-pagina]'));
+  const encontrados = disponiveis.filter(botao => {
+    const pagina = botao.dataset.pagina;
+    return normalizarAjuda(N[pagina] + ' ' + (termosAjuda[pagina] || '')).includes(termo);
+  });
+
+  const resultados = selecionar('#resultados-ajuda');
+  if (!encontrados.length) {
+    resultados.innerHTML = '<p class="ajuda-sem-resultado">Nenhuma área encontrada. Tente outra palavra.</p>';
+    return;
+  }
+
+  resultados.innerHTML = encontrados.map(botao => {
+    const pagina = botao.dataset.pagina;
+    const descricao = D[pagina]?.desc || 'Abrir esta área do sistema.';
+    return `<button type="button" class="ajuda-opcao" data-ajuda="${pagina}">
+      <strong>${esc(N[pagina])}</strong><small>${esc(descricao)}</small>
+    </button>`;
+  }).join('');
+}
+
 function atualizarMenu() {
   const recolhido = selecionar('#aplicacao').classList.contains('menu-recolhido');
   const noCelular = window.innerWidth <= 760;
@@ -256,6 +301,21 @@ selecionar('#form-cadastro').onsubmit=async e=>{
   catch(err){selecionar('#modal-erro').textContent=err.message;}
 };
 selecionar('#fechar-modal').onclick=()=>selecionar('#modal').close();selecionar('#cancelar-modal').onclick=()=>selecionar('#modal').close();
+selecionar('#abrir-ajuda').onclick = () => {
+  selecionar('#busca-ajuda').value = '';
+  pesquisarAjuda();
+  selecionar('#janela-ajuda').showModal();
+  selecionar('#busca-ajuda').focus();
+};
+selecionar('#busca-ajuda').oninput = pesquisarAjuda;
+selecionar('#fechar-ajuda').onclick = () => selecionar('#janela-ajuda').close();
+selecionar('#resultados-ajuda').onclick = evento => {
+  const botao = evento.target.closest('[data-ajuda]');
+  if (!botao) return;
+  selecionar('#janela-ajuda').close();
+  navegar(botao.dataset.ajuda);
+};
+
 selecionar('#sair').onclick=async()=>{try{await api('/api/sair',{method:'POST'});}catch{}estado={usuario:null,escola:'',pagina:'dashboard',alunos:[],turmas:[]};selecionar('#form-acesso').reset();history.replaceState(null,'',destino('/entrar'));entrarTela(false);};
 selecionar('#abrir-menu').onclick=alternarMenu;
 selecionar('#fechar-menu-lateral').onclick=recolherMenu;

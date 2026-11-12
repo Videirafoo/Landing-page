@@ -24,6 +24,13 @@ assert.match(css, /@media\(max-width:760px\)[\s\S]*?\.grade-paineis\s*\{[^}]*gri
 assert.match(css, /\.aviso-rolagem\s*\{\s*display:none/);
 assert.match(css, /\.acesso-miolo\s*\{[^}]*align-items:stretch/);
 assert.match(html, /<a href="\.\/" class="marca marca-menu"/);
+assert.match(html, /id="abrir-ajuda"/);
+assert.match(html, /id="janela-ajuda"/);
+assert.match(html, /id="busca-ajuda"/);
+assert.match(css, /\.itens-menu\s*\{[^}]*flex:0 1 auto/);
+assert.match(css, /\.menu-rodape\s*\{[^}]*margin-top:8px/);
+assert.match(javascript, /function pesquisarAjuda\(\)/);
+assert.match(javascript, /selecionar\('#resultados-ajuda'\)\.onclick/);
 assert.match(javascript, /const sessao = await api\('\/api\/me'\);\s*entrarApp\(sessao\);/);
 assert.ok(javascript.indexOf("await api('/api/me')") < javascript.indexOf('entrarTela(cadastrar)'));
 
@@ -91,4 +98,35 @@ assert.equal(elementos['#aplicacao'].classList.contains('menu-recolhido'), false
 funcoes.alternarMenu();
 assert.equal(elementos['#aplicacao'].classList.contains('menu-recolhido'), true);
 
-console.log('OK: menu mobile, sessão, logo e painéis responsivos.');
+// Verifica que a ajuda encontra módulos e respeita os itens do menu.
+const inicioAjuda = javascript.indexOf('const termosAjuda =');
+const fimAjuda = javascript.indexOf('function atualizarMenu()', inicioAjuda);
+assert.ok(inicioAjuda >= 0 && fimAjuda > inicioAjuda);
+
+const busca = { value: 'faltas' };
+const resultados = { innerHTML: '' };
+const opcoes = ['alunos', 'frequencias', 'avaliacoes'].map(pagina => ({
+  dataset: { pagina }
+}));
+
+const pesquisarAjuda = new Function(
+  'selecionar', 'selecionarTodos', 'N', 'D', 'esc',
+  javascript.slice(inicioAjuda, fimAjuda) + '\nreturn pesquisarAjuda;'
+)(
+  seletor => seletor === '#busca-ajuda' ? busca : resultados,
+  () => opcoes,
+  { alunos: 'Alunos', frequencias: 'Frequência', avaliacoes: 'Avaliações' },
+  {},
+  valor => valor
+);
+
+pesquisarAjuda();
+assert.match(resultados.innerHTML, /data-ajuda="frequencias"/);
+assert.doesNotMatch(resultados.innerHTML, /data-ajuda="alunos"/);
+
+busca.value = 'notas';
+pesquisarAjuda();
+assert.match(resultados.innerHTML, /data-ajuda="avaliacoes"/);
+assert.doesNotMatch(resultados.innerHTML, /data-ajuda="usuarios"/);
+
+console.log('OK: menu, sessão, ajuda e painéis responsivos.');
