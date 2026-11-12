@@ -1154,18 +1154,20 @@ td:first-child {
 
 .vazio-ilustrado {
   flex-direction:column;
-  gap:4px;
-  padding:16px 12px;
+  gap:12px;
+  padding:18px 12px;
   font-size:12px;
   min-height:188px
 }
 
 .vazio-ilustrado img {
-  width:112px;
-  height:96px;
-  max-width:50%;
-  object-fit:contain;
-  opacity:.92
+  width:64px;
+  height:64px;
+  max-width:100%;
+  padding:15px;
+  border-radius:14px;
+  background:#f3f6fc;
+  object-fit:contain
 }
 
 .vazio-ilustrado span {
@@ -1311,17 +1313,24 @@ td:first-child {
   }
   .vazio-ilustrado {
     min-height:130px;
-    padding:5px;
-    gap:6px;
-    font-size:10px
+    padding:9px;
+    gap:8px;
+    font-size:11px
   }
   .vazio-ilustrado img {
-    width:62px;
-    height:62px;
-    max-width:82%
+    width:54px;
+    height:54px;
+    padding:12px
   }
   .vazio-ilustrado span {
     max-width:100%
+  }
+}
+
+/* Evita cortes no painel quando o navegador usa a largura de tablet. */
+@media (min-width:761px) and (max-width:1024px) {
+  .grade-paineis {
+    grid-template-columns:1fr
   }
 }
 
