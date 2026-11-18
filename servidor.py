@@ -100,6 +100,33 @@ def padrao_escola():
     return {t: [] for t in CAMPOS}
 
 
+def atividades_recentes(dados_escola):
+    atividades = []
+    for tipo in CAMPOS:
+        for registro in dados_escola[tipo]:
+            titulo = registro.get('nome') or registro.get('titulo') or registro.get('data') or 'Registro'
+            atividades.append({'tipo': tipo, 'criadoEm': registro['criadoEm'], 'titulo': titulo})
+    atividades.sort(key=lambda item: item['criadoEm'], reverse=True)
+    return atividades[:5]
+
+
+def calcular_resumo(dados_escola):
+    frequencias = dados_escola['frequencias']
+    percentual_frequencia = None
+    if frequencias:
+        presencas = sum(bool(registro['presente']) for registro in frequencias)
+        percentual_frequencia = round(100 * presencas / len(frequencias))
+
+    return {
+        'alunos': len(dados_escola['alunos']),
+        'turmas': len(dados_escola['turmas']),
+        'professores': len(dados_escola['professores']),
+        'frequencia': percentual_frequencia,
+        'avisos': list(reversed(dados_escola['avisos'][-4:])),
+        'atividades': atividades_recentes(dados_escola)
+    }
+
+
 def isodata(texto):
     try:
         return bool(re.fullmatch(r'\d{4}-\d{2}-\d{2}', texto)) and datetime.strptime(texto, '%Y-%m-%d').strftime('%Y-%m-%d') == texto
@@ -245,16 +272,7 @@ class Servidor(BaseHTTPRequestHandler):
             salvar(banco)
             return self.enviar(200, {'escola': nome})
         if rota == '/api/resumo' and metodo == 'GET':
-            freq = dados_escola['frequencias']
-            atividades = [{ 'tipo': t, 'criadoEm': x['criadoEm'], 'titulo': x.get('nome') or x.get('titulo') or x.get('data') or 'Registro'}
-                          for t in CAMPOS for x in dados_escola[t]]
-            atividades.sort(key=lambda x: x['criadoEm'], reverse=True)
-            return self.enviar(200, {
-                'alunos': len(dados_escola['alunos']), 'turmas': len(dados_escola['turmas']),
-                'professores': len(dados_escola['professores']),
-                'frequencia': round(100 * sum(bool(x['presente']) for x in freq) / len(freq)) if freq else None,
-                'avisos': list(reversed(dados_escola['avisos'][-4:])), 'atividades': atividades[:5]
-            })
+            return self.enviar(200, calcular_resumo(dados_escola))
 
         if rota == '/api/usuarios':
             if usuario['perfil'] != 'Administrador':
